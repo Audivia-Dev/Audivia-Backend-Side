@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audivia.API", "Audivia.API\Audivia.API.csproj", "{917BCD95-0EC2-4F79-9D68-8F5DD953C251}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audivia.Domain", "Audivia.Domain\Audivia.Domain.csproj", "{0D1F7D1F-5BAA-4A80-BC53-A45EC5E69B12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audivia.Application", "Audivia.Application\Audivia.Application.csproj", "{04ECF76C-FB89-4D4A-A056-5C78A1AD92D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audivia.Infrastructure", "Audivia.Infrastructure\Audivia.Infrastructure.csproj", "{CC3AC703-65AF-4F7A-935D-9106B1628995}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{917BCD95-0EC2-4F79-9D68-8F5DD953C251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917BCD95-0EC2-4F79-9D68-8F5DD953C251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917BCD95-0EC2-4F79-9D68-8F5DD953C251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917BCD95-0EC2-4F79-9D68-8F5DD953C251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D1F7D1F-5BAA-4A80-BC53-A45EC5E69B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1F7D1F-5BAA-4A80-BC53-A45EC5E69B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D1F7D1F-5BAA-4A80-BC53-A45EC5E69B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1F7D1F-5BAA-4A80-BC53-A45EC5E69B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04ECF76C-FB89-4D4A-A056-5C78A1AD92D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04ECF76C-FB89-4D4A-A056-5C78A1AD92D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04ECF76C-FB89-4D4A-A056-5C78A1AD92D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04ECF76C-FB89-4D4A-A056-5C78A1AD92D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC3AC703-65AF-4F7A-935D-9106B1628995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC3AC703-65AF-4F7A-935D-9106B1628995}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC3AC703-65AF-4F7A-935D-9106B1628995}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC3AC703-65AF-4F7A-935D-9106B1628995}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09A24209-D7D6-4EC9-9B64-5A2391B31D3E}
+	EndGlobalSection
+EndGlobal
