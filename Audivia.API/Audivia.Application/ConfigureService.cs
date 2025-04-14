@@ -13,7 +13,7 @@ namespace Audivia.Application
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<ITourTypeService, TourTypeService>();
             service.AddScoped<IAudioTourService, AudioTourService>();
-
+            service.AddScoped<IQuizFieldService, QuizFieldService>();
 
             return service;
         }
