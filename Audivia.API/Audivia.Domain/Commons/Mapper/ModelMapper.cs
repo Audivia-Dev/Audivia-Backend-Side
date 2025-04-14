@@ -26,5 +26,17 @@ namespace Audivia.Domain.Commons.Mapper
                 UpdatedAt = tour.UpdatedAt
             };
         }
+
+        public static QuizFieldDTO MapQuizFieldToDTO(QuizField quizField)
+        {
+            return new QuizFieldDTO
+            {
+                Id = quizField.Id,
+                Name = quizField.QuizFieldName,
+                Description = quizField.Description,
+                IsDeleted = quizField.IsDeleted,
+
+            };
+        }
     }
 }
