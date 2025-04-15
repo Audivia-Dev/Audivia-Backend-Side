@@ -104,5 +104,44 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
+        public static QuizDTO MapQuizToDTO(Quiz q)
+        {
+            return new QuizDTO
+            {
+                Id = q.Id,
+                Title = q.Title,
+                QuizFieldId = q.QuizFieldId,
+                TourCheckpointId = q.TourCheckpointId,
+                CreatedAt = q.CreatedAt,    
+                UpdatedAt = q.UpdatedAt,
+                IsDeleted = q.IsDeleted,
+                Image = q.Image,
+            };
+        }
+        public static QuestionDTO MapQuestionToDTO(Question question)
+        {
+            return new QuestionDTO
+            {
+                Id = question.Id,
+                Text = question.Text,
+                QuizId = question.QuizId,
+                Points = question.Points,
+                Type = question.Type,
+                CreatedAt = question.CreatedAt,
+                UpdatedAt = question.UpdatedAt,
+                IsDeleted = question.IsDeleted,
+            };
+        }
+        public static AnswerDTO MapAnswerToDTO(Answer a)
+        {
+            return new AnswerDTO
+            {
+                Id = a.Id,
+                QuestionId = a.QuestionId, 
+                Text = a.Text,
+                IsCorrect = a.IsCorrect,
+                IsDeleted = a.IsDeleted,
+            };
+        }
     }
 }

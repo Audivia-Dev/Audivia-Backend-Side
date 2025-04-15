@@ -19,8 +19,9 @@ namespace Audivia.Application
             service.AddScoped<ICommentService, CommentService>();
             service.AddScoped<IReactionService, ReactionService>();
             service.AddScoped<ITourReviewService, TourReviewService>();
-
-
+            service.AddScoped<IQuizService, QuizService>();
+            service.AddScoped<IQuestionService, QuestionService>();
+            service.AddScoped<IAnswerService, AnswerService>();
             return service;
         }
     }
