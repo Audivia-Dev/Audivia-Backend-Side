@@ -5,10 +5,8 @@ using MongoDB.Driver;
 
 namespace Audivia.Infrastructure.Repositories.Implemetation
 {
-    public class AudioTourRepository : BaseRepository<AudioTour>, IAudioTourRepository
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
-        public AudioTourRepository(IMongoDatabase database) : base(database)
-        {
-        }
+        public CommentRepository(IMongoDatabase database) : base(database) { }
     }
 }
