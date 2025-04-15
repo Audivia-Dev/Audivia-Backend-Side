@@ -1,0 +1,117 @@
+﻿using Audivia.Application.Services.Interface;
+using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.ModelRequests.TourReview;
+using Audivia.Domain.ModelResponses.TourReview;
+using Audivia.Domain.Models;
+using Audivia.Infrastructure.Repositories.Interface;
+using MongoDB.Bson;
+
+namespace Audivia.Application.Services.Implemetation
+{
+    public class TourReviewService : ITourReviewService
+    {
+        private readonly ITourReviewRepository _tourReviewRepository;
+
+        public TourReviewService(ITourReviewRepository tourReviewRepository)
+        {
+            _tourReviewRepository = tourReviewRepository;
+        }
+
+        public async Task<TourReviewResponse> CreateTourReview(CreateTourReviewRequest request)
+        {
+            if (!ObjectId.TryParse(request.CreatedBy, out _))
+            {
+                return new TourReviewResponse
+                {
+                    Success = false,
+                    Message = "Invalid CreatedBy format",
+                    Response = null
+                };
+            }
+            var tourReview = new TourReview
+            {
+                Title = request.Title,
+                Content = request.Content,
+                ImageUrl = request.ImageUrl,
+                CreatedBy = request.CreatedBy,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            await _tourReviewRepository.Create(tourReview);
+
+            return new TourReviewResponse
+            {
+                Success = true,
+                Message = "TourReview created successfully",
+                Response = ModelMapper.MapTourReviewToDTO(tourReview)
+            };
+        }
+
+        public async Task<TourReviewListResponse> GetAllTourReviews()
+        {
+            var tourReviews = await _tourReviewRepository.GetAll();
+            var tourReviewDtos = tourReviews
+                .Where(t => !t.IsDeleted)
+                .Select(ModelMapper.MapTourReviewToDTO)
+                .ToList();
+            return new TourReviewListResponse
+            {
+                Success = true,
+                Message = "TourReviews retrieved successfully",
+                Response = tourReviewDtos
+            };
+        }
+
+        public async Task<TourReviewResponse> GetTourReviewById(string id)
+        {
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            if (tourReview == null)
+            {
+                return new TourReviewResponse
+                {
+                    Success = false,
+                    Message = "TourReview not found",
+                    Response = null
+                };
+            }
+
+            return new TourReviewResponse
+            {
+                Success = true,
+                Message = "TourReview retrieved successfully",
+                Response = ModelMapper.MapTourReviewToDTO(tourReview)
+            };
+        }
+
+        public async Task UpdateTourReview(string id, UpdateTourReviewRequest request)
+        {
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            if (tourReview == null) return;
+
+            if (!string.IsNullOrEmpty(request.UpdatedBy) && (!ObjectId.TryParse(request.UpdatedBy, out _) || !request.UpdatedBy.Equals(tourReview.CreatedBy)))
+            {
+                throw new FormatException("Invalid user try to update tourReview");
+            }
+            tourReview.Title = request.Title ?? tourReview.Title;
+            tourReview.Content = request.Content ?? tourReview.Content;
+            tourReview.ImageUrl = request.ImageUrl ?? tourReview.ImageUrl;
+            tourReview.Rating = request.Rating ?? tourReview.Rating;
+            tourReview.UpdatedAt = DateTime.UtcNow;
+
+            await _tourReviewRepository.Update(tourReview);
+        }
+
+        public async Task DeleteTourReview(string id)
+        {
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            if (tourReview == null) return;
+
+            tourReview.IsDeleted = true;
+            tourReview.UpdatedAt = DateTime.UtcNow;
+
+            await _tourReviewRepository.Update(tourReview);
+        }
+    }
+}

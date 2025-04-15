@@ -15,6 +15,12 @@ namespace Audivia.Infrastructure
             service.AddScoped<ITourTypeRepository, TourTypeRepository>();
             service.AddScoped<IAudioTourRepository, AudioTourRepository>();
             service.AddScoped<IQuizFieldRepository, QuizFieldRepository>();
+            service.AddScoped<IRoleRepository, RoleRepository>();
+            service.AddScoped<IPostRepository, PostRepository>();
+            service.AddScoped<ITourReviewRepository, TourReviewRepository>();
+            service.AddScoped<ICommentRepository, CommentRepository>();
+            service.AddScoped<IReactionRepository, ReactionRepository>();
+
             return service;
         }
     }

@@ -1,10 +1,6 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace Audivia.Domain.Commons.Mapper
 {
@@ -38,5 +34,75 @@ namespace Audivia.Domain.Commons.Mapper
 
             };
         }
+        public static RoleDTO MapRoleToDTO(Role role)
+        {
+            return new RoleDTO
+            {
+                Id = role.Id,
+                RoleName = role.RoleName,
+                IsDeleted = role.IsDeleted,
+                CreatedAt = role.CreatedAt,
+                UpdatedAt = role.UpdatedAt
+            };
+        }
+
+        public static PostDTO MapPostToDTO(Post post)
+        {
+            return new PostDTO
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                ImageUrl = post.ImageUrl,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt,
+                CreatedBy = post.CreatedBy,
+                IsDeleted = post.IsDeleted
+            };
+        }
+
+        public static TourReviewDTO MapTourReviewToDTO(TourReview review)
+        {
+            return new TourReviewDTO
+            {
+                Id = review.Id,
+                Title = review.Title,
+                Content = review.Content,
+                Rating = review.Rating,
+                ImageUrl = review.ImageUrl,
+                TourId = review.TourId,
+                CreatedAt = review.CreatedAt,
+                UpdatedAt = review.UpdatedAt,
+                CreatedBy = review.CreatedBy,
+                IsDeleted = review.IsDeleted
+            };
+        }
+
+        public static CommentDTO MapCommentToDTO(Comment comment)
+        {
+            return new CommentDTO
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                CreatedAt = comment.CreatedAt,
+                UpdatedAt = comment.UpdatedAt,
+                CreatedBy = comment.CreatedBy,
+                IsDeleted = comment.IsDeleted,
+                PostId = comment.PostId,
+            };
+        }
+
+        public static ReactionDTO MapReactionToDTO(Reaction reaction)
+        {
+            return new ReactionDTO
+            {
+                Id = reaction.Id,
+                Type = reaction.Type.ToString(),
+                PostId = reaction.PostId,
+                CreatedAt = reaction.CreatedAt,
+                CreatedBy = reaction.CreatedBy,
+            };
+        }
+
     }
 }

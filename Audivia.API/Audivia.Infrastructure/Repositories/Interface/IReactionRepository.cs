@@ -3,7 +3,7 @@ using Audivia.Infrastructure.Interface;
 
 namespace Audivia.Infrastructure.Repositories.Interface
 {
-    public interface ITourTypeRepository: IBaseRepository<TourType>, IDisposable
+    public interface IReactionRepository : IBaseRepository<Reaction>, IDisposable
     {
     }
 }

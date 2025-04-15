@@ -5,9 +5,9 @@ using MongoDB.Driver;
 
 namespace Audivia.Infrastructure.Repositories.Implemetation
 {
-    public class AudioTourRepository : BaseRepository<AudioTour>, IAudioTourRepository
+    public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public AudioTourRepository(IMongoDatabase database) : base(database)
+        public RoleRepository(IMongoDatabase database) : base(database)
         {
         }
     }
