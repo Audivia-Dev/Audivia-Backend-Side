@@ -16,7 +16,7 @@ namespace Audivia.Domain.Models
 
         [BsonElement("quiz_field_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? QuizField { get; set; }
+        public string? QuizFieldId { get; set; }
 
         [BsonElement("tourcheckpoint_id")]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -24,6 +24,8 @@ namespace Audivia.Domain.Models
 
         [BsonElement("title")]
         public string? Title { get; set; }
+        [BsonElement("image")]
+        public string? Image { get; set; }
         [BsonElement("created_at")]
         public DateTime? CreatedAt { get; set; }
 

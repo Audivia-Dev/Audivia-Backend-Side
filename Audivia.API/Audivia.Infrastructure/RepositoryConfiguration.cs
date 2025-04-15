@@ -20,6 +20,9 @@ namespace Audivia.Infrastructure
             service.AddScoped<ITourReviewRepository, TourReviewRepository>();
             service.AddScoped<ICommentRepository, CommentRepository>();
             service.AddScoped<IReactionRepository, ReactionRepository>();
+            service.AddScoped<IQuizRepository, QuizRepository>();
+            service.AddScoped<IQuestionRepository, QuestionRepository>();
+            service.AddScoped<IAnswerRepository, AnswerRepository>();
 
             return service;
         }
