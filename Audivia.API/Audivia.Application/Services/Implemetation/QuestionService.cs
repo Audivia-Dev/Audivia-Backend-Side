@@ -67,7 +67,7 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<QuestionListResponse> GetAllQuestionsAsync()
         {
-            var questions = await _questionRepository.GetAll();
+            var questions = await _questionRepository.GetAllWithAnswersAsync();
             var activeQuestions = questions.Where(q => !q.IsDeleted).ToList();
             var rs = activeQuestions.Select(ModelMapper.MapQuestionToDTO).ToList();
             return new QuestionListResponse
@@ -103,6 +103,18 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<Question> GetQuestionModel(string id)
         {
             return await _questionRepository.GetById(new ObjectId(id.ToString()));
+        }
+
+        public async Task UpdateQuestion(Question question)
+        {
+            //var q = await _questionRepository.GetById(new ObjectId(id.ToString()));
+            //if (question.Answers != null) 
+            //{
+            //    q.Answers = question.Answers;
+            //} 
+            //q.Answers = question.Answers;
+            await _questionRepository.Update(question);
+            
         }
 
         public async Task<QuestionResponse> UpdateQuestionAsync(string id, UpdateQuestionRequest request)

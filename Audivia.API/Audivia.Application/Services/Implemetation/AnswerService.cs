@@ -44,7 +44,13 @@ namespace Audivia.Application.Services.Implemetation
                 QuestionId = request.QuestionId,
                 IsDeleted = false,
             };
-            await _answerRepository.Create(newAnswer);   
+            
+            var rs = await _answerRepository.Create(newAnswer);
+            if (rs != null)
+            {
+                question.Answers.Add(newAnswer);
+                await _questionService.UpdateQuestion(question);
+            }
             return new AnswerResponse
             {
                 Success = true,

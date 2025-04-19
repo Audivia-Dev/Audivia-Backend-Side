@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Audivia.Domain.Models
 {
+    [BsonIgnoreExtraElements]
     public class Question
     {
         [BsonId]
@@ -27,8 +28,8 @@ namespace Audivia.Domain.Models
 
         [BsonElement("points")]
         public double? Points { get; set; }
-        [BsonElement("answers")]
-        public List<Answer> Answers { get; set; } = new List<Answer>();
+       // [BsonIgnore]
+        public List<Answer>? Answers { get; set; } = new List<Answer>();
 
         [BsonElement("created_at")]
         public DateTime? CreatedAt { get; set; }

@@ -23,7 +23,10 @@ namespace Audivia.Infrastructure
             service.AddScoped<IQuizRepository, QuizRepository>();
             service.AddScoped<IQuestionRepository, QuestionRepository>();
             service.AddScoped<IAnswerRepository, AnswerRepository>();
-
+            service.AddScoped<IUserCurrentLocationRepository, UserCurrentLocationRepository>();
+            service.AddScoped<IUserLocationVisitRepository, UserLocationVisitRepository>();
+            service.AddScoped<IUserResponseRepository, UserResponseRepository>();
+            service.AddScoped<IRouteRepository, RouteRepository>();
             return service;
         }
     }
