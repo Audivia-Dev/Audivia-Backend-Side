@@ -6,6 +6,18 @@ namespace Audivia.Domain.Commons.Mapper
 {
     public static class ModelMapper
     {
+        public static UserDTO MapUserToDTO(User user)
+        {
+            return new UserDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                UserName = user.Username,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
+                IsDeleted = user.IsDeleted
+            };
+        }
         public static AudioTourDTO MapAudioTourToDTO(AudioTour tour)
         {
             return new AudioTourDTO
@@ -112,7 +124,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Title = q.Title,
                 QuizFieldId = q.QuizFieldId,
                 TourCheckpointId = q.TourCheckpointId,
-                CreatedAt = q.CreatedAt,    
+                CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
                 IsDeleted = q.IsDeleted,
                 Image = q.Image,
@@ -138,7 +150,7 @@ namespace Audivia.Domain.Commons.Mapper
             return new AnswerDTO
             {
                 Id = a.Id,
-                QuestionId = a.QuestionId, 
+                QuestionId = a.QuestionId,
                 Text = a.Text,
                 IsCorrect = a.IsCorrect,
                 IsDeleted = a.IsDeleted,
@@ -202,7 +214,70 @@ namespace Audivia.Domain.Commons.Mapper
                 Longitude = userCurrentLocation.Longitude,
                 UpdatedAt = userCurrentLocation.UpdatedAt,
                 UserId = userCurrentLocation.UserId,
+            }
+        }
                 
+
+        public static TransactionHistoryDTO MapTransactionHistoryToDTO(TransactionHistory transaction)
+        {
+            return new TransactionHistoryDTO
+            {
+                Id = transaction.Id,
+                UserId = transaction.UserId,
+                TourId = transaction.TourId,
+                Amount = transaction.Amount,
+                Description = transaction.Description,
+                Type = transaction.Type,
+                Status = transaction.Status,
+                IsDeleted = transaction.IsDeleted,
+                CreatedAt = transaction.CreatedAt,
+                UpdatedAt = transaction.UpdatedAt,
+            };
+        }
+
+        public static UserTourProgressDTO MapUserTourProgressToDTO(UserTourProgress userTourProgress)
+        {
+            return new UserTourProgressDTO
+            {
+                Id = userTourProgress.Id,
+                UserId = userTourProgress.UserId,
+                TourId = userTourProgress.TourId,
+                StartedAt = userTourProgress.StartedAt,
+                FinishedAt = userTourProgress.FinishedAt,
+                Status = userTourProgress.Status,
+                CurrentCheckpointId = userTourProgress.CurrentCheckpointId,
+                Score = userTourProgress.Score,
+                GroupMode = userTourProgress.GroupMode,
+                GroupId = userTourProgress.GroupId,
+                CreatedAt = userTourProgress.CreatedAt,
+                UpdatedAt = userTourProgress.UpdatedAt,
+                IsDeleted = userTourProgress.IsDeleted,
+            };
+        }
+
+        public static UserFollowDTO MapUserFollowToDTO(UserFollow userFollow)
+        {
+            return new UserFollowDTO
+            {
+                Id = userFollow.Id,
+                FollowerId = userFollow.FollowerId,
+                FollowingId = userFollow.FollowingId,
+                CreatedAt = userFollow.CreatedAt,
+                UpdatedAt = userFollow.UpdatedAt,
+                IsDeleted = userFollow.IsDeleted,
+            };
+        }
+
+        public static UserAudioTourDTO MapUserAudioTourToDTO (UserAudioTour userAudioTour)
+        {
+            return new UserAudioTourDTO
+            {
+                Id = userAudioTour.Id,
+                UserId = userAudioTour.UserId,
+                TourId = userAudioTour.TourId,
+                CreatedAt = userAudioTour.CreatedAt,
+                UpdatedAt = userAudioTour.UpdatedAt,
+                IsDeleted = userAudioTour.IsDeleted,
             };
         }
     }
