@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Audivia.Infrastructure.Repositories.Interface
 {
-    public interface IQuestionRepository : IBaseRepository<Question>, IDisposable
+    public interface IRouteRepository : IBaseRepository<Route>, IDisposable
     {
-        Task<List<Question>> GetAllWithAnswersAsync();
     }
 }

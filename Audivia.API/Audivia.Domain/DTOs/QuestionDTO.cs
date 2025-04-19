@@ -20,7 +20,7 @@ namespace Audivia.Domain.DTOs
         public string? Text { get; set; }
 
         public double? Points { get; set; }
-        public List<Answer> Answers { get; set; } = new List<Answer>();
+        public List<AnswerDTO>? Answers { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsDeleted { get; set; } = false;

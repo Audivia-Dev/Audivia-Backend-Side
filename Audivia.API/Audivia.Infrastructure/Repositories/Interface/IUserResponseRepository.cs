@@ -1,4 +1,4 @@
-﻿using Audivia.Domain.Models;
+﻿using Audivia.Domain.ModelResponses.User;
 using Audivia.Infrastructure.Interface;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Audivia.Infrastructure.Repositories.Interface
 {
-    public interface IQuestionRepository : IBaseRepository<Question>, IDisposable
+    public interface IUserResponseRepository : IBaseRepository<Domain.Models.UserResponse>, IDisposable
     {
-        Task<List<Question>> GetAllWithAnswersAsync();
     }
 }

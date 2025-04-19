@@ -25,7 +25,10 @@ namespace Audivia.Application
             service.AddScoped<IQuizService, QuizService>();
             service.AddScoped<IQuestionService, QuestionService>();
             service.AddScoped<IAnswerService, AnswerService>();
-            
+            service.AddScoped<IRouteService, RouteService>();
+            service.AddScoped<IUserResponseService, UserResponseService>();
+            service.AddScoped<IUserCurrentLocationService, UserCurrentLocationService>();
+            service.AddScoped<IUserLocationVisitService, UserLocationVisitService>();
             service.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
             service.AddScoped<IUserAudioTourService, UserAudioTourService>();
             service.AddScoped<IUserFollowService, UserFollowService>();
