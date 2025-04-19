@@ -11,17 +11,25 @@ namespace Audivia.Application
         {
           
             service.AddScoped<IUserService, UserService>();
+            service.AddScoped<IRoleService, RoleService>();
+
             service.AddScoped<ITourTypeService, TourTypeService>();
             service.AddScoped<IAudioTourService, AudioTourService>();
-            service.AddScoped<IQuizFieldService, QuizFieldService>();
-            service.AddScoped<IRoleService, RoleService>();
+
             service.AddScoped<IPostService, PostService>();
             service.AddScoped<ICommentService, CommentService>();
             service.AddScoped<IReactionService, ReactionService>();
             service.AddScoped<ITourReviewService, TourReviewService>();
+
+            service.AddScoped<IQuizFieldService, QuizFieldService>();
             service.AddScoped<IQuizService, QuizService>();
             service.AddScoped<IQuestionService, QuestionService>();
             service.AddScoped<IAnswerService, AnswerService>();
+            
+            service.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
+            service.AddScoped<IUserAudioTourService, UserAudioTourService>();
+            service.AddScoped<IUserFollowService, UserFollowService>();
+            service.AddScoped<IUserTourProgressService, UserTourProgressService>();
             return service;
         }
     }
