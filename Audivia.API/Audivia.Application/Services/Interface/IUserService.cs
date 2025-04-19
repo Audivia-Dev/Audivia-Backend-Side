@@ -1,11 +1,15 @@
-﻿using Audivia.Domain.ModelRequests.User;
+﻿using Audivia.Domain.DTOs;
+using Audivia.Domain.ModelRequests.User;
 using Audivia.Domain.ModelResponses.User;
 
 namespace Audivia.Application.Services.Interface
 {
     public interface IUserService 
     {
-        Task<UserResponse> CreateAccount(UserCreateRequest request);
-      
+        Task<UserResponse> CreateUser(UserCreateRequest request);
+        Task<List<UserDTO>> GetAllUsers();
+        Task<UserResponse> GetUserById(string id);
+        Task UpdateUser(string id, UserUpdateRequest request);
+        Task DeleteUser(string id);
     }
 }
