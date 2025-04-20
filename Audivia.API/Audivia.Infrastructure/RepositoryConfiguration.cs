@@ -51,6 +51,10 @@ namespace Audivia.Infrastructure
             service.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
             service.AddScoped<ITourCheckpointRepository, TourCheckpointRepository>();
             service.AddScoped<ICheckpointImageRepository, CheckpointImageRepository>();
+
+            service.AddScoped<IChatRoomRepository, ChatRoomRepository>();
+            service.AddScoped<IChatRoomMemberRepository, ChatRoomMemberRepository>();
+            service.AddScoped<IMessageRepository, MessageRepository>();
             return service;
         }
     }

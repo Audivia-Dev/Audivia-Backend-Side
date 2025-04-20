@@ -48,6 +48,10 @@ namespace Audivia.Application
             service.AddScoped<ITourCheckpointService, TourCheckpointService>();
             service.AddScoped<ICheckpointImageService, CheckpointImageService>();
             service.AddScoped<ILeaderboardService, LeaderboardService>();
+
+            service.AddScoped<IChatRoomService, ChatRoomService>();
+            service.AddScoped<IChatRoomMemberService, ChatRoomMemberService>();
+            service.AddScoped<IMessageService, MessageService>();
             return service;
         }
     }

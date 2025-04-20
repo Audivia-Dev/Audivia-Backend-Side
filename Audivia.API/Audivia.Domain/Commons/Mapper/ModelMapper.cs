@@ -469,5 +469,47 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = leaderboard.IsDeleted,
             };
         }
+
+        public static ChatRoomDTO MapChatRoomToDTO (ChatRoom chatRoom)
+        {
+            return new ChatRoomDTO
+            {
+                Id = chatRoom.Id,
+                Name = chatRoom.Name,
+                Type = chatRoom.Type,
+                IsActive = chatRoom.IsActive,
+                CreatedBy = chatRoom.CreatedBy,
+                CreatedAt = chatRoom.CreatedAt,
+                UpdatedAt = chatRoom.UpdatedAt,
+            };
+        }
+
+        public static MessageDTO MapMessageToDTO (Message message)
+        {
+
+            return new MessageDTO
+            {
+                Id = message.Id,
+                ChatRoomId = message.ChatRoomId,
+                Content = message.Content,
+                SenderId = message.SenderId,
+                Type = message.Type,
+                CreatedAt = message.CreatedAt,
+                Status = message.Status,
+            };
+        }
+
+        public static ChatRoomMemberDTO MapChatRoomMemberToDTO (ChatRoomMember member)
+        {
+            return new ChatRoomMemberDTO
+            {
+                Id = member.Id,
+                ChatRoomId = member.ChatRoomId,
+                UserId = member.UserId,
+                Nickname = member.Nickname,
+                IsHost = member.IsHost,
+                JoinedAt = member.JoinedAt
+            };
+         }
     }
 }

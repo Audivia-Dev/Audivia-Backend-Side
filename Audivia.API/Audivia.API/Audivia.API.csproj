@@ -16,10 +16,4 @@
     <ProjectReference Include="..\Audivia.Infrastructure\Audivia.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\ChatRoom\" />
-    <Folder Include="Controllers\Message\" />
-    <Folder Include="Controllers\ChatRoomMember\" />
-  </ItemGroup>
-
 </Project>
