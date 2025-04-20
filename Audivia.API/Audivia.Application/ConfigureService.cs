@@ -39,6 +39,9 @@ namespace Audivia.Application
             service.AddScoped<IPlayResultService, PlayResultService>();
             service.AddScoped<IVoucherService, VoucherService>();
             service.AddScoped<IUserVoucherService, UserVoucherService>();
+            service.AddScoped<ITourCheckpointService, TourCheckpointService>();
+            service.AddScoped<ICheckpointImageService, CheckpointImageService>();
+            service.AddScoped<ILeaderboardService, LeaderboardService>();
             return service;
         }
     }
