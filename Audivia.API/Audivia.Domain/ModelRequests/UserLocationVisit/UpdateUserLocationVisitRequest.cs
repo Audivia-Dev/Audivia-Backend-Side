@@ -10,6 +10,5 @@ namespace Audivia.Domain.ModelRequests.UserLocationVisit
     {
         public string? UserId { get; set; }
         public string? TourcheckpointId { get; set; }
-        public string? RouteId { get; set; }
     }
 }

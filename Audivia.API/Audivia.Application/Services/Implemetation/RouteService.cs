@@ -36,6 +36,7 @@ namespace Audivia.Application.Services.Implemetation
             }
             var route = new Route
             {
+                TourId = req.TourId,
                 Name = req.Name,
                 Description = req.Description,
                 IsDeleted = false,
@@ -121,6 +122,7 @@ namespace Audivia.Application.Services.Implemetation
 
                 };
             }
+            route.TourId = req.TourId;
             route.Name = req.Name;
             route.Description = req.Description;
             await _routeRepository.Update(route);

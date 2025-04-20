@@ -38,7 +38,6 @@ namespace Audivia.Application.Services.Implemetation
             {
                 UserId = req.UserId,
                 TourcheckpointId = req.TourcheckpointId,
-                RouteId = req.RouteId,
                 VisitedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
@@ -68,7 +67,6 @@ namespace Audivia.Application.Services.Implemetation
 
             visit.UserId = req.UserId;
             visit.TourcheckpointId = req.TourcheckpointId;
-            visit.RouteId = req.RouteId;
             visit.VisitedAt = DateTime.UtcNow;
 
             await _userLocationVisitRepository.Update(visit);

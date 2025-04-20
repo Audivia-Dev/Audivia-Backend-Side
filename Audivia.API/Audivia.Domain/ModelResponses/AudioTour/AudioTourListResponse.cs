@@ -3,8 +3,8 @@ using Audivia.Domain.DTOs;
 
 namespace Audivia.Domain.ModelResponses.AudioTour
 {
-    public class AudioTourListResponse : AbstractApiResponse<List<AudioTourDTO>>
+    public class AudioTourListResponse : AbstractApiResponse<List<TourDTO>>
     {
-        public override List<AudioTourDTO> Response { get; set; }
+        public override List<TourDTO> Response { get; set; }
     }
 }

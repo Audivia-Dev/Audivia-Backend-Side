@@ -14,7 +14,7 @@ namespace Audivia.Application
             service.AddScoped<IRoleService, RoleService>();
 
             service.AddScoped<ITourTypeService, TourTypeService>();
-            service.AddScoped<IAudioTourService, AudioTourService>();
+            service.AddScoped<ITourService, TourService>();
 
             service.AddScoped<IPostService, PostService>();
             service.AddScoped<ICommentService, CommentService>();
@@ -33,6 +33,12 @@ namespace Audivia.Application
             service.AddScoped<IUserAudioTourService, UserAudioTourService>();
             service.AddScoped<IUserFollowService, UserFollowService>();
             service.AddScoped<IUserTourProgressService, UserTourProgressService>();
+            service.AddScoped<IGroupService, GroupService>();
+            service.AddScoped<IGroupMemberService, GroupMemberService>();
+            service.AddScoped<IPlaySessionService, PlaySessionService>();
+            service.AddScoped<IPlayResultService, PlayResultService>();
+            service.AddScoped<IVoucherService, VoucherService>();
+            service.AddScoped<IUserVoucherService, UserVoucherService>();
             return service;
         }
     }

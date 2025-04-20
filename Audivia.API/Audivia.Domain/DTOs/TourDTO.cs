@@ -1,9 +1,11 @@
 ﻿
 
-namespace Audivia.Domain.ModelRequests.AudioTour
+namespace Audivia.Domain.DTOs
 {
-    public class UpdateAudioTourRequest
+    public class TourDTO
     {
+        public string Id { get; set; } = string.Empty;
+
         public string? Title { get; set; }
 
         public string? Description { get; set; }
@@ -15,5 +17,8 @@ namespace Audivia.Domain.ModelRequests.AudioTour
         public string? TypeId { get; set; }
 
         public string? ThumbnailUrl { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

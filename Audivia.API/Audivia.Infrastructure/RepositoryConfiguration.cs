@@ -13,7 +13,7 @@ namespace Audivia.Infrastructure
             service.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<ITourTypeRepository, TourTypeRepository>();
-            service.AddScoped<IAudioTourRepository, AudioTourRepository>();
+            service.AddScoped<ITourRepository, TourRepository>();
             service.AddScoped<IQuizFieldRepository, QuizFieldRepository>();
             service.AddScoped<IRoleRepository, RoleRepository>();
             service.AddScoped<IPostRepository, PostRepository>();
@@ -31,7 +31,12 @@ namespace Audivia.Infrastructure
             service.AddScoped<IUserAudioTourRepository, UserAudioTourRepository>();
             service.AddScoped<IUserFollowRepository, UserFollowRepository>();
             service.AddScoped<IUserTourProgressRepository, UserTourProgressRepository>();
-          
+            service.AddScoped<IPlaySessionRepository, PlaySessionRepository>();
+            service.AddScoped<IPlayResultRepository, PlayResultRepository>();
+            service.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
+            service.AddScoped<IGroupRepository, GroupRepository>();
+            service.AddScoped<IVoucherRepository, VoucherRepository>();
+            service.AddScoped<IUserVoucherRepository, UserVoucherRepository>(); 
             return service;
         }
     }
