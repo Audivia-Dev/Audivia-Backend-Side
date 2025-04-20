@@ -1,6 +1,8 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.Models;
+using MongoDB.Bson.Serialization.Serializers;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Audivia.Domain.Commons.Mapper
 {
@@ -354,5 +356,51 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
+        public static TourCheckpointDTO MapTourCheckpointToDTO(TourCheckpoint tourCheckpoint)
+        {
+            return new TourCheckpointDTO
+            {
+                Id = tourCheckpoint.Id,
+                Title = tourCheckpoint.Title,
+                Description = tourCheckpoint.Description,
+                Latitude = tourCheckpoint.Latitude,
+                Longitude = tourCheckpoint.Longitude,
+                Order = tourCheckpoint.Order,
+                RouteId = tourCheckpoint.RouteId,
+                TourId = tourCheckpoint.TourId,
+                CreatedAt = tourCheckpoint.CreatedAt,
+                UpdatedAt = tourCheckpoint.UpdatedAt,
+                IsDeleted = tourCheckpoint.IsDeleted,
+            };
+        }
+
+        public static CheckpointImageDTO MapCheckpointImageToDTO(CheckpointImage req)
+        {
+            return new CheckpointImageDTO
+            {
+                Id = req.Id,
+                TourCheckpointId = req.TourCheckpointId,
+                Description = req.Description,
+                ImageUrl = req.ImageUrl,
+                CreatedAt = req.CreatedAt,
+                UpdatedAt = req.UpdatedAt,
+                IsDeleted = req.IsDeleted,
+            };
+        }
+
+        public static LeaderboardDTO MapLeaderboardToDTO(Leaderboard leaderboard)
+        {
+            return new LeaderboardDTO
+            {
+                Id = leaderboard.Id,
+                TourId = leaderboard.TourId,
+                UserId = leaderboard.UserId,
+                Score = leaderboard.Score,
+                Rank = leaderboard.Rank,
+                CreatedAt = leaderboard.CreatedAt,
+                UpdatedAt = leaderboard.UpdatedAt,
+                IsDeleted = leaderboard.IsDeleted,
+            };
+        }
     }
 }

@@ -37,6 +37,9 @@ namespace Audivia.Infrastructure
             service.AddScoped<IGroupRepository, GroupRepository>();
             service.AddScoped<IVoucherRepository, VoucherRepository>();
             service.AddScoped<IUserVoucherRepository, UserVoucherRepository>(); 
+            service.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
+            service.AddScoped<ITourCheckpointRepository, TourCheckpointRepository>();
+            service.AddScoped<ICheckpointImageRepository, CheckpointImageRepository>();
             return service;
         }
     }

@@ -6,10 +6,12 @@ namespace Audivia.Domain.Models
     public class CheckpointImage
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
-        [BsonElement("checkpoint_id")]
-        public ObjectId CheckpointId { get; set; }
+        [BsonElement("tourcheckpoint_id")]
+        [BsonRepresentation(BsonType.ObjectId)] 
+        public string? TourCheckpointId { get; set; }
 
         [BsonElement("image_url")]
         public string? ImageUrl { get; set; }
