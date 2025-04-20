@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Audivia.Application.Services.Interface;
+using Audivia.Domain.ModelRequests.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.User
@@ -7,8 +9,50 @@ namespace Audivia.API.Controllers.User
     [ApiController]
     public class UserController : ControllerBase
     {
-        public UserController()
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
+            _userService = userService;
+        }
+
+        // register - handle jwt later
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
+        {
+            var result = await _userService.CreateUser(request);
+            return Ok(result);
+        }
+
+        // login - handle jwt later
+
+        // get current user profile
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _userService.GetAllUsers();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var result = await _userService.GetUserById(id);
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] UserUpdateRequest request)
+        {
+            await _userService.UpdateUser(id, request);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _userService.DeleteUser(id);
+            return NoContent();
         }
     }
 }

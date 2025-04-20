@@ -27,7 +27,7 @@ namespace Audivia.Domain.Models
         public string? Type { get; set; }
 
         [BsonElement("status")]
-        public string? Status { get; set; }
+        public string? Status { get; set; } // change to enum
 
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
