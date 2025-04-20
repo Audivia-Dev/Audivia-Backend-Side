@@ -2,7 +2,7 @@
 using Audivia.Domain.ModelRequests.Post;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Audivia.API.Controllers.Community
+namespace Audivia.API.Controllers.Post
 {
     [Route("api/[controller]")]
     [ApiController]

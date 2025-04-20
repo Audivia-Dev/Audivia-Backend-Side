@@ -2,7 +2,7 @@
 using Audivia.Domain.ModelRequests.Reaction;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Audivia.API.Controllers.Community
+namespace Audivia.API.Controllers.Reaction
 {
     [Route("api/v1/[controller]")]
     [ApiController]

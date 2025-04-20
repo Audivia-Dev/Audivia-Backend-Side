@@ -8,45 +8,45 @@ namespace Audivia.API.Controllers.Transaction
     [ApiController]
     public class TransactionHistoriesController : ControllerBase
     {
-        private readonly ITransactionHistoryService _audioTourService;
+        private readonly ITransactionHistoryService _transactionHistoryService;
 
-        public TransactionHistoriesController(ITransactionHistoryService audioTourService)
+        public TransactionHistoriesController(ITransactionHistoryService transactionHistoryService)
         {
-            _audioTourService = audioTourService;
+            _transactionHistoryService = transactionHistoryService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTransactionHistoryRequest request)
         {
-            var result = await _audioTourService.CreateTransactionHistory(request);
+            var result = await _transactionHistoryService.CreateTransactionHistory(request);
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _audioTourService.GetAllTransactionHistorys();
+            var result = await _transactionHistoryService.GetAllTransactionHistorys();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var result = await _audioTourService.GetTransactionHistoryById(id);
+            var result = await _transactionHistoryService.GetTransactionHistoryById(id);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateTransactionHistoryRequest request)
         {
-            await _audioTourService.UpdateTransactionHistory(id, request);
+            await _transactionHistoryService.UpdateTransactionHistory(id, request);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _audioTourService.DeleteTransactionHistory(id);
+            await _transactionHistoryService.DeleteTransactionHistory(id);
             return NoContent();
         }
     }

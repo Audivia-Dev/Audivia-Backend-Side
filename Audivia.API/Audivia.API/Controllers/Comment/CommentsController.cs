@@ -2,7 +2,7 @@
 using Audivia.Domain.ModelRequests.Comment;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Audivia.API.Controllers.Community
+namespace Audivia.API.Controllers.Comment
 {
     [Route("api/v1/[controller]")]
     [ApiController]

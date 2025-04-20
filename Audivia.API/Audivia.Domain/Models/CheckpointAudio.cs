@@ -8,13 +8,15 @@ namespace Audivia.Domain.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
 
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
 
         [BsonElement("checkpoint_id")]
-        public ObjectId CheckpointId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string CheckpointId { get; set; }
 
         [BsonElement("audio_character_id")]
-        public ObjectId AudioCharacterId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string AudioCharacterId { get; set; }
 
         [BsonElement("file_url")]
         public string? FileUrl { get; set; }
