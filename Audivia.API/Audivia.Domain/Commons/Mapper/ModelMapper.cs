@@ -283,6 +283,73 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
+        public static CheckpointAudioDTO MapCheckpointAudioToDTO (CheckpointAudio checkpointAudio)
+        {
+            return new CheckpointAudioDTO
+            {
+                Id = checkpointAudio.Id,
+                CheckpointId = checkpointAudio.CheckpointId,
+                AudioCharacterId = checkpointAudio.AudioCharacterId,
+                FileUrl = checkpointAudio.FileUrl,
+                IsDefault = checkpointAudio.IsDefault,
+                Transcript = checkpointAudio.Transcript,
+                CreatedAt = checkpointAudio.CreatedAt,
+                UpdatedAt = checkpointAudio.UpdatedAt,
+                IsDeleted = checkpointAudio.IsDeleted,
+            };
+        }
+
+        public static SavedTourDTO MapSavedTourToDTO(SavedTour savedTour)
+        {
+            return new SavedTourDTO
+            {
+                Id = savedTour.Id,
+                TourId = savedTour.TourId,
+                UserId = savedTour.UserId,
+                PlannedTime = savedTour.PlannedTime,
+                SavedAt = savedTour.SavedAt,
+            };
+        }
+
+        public static AudioCharacterDTO MapAudioCharacterToDTO(AudioCharacter audioCharacter)
+        {
+            return new AudioCharacterDTO
+            {
+                Id = audioCharacter.Id,
+                Name = audioCharacter.Name,
+                Description = audioCharacter.Description,
+                AvatarUrl = audioCharacter.AvatarUrl,
+                VoiceType = audioCharacter.VoiceType,
+                CreatedAt = audioCharacter.CreatedAt,
+                UpdatedAt = audioCharacter.UpdatedAt,
+                IsDeleted = audioCharacter.IsDeleted,
+            };
+        }
+
+        public static TourPreferenceDTO MapTourPreferenceToDTO (TourPreference tourPreference)
+        {
+            return new TourPreferenceDTO
+            {
+                Id = tourPreference.Id,
+                TourId = tourPreference.TourId,
+                UserId = tourPreference.UserId,
+                PredictedScore = tourPreference.PredictedScore,
+                CreatedAt = tourPreference.CreatedAt,
+            };
+        }
+
+        public static NotificationDTO MapNotificationToDTO(Notification notification)
+        {
+            return new NotificationDTO
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                UserId = notification.UserId,
+                Type = notification.Type,
+                IsRead = notification.IsRead,
+                CreatedAt = notification.CreatedAt,
+            };
+        }
         public static PlaySessionDTO MapPlaySessionToDTO(PlaySession playSession)
         {
             return new PlaySessionDTO

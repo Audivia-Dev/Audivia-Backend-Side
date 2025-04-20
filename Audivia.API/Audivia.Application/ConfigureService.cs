@@ -33,6 +33,12 @@ namespace Audivia.Application
             service.AddScoped<IUserAudioTourService, UserAudioTourService>();
             service.AddScoped<IUserFollowService, UserFollowService>();
             service.AddScoped<IUserTourProgressService, UserTourProgressService>();
+
+            service.AddScoped<IAudioCharacterService, AudioCharacterService>();
+            service.AddScoped<ITourPreferenceService, TourPreferenceService>();
+            service.AddScoped<INotificationService, NotificationService>();
+            service.AddScoped<ISavedTourService, SavedTourService>();
+            service.AddScoped<ICheckpointAudioService, CheckpointAudioService>();
             service.AddScoped<IGroupService, GroupService>();
             service.AddScoped<IGroupMemberService, GroupMemberService>();
             service.AddScoped<IPlaySessionService, PlaySessionService>();

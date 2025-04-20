@@ -2,51 +2,51 @@
 using Audivia.Domain.ModelRequests.UserTourProgress;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Audivia.API.Controllers.UserTour
+namespace Audivia.API.Controllers.UserTourProgress
 {
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UserTourProgressController : ControllerBase
     {
-        private readonly IUserTourProgressService _audioTourService;
+        private readonly IUserTourProgressService _userTourProgressService;
 
-        public UserTourProgressController(IUserTourProgressService audioTourService)
+        public UserTourProgressController(IUserTourProgressService userTourProgressService)
         {
-            _audioTourService = audioTourService;
+            _userTourProgressService = userTourProgressService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserTourProgressRequest request)
         {
-            var result = await _audioTourService.CreateUserTourProgress(request);
+            var result = await _userTourProgressService.CreateUserTourProgress(request);
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _audioTourService.GetAllUserTourProgresss();
+            var result = await _userTourProgressService.GetAllUserTourProgresss();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var result = await _audioTourService.GetUserTourProgressById(id);
+            var result = await _userTourProgressService.GetUserTourProgressById(id);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateUserTourProgressRequest request)
         {
-            await _audioTourService.UpdateUserTourProgress(id, request);
+            await _userTourProgressService.UpdateUserTourProgress(id, request);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _audioTourService.DeleteUserTourProgress(id);
+            await _userTourProgressService.DeleteUserTourProgress(id);
             return NoContent();
         }
     }
