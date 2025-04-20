@@ -8,6 +8,7 @@ namespace Audivia.Domain.ModelRequests.Route
 {
     public class CreateRouteRequest
     {
+        public string? TourId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
     }

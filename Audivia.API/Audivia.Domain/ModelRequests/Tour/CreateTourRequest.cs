@@ -6,7 +6,7 @@
 
     namespace Audivia.Domain.ModelRequests.AudioTour
     {
-        public class CreateAudioTourRequest
+        public class CreateTourRequest
         {
             public string? Title { get; set; }
 

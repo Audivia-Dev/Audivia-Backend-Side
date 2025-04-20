@@ -13,7 +13,6 @@ namespace Audivia.Domain.DTOs
         public string Id { get; set; } = string.Empty;
         public string? UserId { get; set; }
         public string? TourcheckpointId { get; set; }
-        public string? RouteId { get; set; }
         public DateTime? VisitedAt { get; set; }
         public bool? IsDeleted { get; set; }
     }

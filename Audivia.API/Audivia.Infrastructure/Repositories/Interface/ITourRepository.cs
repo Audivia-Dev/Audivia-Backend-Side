@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Audivia.Infrastructure.Repositories.Interface
 {
-    public interface IAudioTourRepository: IBaseRepository<AudioTour>, IDisposable
+    public interface ITourRepository: IBaseRepository<Tour>, IDisposable
     {
     }
 }

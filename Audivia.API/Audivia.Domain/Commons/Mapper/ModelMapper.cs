@@ -18,9 +18,9 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = user.IsDeleted
             };
         }
-        public static AudioTourDTO MapAudioTourToDTO(AudioTour tour)
+        public static TourDTO MapAudioTourToDTO(Tour tour)
         {
-            return new AudioTourDTO
+            return new TourDTO
             {
                 Id = tour.Id,
                 Title = tour.Title,
@@ -173,10 +173,11 @@ namespace Audivia.Domain.Commons.Mapper
         {
             return new RouteDTO
             {
-                Id=r.Id,
-                Description=r.Description,
+                Id = r.Id,
+                Description = r.Description,
                 Name = r.Name,
                 IsDeleted = r.IsDeleted,
+                TourId = r.TourId,
             };
         }
         public static UserLocationVisitDTO MapUserLocationVisitToDTO(UserLocationVisit userLocationVisit)
@@ -184,12 +185,11 @@ namespace Audivia.Domain.Commons.Mapper
             return new UserLocationVisitDTO
             {
                 Id = userLocationVisit.Id,
-                UserId=userLocationVisit.UserId,
-                IsDeleted=userLocationVisit.IsDeleted,
-                RouteId = userLocationVisit.RouteId,
+                UserId = userLocationVisit.UserId,
+                IsDeleted = userLocationVisit.IsDeleted,
                 TourcheckpointId = userLocationVisit.TourcheckpointId,
                 VisitedAt = userLocationVisit.VisitedAt,
-                
+
             };
         }
         public static UserCurrentLocationDTO MapUserCurrentLocationToDTO(UserCurrentLocation userCurrentLocation)
@@ -214,9 +214,9 @@ namespace Audivia.Domain.Commons.Mapper
                 Longitude = userCurrentLocation.Longitude,
                 UpdatedAt = userCurrentLocation.UpdatedAt,
                 UserId = userCurrentLocation.UserId,
-            }
+            };
         }
-                
+
 
         public static TransactionHistoryDTO MapTransactionHistoryToDTO(TransactionHistory transaction)
         {
@@ -268,7 +268,7 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static UserAudioTourDTO MapUserAudioTourToDTO (UserAudioTour userAudioTour)
+        public static UserAudioTourDTO MapUserAudioTourToDTO(UserAudioTour userAudioTour)
         {
             return new UserAudioTourDTO
             {
@@ -280,5 +280,79 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = userAudioTour.IsDeleted,
             };
         }
+
+        public static PlaySessionDTO MapPlaySessionToDTO(PlaySession playSession)
+        {
+            return new PlaySessionDTO
+            {
+                Id = playSession.Id,
+                GroupId = playSession.GroupId,
+                RouteId = playSession.RouteId,
+                UserId = playSession.UserId,
+                StartTime = playSession.StartTime,
+                EndTime = playSession.EndTime,
+            };
+        }
+
+        public static PlayResultDTO MapPlayResultToDTO(PlayResult playResult)
+        {
+            return new PlayResultDTO
+            {
+                Id = playResult.Id,
+                SessionId = playResult.SessionId,
+                Score = playResult.Score,
+                CompletedAt = playResult.CompletedAt,
+            };
+        }
+        public static GroupDTO MapGroupToDTO(Group group) 
+        {
+            return new GroupDTO
+            {
+                Id = group.Id,
+                Name = group.Name,
+                CreatedAt = group.CreatedAt,
+                IsDeleted = group.IsDeleted,
+            };
+        } 
+        public static GroupMemberDTO MapGroupMemberToDTO(GroupMember groupMember)
+        {
+            return new GroupMemberDTO
+            {
+                Id = groupMember.Id,
+                UserId = groupMember.UserId,
+                GroupId = groupMember.GroupId,
+                JoinedAt = groupMember.JoinedAt,
+
+            };
+
+        }
+
+        public static VoucherDTO MapVoucherToDTO(Voucher voucher)
+        {
+            return new VoucherDTO
+            {
+                Id = voucher.Id,
+                Code = voucher.Code,
+                Title = voucher.Title,
+                Discount = voucher.Discount,
+                CreatedAt = voucher.CreatedAt,
+                ExpiryDate = voucher.ExpiryDate,
+                IsDeleted = voucher.IsDeleted,
+            };
+        }
+
+        public static UserVoucherDTO MapUserVoucherToDTO(UserVoucher userVoucher)
+        {
+            return new UserVoucherDTO
+            {
+                Id = userVoucher.Id,
+                UserId = userVoucher.UserId,
+                VoucherId = userVoucher.VoucherId,
+                UsedAt = userVoucher.UsedAt,
+                IsDeleted = userVoucher.IsDeleted,
+                
+            };
+        }
+
     }
 }

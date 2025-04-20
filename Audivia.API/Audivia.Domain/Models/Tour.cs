@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace Audivia.Domain.Models
 {
-    public class AudioTour
+    public class Tour
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

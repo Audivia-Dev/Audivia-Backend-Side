@@ -9,16 +9,16 @@ using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
 {
-    public class AudioTourService : IAudioTourService
+    public class TourService : ITourService
     {
-        private readonly IAudioTourRepository _audioTourRepository;
+        private readonly ITourRepository _tourRepository;
 
-        public AudioTourService(IAudioTourRepository audioTourRepository)
+        public TourService(ITourRepository tourRepository)
         {
-            _audioTourRepository = audioTourRepository;
+            _tourRepository = tourRepository;
         }
 
-        public async Task<AudioTourResponse> CreateAudioTour(CreateAudioTourRequest request)
+        public async Task<AudioTourResponse> CreateAudioTour(CreateTourRequest request)
         {
             if (!ObjectId.TryParse(request.TypeId, out _))
             {
@@ -29,7 +29,7 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-            var audioTour = new AudioTour
+            var audioTour = new Tour
             {
                 Title = request.Title,
                 Description = request.Description,
@@ -42,7 +42,7 @@ namespace Audivia.Application.Services.Implemetation
                 IsDeleted = false
             };
 
-            await _audioTourRepository.Create(audioTour);
+            await _tourRepository.Create(audioTour);
 
             return new AudioTourResponse
             {
@@ -52,9 +52,9 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<List<AudioTourDTO>> GetAllAudioTours()
+        public async Task<List<TourDTO>> GetAllAudioTours()
         {
-            var tours = await _audioTourRepository.GetAll();
+            var tours = await _tourRepository.GetAll();
             return tours
                 .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapAudioTourToDTO)
@@ -63,7 +63,7 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<AudioTourResponse> GetAudioTourById(string id)
         {
-            var tour = await _audioTourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var tour = await _tourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (tour == null)
             {
                 return new AudioTourResponse
@@ -82,9 +82,9 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task UpdateAudioTour(string id, UpdateAudioTourRequest request)
+        public async Task UpdateAudioTour(string id, UpdateTourRequest request)
         {
-            var tour = await _audioTourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var tour = await _tourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (tour == null) return;
 
             if (!string.IsNullOrEmpty(request.TypeId) && !ObjectId.TryParse(request.TypeId, out _))
@@ -99,18 +99,18 @@ namespace Audivia.Application.Services.Implemetation
             tour.ThumbnailUrl = request.ThumbnailUrl ?? tour.ThumbnailUrl;
             tour.UpdatedAt = DateTime.UtcNow;
 
-            await _audioTourRepository.Update(tour);
+            await _tourRepository.Update(tour);
         }
 
         public async Task DeleteAudioTour(string id)
         {
-            var tour = await _audioTourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var tour = await _tourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (tour == null) return;
 
             tour.IsDeleted = true;
             tour.UpdatedAt = DateTime.UtcNow;
 
-            await _audioTourRepository.Update(tour);
+            await _tourRepository.Update(tour);
         }
 
         
