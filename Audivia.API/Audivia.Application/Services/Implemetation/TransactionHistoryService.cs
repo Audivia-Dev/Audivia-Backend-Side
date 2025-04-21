@@ -104,5 +104,13 @@ namespace Audivia.Application.Services.Implemetation
             await _transactionHistoryRepository.Update(transaction);
         }
 
+        public async Task<List<TransactionHistoryDTO>> GetTransactionHistoryByUserId(string userId)
+        {
+            var transactions = await _transactionHistoryRepository.GetTransactionHistoryByUserId(userId);
+            return transactions
+                .Where(t => !t.IsDeleted)
+                .Select(ModelMapper.MapTransactionHistoryToDTO)
+                .ToList();
+        }
     }
 }
