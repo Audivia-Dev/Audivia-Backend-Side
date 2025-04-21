@@ -1,6 +1,7 @@
 
 using Audivia.API.Middlewares;
 using Audivia.Application;
+using Audivia.Domain.Commons.Mail;
 using Audivia.Infrastructure;
 using Audivia.Infrastructure.Data;
 using MongoDB.Driver;
@@ -30,6 +31,8 @@ namespace Audivia.API
             builder.Services.AddRepository();
 
             builder.Services.AddService();
+
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
 

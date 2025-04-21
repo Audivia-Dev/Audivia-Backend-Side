@@ -39,6 +39,11 @@
                 _logger.LogError(ex, ex.Message);
                 await WriteToResponse(context, StatusCodes.Status400BadRequest, ex.Message);
             }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await WriteToResponse(context, StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (KeyNotFoundException ex)
             {
                 _logger.LogWarning(ex, ex.Message);

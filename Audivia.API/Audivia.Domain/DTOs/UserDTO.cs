@@ -6,6 +6,7 @@
         public string? Email { get; set; }
         public string? UserName { get; set; }
         public bool IsDeleted { get; set; }
+        public bool ConfirmedEmail { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

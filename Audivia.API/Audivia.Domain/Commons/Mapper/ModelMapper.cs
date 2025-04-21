@@ -17,7 +17,8 @@ namespace Audivia.Domain.Commons.Mapper
                 UserName = user.Username,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
-                IsDeleted = user.IsDeleted
+                IsDeleted = user.IsDeleted,
+                ConfirmedEmail = user.ConfirmedEmail,
             };
         }
         public static TourDTO MapAudioTourToDTO(Tour tour)

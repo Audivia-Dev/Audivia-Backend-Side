@@ -8,9 +8,11 @@ namespace Audivia.Application.Services.Interface
         // login
         Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request);
 
-        // logout
-
         // register
+        Task<RegisterResponse> Register(RegisterRequest request);
+
+        //confirm email
+        Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request);
 
         // get profile
     }
