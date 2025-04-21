@@ -1,6 +1,8 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Application.Utils.Helper;
+using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.ModelRequests.Auth;
+using Audivia.Domain.ModelRequests.Mail;
 using Audivia.Domain.ModelResponses.Auth;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
@@ -15,12 +17,81 @@ namespace Audivia.Application.Services.Implemetation
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IConfiguration _configuration;
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository)
+        private readonly IMailService _mailService;
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _configuration = configuration;
+            _mailService = mailService;
         }
+
+        public async Task<RegisterResponse> Register(RegisterRequest request)
+        {
+            if (await _userRepository.GetByEmail(request.Email) != null)
+            {
+                throw new HttpRequestException("Email existed!");
+            }
+
+            if (await _userRepository.GetByUsername(request.UserName) != null)
+            {
+                throw new HttpRequestException("Username existed!");
+            }
+
+            var customerRole = await _roleRepository.GetByRoleName("customer");
+            var user = new User
+            {
+                Email = request.Email,
+                Username = request.UserName,
+                Password = PasswordHasher.HashPassword(request.Password),
+                RoleId = customerRole.Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            user.TokenConfirmEmail = Guid.NewGuid().ToString();
+
+            await _userRepository.Create(user);
+
+            await _mailService.SendEmailAsync(new MailRequest()
+            {
+                ToEmail = user.Email,
+                Body = EmailContent.ConfirmEmail(user.Username, _configuration, user.TokenConfirmEmail),
+                Subject = "[Audivia] Confirm Email"
+            });
+
+            return new RegisterResponse
+            {
+                Message = "Registered successfully!",
+                Response = ModelMapper.MapUserToDTO(user),
+                Success = true
+            };
+        }
+
+        public async Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request)
+        {
+            var user = await _userRepository.GetByTokenConfirm(request.Token);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found!");
+            }
+            user.ConfirmedEmail = true;
+            user.TokenConfirmEmail = "";
+            await _userRepository.Update(user);
+            await _mailService.SendEmailAsync(new MailRequest
+            {
+                ToEmail = user.Email,
+                Subject = "[Audivia] Welcome to Audivia",
+                Body = EmailContent.WelcomeEmail(user.Username ?? "New Customer")
+            });
+            return new ConfirmEmailResponse
+            {
+                Message = "Registered successfully!",
+                Success = true
+            };
+        }
+
         public async Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request)
         {
             var user = await _userRepository.GetByEmail(request.Email)
@@ -29,6 +100,10 @@ namespace Audivia.Application.Services.Implemetation
             if (!isPasswordMatched)
             {
                 throw new KeyNotFoundException("Incorrect email or password!");
+            }
+            if (!user.ConfirmedEmail)
+            {
+                throw new HttpRequestException("You must check the mailbox to confirm email before login!");
             }
 
             // generate access token and response

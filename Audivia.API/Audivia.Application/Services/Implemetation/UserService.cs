@@ -5,7 +5,6 @@ using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.User;
 using Audivia.Domain.ModelResponses.User;
 using Audivia.Infrastructure.Repositories.Interface;
-using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
 {
