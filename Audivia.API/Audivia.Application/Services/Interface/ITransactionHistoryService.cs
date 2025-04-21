@@ -15,5 +15,6 @@ namespace Audivia.Application.Services.Interface
         Task UpdateTransactionHistory(string id, UpdateTransactionHistoryRequest request);
 
         Task DeleteTransactionHistory(string id);
+        Task<List<TransactionHistoryDTO>> GetTransactionHistoryByUserId(string userId);
     }
 }
