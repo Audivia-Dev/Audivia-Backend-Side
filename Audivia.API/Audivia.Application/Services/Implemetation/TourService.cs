@@ -22,12 +22,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.TypeId, out _))
             {
-                return new AudioTourResponse
-                {
-                    Success = false,
-                    Message = "Invalid TypeId format",
-                    Response = null
-                };
+                throw new FormatException("Invalid TypeId format.");
             }
             var audioTour = new Tour
             {

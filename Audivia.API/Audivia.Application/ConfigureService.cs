@@ -10,6 +10,7 @@ namespace Audivia.Application
         public static IServiceCollection AddService(this IServiceCollection service)
         {
           
+            service.AddScoped<IAuthService, AuthService>();
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IRoleService, RoleService>();
 
@@ -39,6 +40,7 @@ namespace Audivia.Application
             service.AddScoped<INotificationService, NotificationService>();
             service.AddScoped<ISavedTourService, SavedTourService>();
             service.AddScoped<ICheckpointAudioService, CheckpointAudioService>();
+            
             service.AddScoped<IGroupService, GroupService>();
             service.AddScoped<IGroupMemberService, GroupMemberService>();
             service.AddScoped<IPlaySessionService, PlaySessionService>();

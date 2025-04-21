@@ -12,19 +12,22 @@ namespace Audivia.Application.Services.Implemetation
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IRoleRepository _roleRepository;
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
         }
 
-        // handle jwt later
         public async Task<UserResponse> CreateUser(UserCreateRequest request)
         {
+            var customerRole = await _roleRepository.GetByRoleName("customer");
             var user = new User
             {
                 Email = request.Email,
                 Username = request.UserName,
                 Password = PasswordHasher.HashPassword(request.Password),
+                RoleId = customerRole.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -81,6 +84,7 @@ namespace Audivia.Application.Services.Implemetation
             user.AudioCharacterId = request.AudioCharacterId ?? user.AudioCharacterId;
             user.AutoPlayDistance = request.AutoPlayDistance ?? user.AutoPlayDistance;
             user.TravelDistance = request.TravelDistance ?? user.TravelDistance;
+            user.RoleId = request.RoleId ?? user.RoleId;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.Update(user);

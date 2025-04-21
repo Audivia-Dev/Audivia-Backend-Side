@@ -21,12 +21,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.CreatedBy, out _))
             {
-                return new ReactionResponse
-                {
-                    Success = false,
-                    Message = "Invalid CreatedBy format",
-                    Response = null
-                };
+                throw new FormatException("Invalid created by value!");
             }
             var reaction = new Reaction
             {
@@ -62,15 +57,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<ReactionResponse> GetReactionById(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid reaction id!");
+            }
             var reaction = await _reactionRepository.FindFirst(t => t.Id == id);
             if (reaction == null)
             {
-                return new ReactionResponse
-                {
-                    Success = false,
-                    Message = "Reaction not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Reaction not found!");
             }
 
             return new ReactionResponse
@@ -83,6 +77,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task UpdateReaction(string id, UpdateReactionRequest request)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid reaction id!");
+            }
             var reaction = await _reactionRepository.FindFirst(t => t.Id == id);
             if (reaction == null) return;
 
@@ -97,6 +95,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteReaction(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid reaction id!");
+            }
             var reaction = await _reactionRepository.FindFirst(t => t.Id == id);
             if (reaction == null) return;
 

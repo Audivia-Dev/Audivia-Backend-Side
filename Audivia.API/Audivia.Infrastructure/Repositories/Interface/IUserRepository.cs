@@ -1,15 +1,9 @@
-﻿using Audivia.Domain.Models;
-using Audivia.Infrastructure.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Audivia.Infrastructure.Interface;
 
 namespace Audivia.Infrastructure.Repositories.Interface
 {
     public interface IUserRepository: IBaseRepository<User>, IDisposable
     {
-
+        Task<User?> GetByEmail(string email);
     }
 }

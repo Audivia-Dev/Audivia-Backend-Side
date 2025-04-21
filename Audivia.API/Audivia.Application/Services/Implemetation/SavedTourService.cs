@@ -81,7 +81,7 @@ namespace Audivia.Application.Services.Implemetation
             var tour = await _savedTourRepository.FindFirst(t => t.Id == id);
             if (tour == null) return;
 
-            tour.PlannedTime = request.PlannedTime;
+            tour.PlannedTime = request.PlannedTime ?? tour.PlannedTime;
 
             await _savedTourRepository.Update(tour);
         }
