@@ -7,7 +7,7 @@ namespace Audivia.Domain.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public ObjectId Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [BsonElement("name")]
         public string? Name { get; set; }

@@ -5,6 +5,7 @@ using Audivia.Domain.ModelRequests.Role;
 using Audivia.Domain.ModelResponses.Role;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -48,15 +49,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<RoleResponse> GetRoleById(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid role id!");
+            }
             var role = await _roleRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (role == null)
             {
-                return new RoleResponse
-                {
-                    Success = false,
-                    Message = "Role not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Role not found!");
             }
 
             return new RoleResponse
@@ -69,10 +69,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task UpdateRole(string id, UpdateRoleRequest request)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid role id!");
+            }
             var role = await _roleRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (role == null) return;
 
-            role.RoleName = request.RoleName;
+            role.RoleName = request.RoleName ?? role.RoleName;
             role.UpdatedAt = DateTime.UtcNow;
 
             await _roleRepository.Update(role);
@@ -80,6 +84,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteRole(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid role id!");
+            }
             var role = await _roleRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (role == null) return;
 

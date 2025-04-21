@@ -15,17 +15,12 @@ namespace Audivia.API.Controllers.User
             _userService = userService;
         }
 
-        // register - handle jwt later
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
         {
             var result = await _userService.CreateUser(request);
             return Ok(result);
         }
-
-        // login - handle jwt later
-
-        // get current user profile
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

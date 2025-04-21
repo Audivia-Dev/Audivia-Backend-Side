@@ -1,4 +1,5 @@
 
+using Audivia.API.Middlewares;
 using Audivia.Application;
 using Audivia.Infrastructure;
 using Audivia.Infrastructure.Data;
@@ -30,7 +31,11 @@ namespace Audivia.API
 
             builder.Services.AddService();
 
+            builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
             var app = builder.Build();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

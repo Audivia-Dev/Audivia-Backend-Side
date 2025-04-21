@@ -22,12 +22,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.CreatedBy, out _))
             {
-                return new PostResponse
-                {
-                    Success = false,
-                    Message = "Invalid CreatedBy format",
-                    Response = null
-                };
+                throw new FormatException("Invalid created by value!");
             }
             var post = new Post
             {
@@ -67,15 +62,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<PostResponse> GetPostById(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid post id!");
+            }
             var post = await _postRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (post == null)
             {
-                return new PostResponse
-                {
-                    Success = false,
-                    Message = "Post not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Post not found!");
             }
 
             return new PostResponse
@@ -88,6 +82,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task UpdatePost(string id, UpdatePostRequest request)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid post id!");
+            }
             var post = await _postRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (post == null) return;
 
@@ -105,6 +103,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeletePost(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid post id!");
+            }
             var post = await _postRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (post == null) return;
 

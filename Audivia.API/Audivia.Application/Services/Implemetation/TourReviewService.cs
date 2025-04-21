@@ -21,12 +21,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.CreatedBy, out _))
             {
-                return new TourReviewResponse
-                {
-                    Success = false,
-                    Message = "Invalid CreatedBy format",
-                    Response = null
-                };
+                throw new FormatException("Invalid created by value!");
             }
             var tourReview = new TourReview
             {
@@ -66,15 +61,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<TourReviewResponse> GetTourReviewById(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid tour review id!");
+            }
             var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (tourReview == null)
             {
-                return new TourReviewResponse
-                {
-                    Success = false,
-                    Message = "TourReview not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Tour review not found!");
             }
 
             return new TourReviewResponse
@@ -87,8 +81,12 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task UpdateTourReview(string id, UpdateTourReviewRequest request)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid tour review id!");
+            }
             var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (tourReview == null) return;
+            if (tourReview == null) throw new KeyNotFoundException("TourReview not found!");
 
             if (!string.IsNullOrEmpty(request.UpdatedBy) && (!ObjectId.TryParse(request.UpdatedBy, out _) || !request.UpdatedBy.Equals(tourReview.CreatedBy)))
             {
@@ -105,8 +103,12 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteTourReview(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid tour review id!");
+            }
             var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (tourReview == null) return;
+            if (tourReview == null) throw new KeyNotFoundException("TourReview not found!");
 
             tourReview.IsDeleted = true;
             tourReview.UpdatedAt = DateTime.UtcNow;

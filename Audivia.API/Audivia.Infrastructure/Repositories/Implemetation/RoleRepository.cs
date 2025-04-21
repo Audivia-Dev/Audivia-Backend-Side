@@ -10,5 +10,12 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         public RoleRepository(IMongoDatabase database) : base(database)
         {
         }
+
+        public async Task<Role?> GetByRoleName(string roleName)
+        {
+            var filter = Builders<Role>.Filter.Eq(r => r.RoleName.ToLower(), roleName.ToLower());
+            return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+
     }
 }
