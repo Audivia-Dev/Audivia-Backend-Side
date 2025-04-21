@@ -13,7 +13,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 
         public async Task<Role?> GetByRoleName(string roleName)
         {
-            var filter = Builders<Role>.Filter.Eq(r => r.RoleName.ToLower(), roleName.ToLower());
+            var filter = Builders<Role>.Filter.Eq(r => r.RoleName, roleName);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
