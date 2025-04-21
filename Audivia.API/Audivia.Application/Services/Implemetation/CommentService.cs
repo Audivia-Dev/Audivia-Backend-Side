@@ -21,12 +21,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.CreatedBy, out _))
             {
-                return new CommentResponse
-                {
-                    Success = false,
-                    Message = "Invalid CreatedBy format",
-                    Response = null
-                };
+                throw new FormatException("Invalid created by value!");
             }
             var comment = new Comment
             {
@@ -65,15 +60,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<CommentResponse> GetCommentById(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid comment id!");
+            }
             var comment = await _commentRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (comment == null)
             {
-                return new CommentResponse
-                {
-                    Success = false,
-                    Message = "Comment not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Comment not found!");
             }
 
             return new CommentResponse
@@ -86,8 +80,15 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task UpdateComment(string id, UpdateCommentRequest request)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid comment id!");
+            }
             var comment = await _commentRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (comment == null) return;
+            if (comment == null)
+            {
+                throw new KeyNotFoundException("Comment not found!");
+            }
 
             if (!string.IsNullOrEmpty(request.UpdatedBy) && (!ObjectId.TryParse(request.UpdatedBy, out _) || !request.UpdatedBy.Equals(comment.CreatedBy)))
             {
@@ -101,6 +102,10 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteComment(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                throw new FormatException("Invalid comment id!");
+            }
             var comment = await _commentRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (comment == null) return;
 

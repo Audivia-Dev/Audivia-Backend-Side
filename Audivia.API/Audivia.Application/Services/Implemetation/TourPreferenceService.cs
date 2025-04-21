@@ -81,7 +81,7 @@ namespace Audivia.Application.Services.Implemetation
             var tour = await _tourPreferenceRepository.FindFirst(t => t.Id == id);
             if (tour == null) return;
 
-            tour.PredictedScore = request.PredictedScore;
+            tour.PredictedScore = request.PredictedScore ?? tour.PredictedScore;
 
             await _tourPreferenceRepository.Update(tour);
         }
