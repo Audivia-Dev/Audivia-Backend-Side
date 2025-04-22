@@ -78,7 +78,7 @@ namespace Audivia.Application.Services.Implemetation
             var user = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (user == null) return;
 
-            if (!ObjectId.TryParse(request.AudioCharacterId, out _))
+            if (!string.IsNullOrEmpty(request.AudioCharacterId) && !ObjectId.TryParse(request.AudioCharacterId, out _))
             {
                 throw new FormatException("Invalid audio character id value!");
             }
