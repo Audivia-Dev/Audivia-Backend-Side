@@ -29,7 +29,7 @@ namespace Audivia.Domain.Models
         public string? ThumbnailUrl { get; set; }
 
         [BsonElement("avg_rating")]
-        public float? AvgRating { get; set; }
+        public double AvgRating { get; set; } = 0;
 
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;

@@ -9,6 +9,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
     {
         public TourRepository(IMongoDatabase database) : base(database)
         {
+
         }
     }
 }

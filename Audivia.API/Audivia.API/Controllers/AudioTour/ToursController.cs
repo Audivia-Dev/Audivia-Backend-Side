@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.AudioTour;
+using Audivia.Domain.ModelRequests.Tour;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.AudioTour
@@ -22,10 +23,11 @@ namespace Audivia.API.Controllers.AudioTour
             return Ok(result);
         }
 
+        // them model request cho get all request (filter, sort, top, page size, page num) va pagination response
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetToursRequest request)
         {
-            var result = await _tourService.GetAllAudioTours();
+            var result = await _tourService.GetAllAudioTours(request);
             return Ok(result);
         }
 

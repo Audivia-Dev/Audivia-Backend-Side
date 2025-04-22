@@ -1,11 +1,14 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Domain.Commons.Api;
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.AudioTour;
+using Audivia.Domain.ModelRequests.Tour;
 using Audivia.Domain.ModelResponses.AudioTour;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -47,13 +50,40 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<List<TourDTO>> GetAllAudioTours()
+        public async Task<AudioTourListResponse> GetAllAudioTours(GetToursRequest request)
         {
-            var tours = await _tourRepository.GetAll();
-            return tours
+            FilterDefinition<Tour>? filter = null; // later
+            SortDefinition<Tour>? sort = null;
+
+            if (!string.IsNullOrEmpty(request.Sort))
+            {
+                switch (request.Sort)
+                {
+                    case "ratingDesc":
+                        sort = Builders<Tour>.Sort.Descending(t => t.AvgRating);
+                        break;
+                    case "createdAtDesc":
+                        sort = Builders<Tour>.Sort.Descending(t => t.CreatedAt);
+                        break;
+                    default:
+                        throw new KeyNotFoundException("Invalid Sorting Criteria!");
+                }
+            }
+            var tours = await _tourRepository.Search(filter, sort, request.Top, request.PageIndex, request.PageSize);
+            var dtos = tours
                 .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapAudioTourToDTO)
                 .ToList();
+            int countAll = await _tourRepository.Count(filter);
+            int count = request.Top.HasValue ? request.Top.Value : countAll;
+            var pagedResponse = new PaginationResponse<TourDTO>(request.PageIndex ?? 1, request.PageSize ?? 5, count, dtos);
+            
+            return new AudioTourListResponse
+            {
+                Success = true,
+                Message = "Audio tour list retrieved successfully",
+                Response = pagedResponse
+            }; 
         }
 
         public async Task<AudioTourResponse> GetAudioTourById(string id)
@@ -108,6 +138,6 @@ namespace Audivia.Application.Services.Implemetation
             await _tourRepository.Update(tour);
         }
 
-        
+
     }
 }
