@@ -1,4 +1,4 @@
-name: Audivia-Backend
+name: audivia-backend
 
 on:
     workflow_dispatch:
@@ -8,11 +8,11 @@ on:
 
 env:
     AZURE_WEBAPP_NAME: audivia-backend
-    AZURE_WEBAPP_PACKAGE_PATH: "./Audivia.API/Audivia.API/publish"
+    AZURE_WEBAPP_PACKAGE_PATH: Audivia.API/Audivia.API/publish
     DOTNET_VERSION: "8.x"
-    SOLUTION_PATH: "Audivia.API/Audivia.sln"
-    API_PROJECT_PATH: "Audivia.API/Audivia.API"
-    PUBLISH_DIR: "./Audivia.API/publish"
+    SOLUTION_PATH: Audivia.API/Audivia.sln
+    API_PROJECT_PATH: Audivia.API/Audivia.API
+    PUBLISH_DIR: Audivia.API/Audivia.API/publish
 
 jobs:
   build-and-test:
@@ -37,7 +37,7 @@ jobs:
         run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-restore --no-build --verbosity normal
 
       - name: Publish
-        run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore --no-build --property:PublishDir=${{ env.PUBLISH_DIR }}
+        run: dotnet publish ${{ env.API_PROJECT_PATH }} --configuration Release --no-restore --no-build --output ${{ env.PUBLISH_DIR }}
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
