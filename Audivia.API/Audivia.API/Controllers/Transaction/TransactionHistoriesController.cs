@@ -49,5 +49,13 @@ namespace Audivia.API.Controllers.Transaction
             await _transactionHistoryService.DeleteTransactionHistory(id);
             return NoContent();
         }
+
+        [HttpGet("transaction/{userId}")]
+        public async Task<IActionResult> GetHistoryTransactionByUser(string userId)
+        {
+            var rs = await _transactionHistoryService.GetTransactionHistoryByUserId(userId);
+            return Ok(rs);
+        }
+
     }
 }

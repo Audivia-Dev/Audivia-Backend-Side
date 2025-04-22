@@ -1,6 +1,8 @@
-﻿using Audivia.Application.Services.Interface;
+﻿using Audivia.Application.Services.Implemetation;
+using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Audivia.API.Controllers.Auth
 {
@@ -15,12 +17,19 @@ namespace Audivia.API.Controllers.Auth
         }
 
         // register
-        //[HttpPost]
-        //public async Task<IActionResult> Register([FromBody] UserCreateRequest request)
-        //{
-        //    var result = await _userService.CreateUser(request);
-        //    return Ok(result);
-        //}
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            var result = await _authService.Register(request);
+            return Ok(result);
+        }
+
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] ConfirmEmailRequest request)
+        {
+            var result = await _authService.VerifyEmail(request);
+            return Ok(result);
+        }
 
         // login
         [HttpPost("Login")]

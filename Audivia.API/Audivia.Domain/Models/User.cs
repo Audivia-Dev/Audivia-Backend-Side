@@ -40,6 +40,12 @@ public class User
 
     [BsonElement("is_deleted")]
     public bool IsDeleted { get; set; } = false;
+    
+    [BsonElement("confirmed_email")]
+    public bool ConfirmedEmail { get; set; }
+
+    [BsonElement("token_confirm_email")]
+    public string? TokenConfirmEmail { get; set; }
 
     [BsonElement("role_id")]
     [BsonRepresentation(BsonType.ObjectId)]
