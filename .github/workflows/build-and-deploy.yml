@@ -27,6 +27,12 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Create appsettings.json
+        run: |
+          echo "$APPSETTINGS_JSON" > ${{ env.API_PROJECT_PATH }}/appsettings.json
+        env:
+          APPSETTINGS_JSON: ${{ secrets.APPSETTINGS_PRODUCTION }}
+
       - name: Restore
         run: dotnet restore ${{ env.SOLUTION_PATH }}
 
