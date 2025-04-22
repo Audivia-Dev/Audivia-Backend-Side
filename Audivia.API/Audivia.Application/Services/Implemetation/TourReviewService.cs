@@ -39,7 +39,7 @@ namespace Audivia.Application.Services.Implemetation
                 IsDeleted = false
             };
 
-            tour.AvgRating = 
+            //tour.AvgRating = 
             await _tourReviewRepository.Create(tourReview);
 
             return new TourReviewResponse
