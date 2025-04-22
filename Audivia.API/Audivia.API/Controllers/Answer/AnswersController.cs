@@ -1,17 +1,15 @@
-﻿using Audivia.Application.Services.Implemetation;
-using Audivia.Application.Services.Interface;
+﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Answer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Answer
 {
-    [Route("api/v1/Answers")]
+    [Route("api/v1/answers")]
     [ApiController]
-    public class AnswerController : ControllerBase
+    public class AnswersController : ControllerBase
     {
         private readonly IAnswerService _answerService;
-        public AnswerController(IAnswerService answerService)
+        public AnswersController(IAnswerService answerService)
         {
             _answerService = answerService;
         }

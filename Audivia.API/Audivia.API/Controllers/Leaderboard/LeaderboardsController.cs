@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Leaderboard
 {
-    [Route("api/v1/Leaderboards")]
+    [Route("api/v1/leaderboards")]
     [ApiController]
-    public class LeaderboardController : ControllerBase
+    public class LeaderboardsController : ControllerBase
     {
         private readonly ILeaderboardService _service;
 
-        public LeaderboardController(ILeaderboardService service)
+        public LeaderboardsController(ILeaderboardService service)
         {
             _service = service;
         }

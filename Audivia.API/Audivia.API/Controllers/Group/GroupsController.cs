@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Group
 {
-    [Route("api/v1/Groups")]
+    [Route("api/v1/groups")]
     [ApiController]
-    public class GroupController : ControllerBase
+    public class GroupsController : ControllerBase
     {
         private readonly IGroupService _groupService;
 
-        public GroupController(IGroupService groupService)
+        public GroupsController(IGroupService groupService)
         {
             _groupService = groupService;
         }

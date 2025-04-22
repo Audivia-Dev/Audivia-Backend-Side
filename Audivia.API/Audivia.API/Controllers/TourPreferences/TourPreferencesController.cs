@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.TourPreferences
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/tour-preferences")]
     [ApiController]
     public class TourPreferencesController : ControllerBase
     {

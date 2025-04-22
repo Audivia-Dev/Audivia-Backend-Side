@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.AudioCharacter
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/audio-characters")]
     [ApiController]
     public class AudioCharactersController : ControllerBase
     {

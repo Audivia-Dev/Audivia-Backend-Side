@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.UserResponse
 {
-    [Route("api/v1/UserResponses")]
+    [Route("api/v1/user-responses")]
     [ApiController]
-    public class UserResponseController : ControllerBase
+    public class UserResponsesController : ControllerBase
     {
         private readonly IUserResponseService _userResponseService;
 
-        public UserResponseController(IUserResponseService userResponseService)
+        public UserResponsesController(IUserResponseService userResponseService)
         {
             _userResponseService = userResponseService;
         }

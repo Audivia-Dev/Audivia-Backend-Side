@@ -1,4 +1,3 @@
-
 using Audivia.API.Middlewares;
 using Audivia.Application;
 using Audivia.Domain.Commons.Mail;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
-using System.Reflection;
 using System.Text;
 
 namespace Audivia.API

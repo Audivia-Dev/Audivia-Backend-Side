@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.TourType
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/tour-types")]
     [ApiController]
-    public class TourTypeController : ControllerBase
+    public class TourTypesController : ControllerBase
     {
         private readonly ITourTypeService _tourTypeService;
 
-        public TourTypeController(ITourTypeService tourTypeService)
+        public TourTypesController(ITourTypeService tourTypeService)
         {
             _tourTypeService = tourTypeService;
         }
