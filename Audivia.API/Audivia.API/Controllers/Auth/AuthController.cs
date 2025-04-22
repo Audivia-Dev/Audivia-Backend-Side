@@ -28,7 +28,7 @@ namespace Audivia.API.Controllers.Auth
         public async Task<IActionResult> VerifyEmail([FromQuery] ConfirmEmailRequest request)
         {
             var result = await _authService.VerifyEmail(request);
-            return Ok(result);
+            return Content(result, "text/html");
         }
 
         // login
@@ -40,6 +40,15 @@ namespace Audivia.API.Controllers.Auth
         }
 
         // get current user profile
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var profile = await _authService.GetCurrentUserAsync(User);
+            if (profile == null)
+                return Unauthorized(new { Message = "Invalid or expired token." });
+
+            return Ok(profile);
+        }
 
     }
 }
