@@ -17,7 +17,7 @@ namespace Audivia.Domain.DTOs
         public string? TypeId { get; set; }
 
         public string? ThumbnailUrl { get; set; }
-        public float? AvgRating { get; set; }
+        public double AvgRating { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

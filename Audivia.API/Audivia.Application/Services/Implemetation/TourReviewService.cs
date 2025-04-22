@@ -5,6 +5,8 @@ using Audivia.Domain.ModelResponses.TourReview;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -25,7 +27,15 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid created by value!");
             }
-            Tour tour = await _tourRepository.GetById(request.TourId) ?? throw new KeyNotFoundException("Tour not found!");
+
+            Tour tour = await _tourRepository.FindFirst(t => t.Id == request.TourId && !t.IsDeleted) ?? throw new KeyNotFoundException("Tour not found!");
+
+            TourReview? existedReview = await _tourReviewRepository.FindFirst(t => t.TourId == request.TourId && t.CreatedBy == request.CreatedBy);
+            if (existedReview != null)
+            {
+                throw new HttpRequestException("You reviewed this tour!");
+            }
+
             var tourReview = new TourReview
             {
                 TourId = request.TourId,
@@ -39,8 +49,14 @@ namespace Audivia.Application.Services.Implemetation
                 IsDeleted = false
             };
 
-            //tour.AvgRating = 
             await _tourReviewRepository.Create(tourReview);
+
+            // update avg rating of the reviewed tour            
+            if (request.Rating.HasValue)
+            {
+                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                await _tourRepository.Update(tour);
+            }
 
             return new TourReviewResponse
             {
@@ -98,6 +114,9 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid user try to update tourReview");
             }
+
+            Tour tour = await _tourRepository.FindFirst(t => t.Id == tourReview.TourId && !t.IsDeleted) ?? throw new KeyNotFoundException("Tour not found!");
+
             tourReview.Title = request.Title ?? tourReview.Title;
             tourReview.Content = request.Content ?? tourReview.Content;
             tourReview.ImageUrl = request.ImageUrl ?? tourReview.ImageUrl;
@@ -105,6 +124,13 @@ namespace Audivia.Application.Services.Implemetation
             tourReview.UpdatedAt = DateTime.UtcNow;
 
             await _tourReviewRepository.Update(tourReview);
+
+            // update average rating of the reviewed tour
+            if (request.Rating.HasValue)
+            {
+                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                await _tourRepository.Update(tour);
+            }
         }
 
         public async Task DeleteTourReview(string id)
@@ -120,6 +146,21 @@ namespace Audivia.Application.Services.Implemetation
             tourReview.UpdatedAt = DateTime.UtcNow;
 
             await _tourReviewRepository.Update(tourReview);
+        }
+
+        private async Task<double> CalculateAverageRatingAsync(string tourId)
+        {
+            FilterDefinition<TourReview>? filter = Builders<TourReview>.Filter.Eq(r => r.TourId, tourId);
+            var tourReviews = await _tourReviewRepository.Search(filter, null, null, null, null);
+            var validRatings = tourReviews
+                                .Where(r => r.Rating.HasValue)
+                                .Select(r => r.Rating!.Value)
+                                .ToList();
+
+            if (!validRatings.Any())
+                return 0;
+
+            return validRatings.Average();
         }
     }
 }
