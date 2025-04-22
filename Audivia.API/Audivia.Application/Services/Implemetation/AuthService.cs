@@ -1,6 +1,7 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Application.Utils.Helper;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Auth;
 using Audivia.Domain.ModelRequests.Mail;
 using Audivia.Domain.ModelResponses.Auth;
@@ -69,7 +70,7 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request)
+        public async Task<string> VerifyEmail(ConfirmEmailRequest request)
         {
             var user = await _userRepository.GetByTokenConfirm(request.Token);
             if (user == null)
@@ -85,11 +86,7 @@ namespace Audivia.Application.Services.Implemetation
                 Subject = "[Audivia] Welcome to Audivia",
                 Body = EmailContent.WelcomeEmail(user.Username ?? "New Customer")
             });
-            return new ConfirmEmailResponse
-            {
-                Message = "Registered successfully!",
-                Success = true
-            };
+            return ConfirmEmailResponse.VerifyEmailResponse("");
         }
 
         public async Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request)
@@ -115,6 +112,20 @@ namespace Audivia.Application.Services.Implemetation
                 AccessToken = accessToken,
                 RefreshToken = refeshToken
             };
+        }
+
+        public async Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims)
+        {
+            var username = userClaims.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(username))
+                return null;
+
+            var user = await _userRepository.FindFirst(u => u.Username == username);
+            if (user == null)
+                return null;
+
+            return ModelMapper.MapUserToDTO(user);
         }
 
         private async Task<string> GenerateAccessToken(User user)
