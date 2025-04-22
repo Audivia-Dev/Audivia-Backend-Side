@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Route
 {
-    [Route("api/v1/Routes")]
+    [Route("api/v1/routes")]
     [ApiController]
-    public class RouteController : ControllerBase
+    public class RoutesController : ControllerBase
     {
         private readonly IRouteService _routeService;
-        public RouteController(IRouteService routeService)
+        public RoutesController(IRouteService routeService)
         {
             _routeService = routeService;
         }

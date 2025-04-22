@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Post
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/posts")]
     [ApiController]
     public class PostsController : ControllerBase
     {

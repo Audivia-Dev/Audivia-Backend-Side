@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.PlaySession
 {
-    [Route("api/v1/PlaySessions")]
+    [Route("api/v1/play-sessions")]
     [ApiController]
-    public class PlaySessionController : ControllerBase
+    public class PlaySessionsController : ControllerBase
     {
         private readonly IPlaySessionService _playSessionService;
 
-        public PlaySessionController(IPlaySessionService playSessionService)
+        public PlaySessionsController(IPlaySessionService playSessionService)
         {
             _playSessionService = playSessionService;
         }

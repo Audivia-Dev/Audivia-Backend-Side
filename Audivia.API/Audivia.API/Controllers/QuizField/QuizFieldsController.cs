@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.QuizField
 {
-    [Route("api/v1/QuizFields")]
+    [Route("api/v1/quiz-fields")]
     [ApiController]
-    public class QuizFieldController : ControllerBase
+    public class QuizFieldsController : ControllerBase
     {
         private IQuizFieldService _quizFieldService;
-        public QuizFieldController(IQuizFieldService quizFieldService)
+        public QuizFieldsController(IQuizFieldService quizFieldService)
         {
             _quizFieldService = quizFieldService;
         }

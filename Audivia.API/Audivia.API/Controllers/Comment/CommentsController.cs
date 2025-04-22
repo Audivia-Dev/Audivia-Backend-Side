@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Comment
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/comments")]
     [ApiController]
     public class CommentsController : ControllerBase
     {

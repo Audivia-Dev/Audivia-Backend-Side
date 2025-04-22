@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.UserTourProgress
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/user-tour-progress")]
     [ApiController]
     public class UserTourProgressController : ControllerBase
     {

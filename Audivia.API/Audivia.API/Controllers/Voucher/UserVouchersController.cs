@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Voucher
 {
-    [Route("api/v1/UserVouchers")]
+    [Route("api/v1/user-vouchers")]
     [ApiController]
-    public class UserVoucherController : ControllerBase
+    public class UserVouchersController : ControllerBase
     {
         private readonly IUserVoucherService _userVoucherService;
 
-        public UserVoucherController(IUserVoucherService userVoucherService)
+        public UserVouchersController(IUserVoucherService userVoucherService)
         {
             _userVoucherService = userVoucherService;
         }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Transaction
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/transaction-histories")]
     [ApiController]
     public class TransactionHistoriesController : ControllerBase
     {

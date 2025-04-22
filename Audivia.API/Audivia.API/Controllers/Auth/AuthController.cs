@@ -6,7 +6,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Audivia.API.Controllers.Auth
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace Audivia.API.Controllers.Auth
         }
 
         // login
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginWithEmailAndPassword(request);
