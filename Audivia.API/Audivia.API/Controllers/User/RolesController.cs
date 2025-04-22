@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.User
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/roles")]
     [ApiController]
     public class RolesController : ControllerBase
     {

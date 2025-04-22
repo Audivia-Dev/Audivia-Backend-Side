@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.UserLocationVisit
 {
-    [Route("api/v1/UserLocationVisits")]
+    [Route("api/v1/user-location-visits")]
     [ApiController]
-    public class UserLocationVisitController : ControllerBase
+    public class UserLocationVisitsController : ControllerBase
     {
         private readonly IUserLocationVisitService _userLocationVisitService;
 
-        public UserLocationVisitController(IUserLocationVisitService userLocationVisitService)
+        public UserLocationVisitsController(IUserLocationVisitService userLocationVisitService)
         {
             _userLocationVisitService = userLocationVisitService;
         }

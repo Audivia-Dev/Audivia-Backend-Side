@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.CheckpointImage
 {
-    [Route("api/v1/CheckpointImages")]
+    [Route("api/v1/checkpoint-images")]
     [ApiController]
-    public class CheckpointImageController : ControllerBase
+    public class CheckpointImagesController : ControllerBase
     {
         private readonly ICheckpointImageService _service;
 
-        public CheckpointImageController(ICheckpointImageService service)
+        public CheckpointImagesController(ICheckpointImageService service)
         {
             _service = service;
         }

@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.AudioTour
 {
-    [Route("api/v1/Tours")]
+    [Route("api/v1/tours")]
     [ApiController]
-    public class TourController : ControllerBase
+    public class ToursController : ControllerBase
     {
         private readonly ITourService _tourService;
 
-        public TourController(ITourService tourService)
+        public ToursController(ITourService tourService)
         {
             _tourService = tourService;
         }

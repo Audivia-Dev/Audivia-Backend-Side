@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.UserFollow
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/user-follows")]
     [ApiController]
     public class UserFollowsController : ControllerBase
     {

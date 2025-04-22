@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.ChatRoom
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/chat-rooms")]
     [ApiController]
     public class ChatRoomsController : ControllerBase
     {

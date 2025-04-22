@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Message
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/messages")]
     [ApiController]
     public class MessagesController : ControllerBase
     {

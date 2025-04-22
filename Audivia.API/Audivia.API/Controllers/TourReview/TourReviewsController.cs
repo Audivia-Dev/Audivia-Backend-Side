@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.TourReview
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/tour-reviews")]
     [ApiController]
     public class TourReviewsController : ControllerBase
     {
