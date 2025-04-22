@@ -32,6 +32,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Duration = tour.Duration,
                 TypeId = tour.TypeId,
                 ThumbnailUrl = tour.ThumbnailUrl,
+                AvgRating = tour.AvgRating,
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
                 UpdatedAt = tour.UpdatedAt

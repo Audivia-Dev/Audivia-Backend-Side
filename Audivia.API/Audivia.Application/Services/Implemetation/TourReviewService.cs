@@ -11,10 +11,12 @@ namespace Audivia.Application.Services.Implemetation
     public class TourReviewService : ITourReviewService
     {
         private readonly ITourReviewRepository _tourReviewRepository;
+        private readonly ITourRepository _tourRepository;
 
-        public TourReviewService(ITourReviewRepository tourReviewRepository)
+        public TourReviewService(ITourReviewRepository tourReviewRepository, ITourRepository tourRepository)
         {
             _tourReviewRepository = tourReviewRepository;
+            _tourRepository = tourRepository;
         }
 
         public async Task<TourReviewResponse> CreateTourReview(CreateTourReviewRequest request)
@@ -23,17 +25,21 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid created by value!");
             }
+            Tour tour = await _tourRepository.GetById(request.TourId) ?? throw new KeyNotFoundException("Tour not found!");
             var tourReview = new TourReview
             {
+                TourId = request.TourId,
                 Title = request.Title,
                 Content = request.Content,
                 ImageUrl = request.ImageUrl,
+                Rating = request.Rating,
                 CreatedBy = request.CreatedBy,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
 
+            tour.AvgRating = 
             await _tourReviewRepository.Create(tourReview);
 
             return new TourReviewResponse
