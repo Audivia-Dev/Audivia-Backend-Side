@@ -68,7 +68,7 @@ namespace Audivia.Application.Services.Implemetation
             return new UserResponse
             {
                 Success = true,
-                Message = "Audio tour retrieved successfully",
+                Message = "User retrieved successfully",
                 Response = ModelMapper.MapUserToDTO(tour)
             };
         }
