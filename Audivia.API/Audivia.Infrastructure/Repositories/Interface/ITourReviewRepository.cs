@@ -4,5 +4,6 @@ namespace Audivia.Infrastructure.Repositories.Interface
 {
     public interface ITourReviewRepository : IBaseRepository<TourReview>, IDisposable
     {
+        Task<int> CountTourReviews();
     }
 }
