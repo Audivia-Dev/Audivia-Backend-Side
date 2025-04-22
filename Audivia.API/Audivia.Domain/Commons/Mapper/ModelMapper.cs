@@ -15,10 +15,19 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = user.Id,
                 Email = user.Email,
                 UserName = user.Username,
+                FullName = user.FullName,
+                Phone = user.Phone,
+                AvatarUrl = user.AvatarUrl,
+                Bio = user.Bio,
+                BalanceWallet = user.BalanceWallet,
+                AudioCharacterId = user.AudioCharacterId,
+                AutoPlayDistance = user.AutoPlayDistance,
+                TravelDistance = user.TravelDistance,
+                RoleId = user.RoleId,
+                ConfirmedEmail = user.ConfirmedEmail,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
                 IsDeleted = user.IsDeleted,
-                ConfirmedEmail = user.ConfirmedEmail,
             };
         }
         public static TourDTO MapAudioTourToDTO(Tour tour)
