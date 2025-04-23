@@ -20,7 +20,7 @@ namespace Audivia.API.Controllers.Payment
             _paymentService = paymentService;
             _payOSService = payOSService;
         }
-        [Authorize]
+       // [Authorize]
         [HttpPost("vietqr")]
         public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest req)
         {
@@ -28,6 +28,7 @@ namespace Audivia.API.Controllers.Payment
             return Ok(new { qrCode = qr });
         }
 
+      //  [AllowAnonymous]
         [HttpPost("webhook")]
         public async Task<IActionResult> HandleWebhook([FromBody] JsonElement payload)
         {
