@@ -1,4 +1,5 @@
-﻿using Audivia.Domain.ModelRequests.PaymentTransaction;
+﻿using Audivia.Domain.ModelRequests.Payment;
+using Audivia.Domain.ModelRequests.PaymentTransaction;
 using Audivia.Domain.ModelResponses.PaymentTransaction;
 using Audivia.Domain.Models;
 using System;

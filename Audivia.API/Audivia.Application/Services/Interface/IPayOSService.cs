@@ -13,5 +13,6 @@ namespace Audivia.Application.Services.Interface
     {
         Task<string> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl);
         bool VerifyWebhook(PayOSWebhookRequest requestPayOSWebhookRequest);
+        Task ConfirmWebhookAsync();
     }
 }

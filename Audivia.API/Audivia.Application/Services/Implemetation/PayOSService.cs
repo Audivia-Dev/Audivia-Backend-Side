@@ -77,5 +77,22 @@ namespace Audivia.Application.Services.Implemetation
             var raw = $"{req.OrderCode}{req.Amount}{req.Description}{req.Status}{req.PaymentTime}";
             return GenerateSignature(raw) == req.Signature;
         }
+
+        public async Task ConfirmWebhookAsync()
+        {
+            var payload = new
+            {
+                webhookUrl = "https://audivia-backend.azurewebsites.net/api/payment/webhook"
+            };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("x-client-id", ClientId);
+            client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+
+            var res = await client.PostAsync("https://api-merchant.payos.vn/confirm-webhook", content);
+            res.EnsureSuccessStatusCode();
+        }
     }
 }

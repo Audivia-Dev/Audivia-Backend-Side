@@ -57,9 +57,9 @@ namespace Audivia.Application
             service.AddScoped<IMailService, MailService>();
 
 
-            service.AddScoped<IPayOSService, PayOSService>();
-
-            service.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
+            service.AddScoped<IPayOSService, PayOSService>(); //communicate with pay os
+            service.AddScoped<IPaymentTransactionService, PaymentTransactionService>();//store db
+            service.AddScoped<IPaymentService, PaymentService>(); // contain logic 
             return service;
         }
     }

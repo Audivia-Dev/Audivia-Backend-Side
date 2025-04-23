@@ -98,6 +98,7 @@ namespace Audivia.API
 
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 

@@ -1,10 +1,13 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
+using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Domain.ModelRequests.PaymentTransaction;
 using Audivia.Domain.ModelResponses.PaymentTransaction;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +20,11 @@ namespace Audivia.Application.Services.Implemetation
     public class PaymentTransactionService : IPaymentTransactionService
     {
         private readonly IPaymentTransactionRepository _paymentTransactionRepository;
-        public PaymentTransactionService(IPaymentTransactionRepository paymentTransactionRepository)
+        private readonly IAuthService _authService;
+        public PaymentTransactionService(IPaymentTransactionRepository paymentTransactionRepository, IAuthService authService)
         {
             _paymentTransactionRepository = paymentTransactionRepository;
+            _authService = authService;
         }
         public async Task<PaymentTransaction> GetByOrderCodeAsync(int orderCode)
         {
@@ -38,11 +43,10 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-            Random random = new Random();
             var transaction = new PaymentTransaction
             {
 
-                OrderCode = random.Next(1, 100000000),
+                OrderCode = request.OrderCode,
                 Amount = request.Amount,
                 CreatedAt = DateTime.UtcNow,
                 Description = request.Description,
@@ -99,6 +103,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             throw new NotImplementedException();
         }
+
 
     }
 }
