@@ -18,5 +18,7 @@ namespace Audivia.Application.Services.Interface
 
         // get profile
         Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims);
+
+        Task<UserDTO?> GetCurrentUserAsync();
     }
 }

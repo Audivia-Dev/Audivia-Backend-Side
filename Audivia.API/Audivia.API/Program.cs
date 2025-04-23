@@ -1,6 +1,7 @@
 using Audivia.API.Middlewares;
 using Audivia.Application;
 using Audivia.Domain.Commons.Mail;
+using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Infrastructure;
 using Audivia.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,6 +97,8 @@ namespace Audivia.API
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
+            builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 

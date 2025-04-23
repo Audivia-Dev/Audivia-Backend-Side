@@ -522,5 +522,21 @@ namespace Audivia.Domain.Commons.Mapper
                 JoinedAt = member.JoinedAt
             };
          }
+
+        public static PaymentTransactionDTO MapPaymentTransactioToDTO(PaymentTransaction paymentTransaction)
+        {
+            return new PaymentTransactionDTO
+            {
+                Id = paymentTransaction.Id,
+                OrderCode = paymentTransaction.OrderCode,
+                UserId = paymentTransaction.UserId,
+                Amount = paymentTransaction.Amount,
+                CreatedAt = paymentTransaction.CreatedAt,
+                Description = paymentTransaction.Description,
+                PaymentTime = paymentTransaction.PaymentTime,
+                Status = paymentTransaction.Status,
+
+            };
+        }
     }
 }

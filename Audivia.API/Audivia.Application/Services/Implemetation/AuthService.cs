@@ -7,24 +7,29 @@ using Audivia.Domain.ModelRequests.Mail;
 using Audivia.Domain.ModelResponses.Auth;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+
 
 namespace Audivia.Application.Services.Implemetation
 {
     public class AuthService : IAuthService
     {
+        
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _configuration = configuration;
             _mailService = mailService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RegisterResponse> Register(RegisterRequest request)
@@ -155,6 +160,15 @@ namespace Audivia.Application.Services.Implemetation
             };
             var refreshToken = JWTUtils.CreateRefreshToken(claims, _configuration, DateTime.UtcNow);
             return new JwtSecurityTokenHandler().WriteToken(refreshToken).ToString();
+        }
+
+        public async Task<UserDTO?> GetCurrentUserAsync()
+        {
+            var userClaims = _httpContextAccessor.HttpContext?.User;
+            if (userClaims == null)
+                return null;
+
+            return await GetCurrentUserAsync(userClaims); // gọi lại hàm cũ
         }
     }
 }
