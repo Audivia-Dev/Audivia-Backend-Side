@@ -91,7 +91,6 @@ namespace Audivia.Application.Services.Implemetation
             user.AudioCharacterId = request.AudioCharacterId ?? user.AudioCharacterId;
             user.AutoPlayDistance = request.AutoPlayDistance ?? user.AutoPlayDistance;
             user.TravelDistance = request.TravelDistance ?? user.TravelDistance;
-            user.RoleId = request.RoleId ?? user.RoleId;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.Update(user);
