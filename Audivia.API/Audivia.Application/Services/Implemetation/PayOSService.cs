@@ -9,6 +9,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -78,21 +79,64 @@ namespace Audivia.Application.Services.Implemetation
             return GenerateSignature(raw) == req.Signature;
         }
 
+        //public async Task ConfirmWebhookAsync()
+        //{
+
+        //    var payload = new
+        //    {
+        //        webhookUrl = "https://audivia-backend.azurewebsites.net/api/payment/webhook"
+        //    };
+        //    var json = JsonSerializer.Serialize(payload);
+        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //    using var client = new HttpClient();
+        //    client.DefaultRequestHeaders.Add("x-client-id", ClientId);
+        //    client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //    var res = await client.PostAsync("https://api-merchant.payos.vn/confirm-webhook", content);
+        //    res.EnsureSuccessStatusCode();
+        //}
         public async Task ConfirmWebhookAsync()
         {
-            var payload = new
-            {
-                webhookUrl = "https://audivia-backend.azurewebsites.net/api/payment/webhook"
-            };
-            var json = JsonSerializer.Serialize(payload);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
             using var client = new HttpClient();
+
+            // 1. Thiết lập headers CHUẨN
             client.DefaultRequestHeaders.Add("x-client-id", ClientId);
             client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var res = await client.PostAsync("https://api-merchant.payos.vn/confirm-webhook", content);
-            res.EnsureSuccessStatusCode();
+            // 2. Tạo payload CHUẨN
+            var payload = new
+            {
+                webhookUrl = "https://audivia-backend.azurewebsites.net/api/v1/payment/webhook" // Thay bằng URL thực tế
+            };
+            var content = new StringContent(
+                JsonSerializer.Serialize(payload),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            try
+            {
+                // 3. Gửi request đến URL CHÍNH XÁC
+                var response = await client.PostAsync(
+                    "https://api-merchant.payos.vn/confirm-webhook", // ĐÚNG endpoint
+                    content
+                );
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Response: {responseBody}");
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"LỖI: {ex.Message}");
+                if (ex.StatusCode.HasValue)
+                    Console.WriteLine($"HTTP Status: {ex.StatusCode}");
+            }
         }
+
     }
+
 }
