@@ -108,7 +108,7 @@ namespace Audivia.Application.Services.Implemetation
             // 2. Tạo payload CHUẨN
             var payload = new
             {
-                webhookUrl = "https://audivia-backend.azurewebsites.net/api/v1/payment/webhook" // Thay bằng URL thực tế
+                webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url" // Thay bằng URL thực tế
             };
             var content = new StringContent(
                 JsonSerializer.Serialize(payload),
