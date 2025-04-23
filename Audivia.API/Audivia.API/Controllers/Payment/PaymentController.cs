@@ -28,6 +28,7 @@ namespace Audivia.API.Controllers.Payment
             return Ok(new { qrCode = qr });
         }
 
+        [AllowAnonymous]
         [HttpPost("webhook")]
         public async Task<IActionResult> HandleWebhook([FromBody] JsonElement payload)
         {
