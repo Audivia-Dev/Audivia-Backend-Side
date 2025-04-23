@@ -49,5 +49,12 @@ namespace Audivia.API.Controllers.Payment
             await _payOSService.ConfirmWebhookAsync();
             return Ok("Webhook URL registered.");
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePayment(string id, int orderCode)
+        {
+            var rs = await _paymentService.HandlePaymentStatus(id, orderCode);
+            return Ok(rs);
+        }
     }
 }

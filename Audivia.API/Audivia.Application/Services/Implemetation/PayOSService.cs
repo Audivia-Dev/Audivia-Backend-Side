@@ -1,6 +1,7 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Domain.ModelRequests.PaymentTransaction;
+using Audivia.Domain.ModelResponses.Payment;
 using Audivia.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -69,7 +70,7 @@ namespace Audivia.Application.Services.Implemetation
 
             var responseJson = await res.Content.ReadAsStringAsync();
             var doc = JsonDocument.Parse(responseJson);
-           
+
             return doc.RootElement.GetProperty("data").GetProperty("checkoutUrl").GetString();
         }
 
@@ -79,64 +80,111 @@ namespace Audivia.Application.Services.Implemetation
             return GenerateSignature(raw) == req.Signature;
         }
 
-        //public async Task ConfirmWebhookAsync()
-        //{
-
-        //    var payload = new
-        //    {
-        //        webhookUrl = "https://audivia-backend.azurewebsites.net/api/payment/webhook"
-        //    };
-        //    var json = JsonSerializer.Serialize(payload);
-        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        //    using var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Add("x-client-id", ClientId);
-        //    client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
-        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //    var res = await client.PostAsync("https://api-merchant.payos.vn/confirm-webhook", content);
-        //    res.EnsureSuccessStatusCode();
-        //}
         public async Task ConfirmWebhookAsync()
         {
-            using var client = new HttpClient();
+            var payload = new
+            {
+                webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url"
+            };
+            var json = JsonSerializer.Serialize(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // 1. Thiết lập headers CHUẨN
+            using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("x-client-id", ClientId);
             client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            // 2. Tạo payload CHUẨN
-            var payload = new
+            var res = await client.PostAsync("https://api-merchant.payos.vn/confirm-webhook", content);
+            var responseBody = await res.Content.ReadAsStringAsync();
+
+            Console.WriteLine($"PayOS response: {responseBody}"); // Quan trọng nhất
+            if (!res.IsSuccessStatusCode)
             {
-                webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url" // Thay bằng URL thực tế
-            };
-            var content = new StringContent(
-                JsonSerializer.Serialize(payload),
-                Encoding.UTF8,
-                "application/json"
-            );
-
-            try
-            {
-                // 3. Gửi request đến URL CHÍNH XÁC
-                var response = await client.PostAsync(
-                    "https://api-merchant.payos.vn/confirm-webhook", // ĐÚNG endpoint
-                    content
-                );
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Response: {responseBody}");
-
-                response.EnsureSuccessStatusCode();
+                Console.WriteLine($"Yêu cầu thất bại với mã trạng thái: {res.StatusCode}");
+                throw new HttpRequestException($"Không thể đăng ký webhook: {responseBody}");
             }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"LỖI: {ex.Message}");
-                if (ex.StatusCode.HasValue)
-                    Console.WriteLine($"HTTP Status: {ex.StatusCode}");
-            }
+            res.EnsureSuccessStatusCode();
         }
 
+        //public async Task ConfirmWebhookAsync()
+        //{
+        //    using var client = new HttpClient();
+
+        //    // 1. Thiết lập headers CHUẨN
+        //    client.DefaultRequestHeaders.Add("x-client-id", ClientId);
+        //    client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+        //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        //    // 2. Tạo payload CHUẨN
+        //    var payload = new
+        //    {
+        //        webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url" // Thay bằng URL thực tế
+        //    };
+        //    var content = new StringContent(
+        //        JsonSerializer.Serialize(payload),
+        //        Encoding.UTF8,
+        //        "application/json"
+        //    );
+
+        //    try
+        //    {
+        //        // 3. Gửi request đến URL CHÍNH XÁC
+        //        var response = await client.PostAsync(
+        //            "https://api-merchant.payos.vn/confirm-webhook", // ĐÚNG endpoint
+        //            content
+        //        );
+
+        //        var responseBody = await response.Content.ReadAsStringAsync();
+        //        Console.WriteLine($"Response: {responseBody}");
+
+        //        response.EnsureSuccessStatusCode();
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+        //        Console.WriteLine($"LỖI ở : {ex.Message}");
+        //        if (ex.StatusCode.HasValue)
+        //            Console.WriteLine($"HTTP Status: {ex.StatusCode}");
+        //    }
+        //}
+
+
+
+
+
+        public async Task<PaymentResponse> CheckPaymentStatusAsync(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("Id is required!");
+            }
+
+            // Gọi API PayOS
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("x-client-id", ClientId);
+            client.DefaultRequestHeaders.Add("x-api-key", ApiKey);
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            var url = $"https://api-merchant.payos.vn/v2/payment-requests/{id}";
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Not found payment: {errorContent}");
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var jsonDoc = JsonDocument.Parse(responseBody);
+            var data = jsonDoc.RootElement.GetProperty("data");
+            var paymentResponse = new PaymentResponse
+            {
+                Id = data.GetProperty("id").GetString(),
+                OrderCode = data.GetProperty("orderCode").GetInt32(),
+                Amount = data.GetProperty("amount").GetInt32(),
+                Status = data.GetProperty("status").GetString()
+            };
+            return paymentResponse;
+        }
     }
 
 }

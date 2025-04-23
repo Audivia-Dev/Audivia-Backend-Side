@@ -11,5 +11,7 @@ namespace Audivia.Application.Services.Interface
         Task<UserResponse> GetUserById(string id);
         Task UpdateUser(string id, UserUpdateRequest request);
         Task DeleteUser(string id);
+        Task<User> GetById(string id);
+        Task UpdateUser(User user);
     }
 }
