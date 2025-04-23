@@ -15,9 +15,10 @@ namespace Audivia.API.Controllers.Payment
     {
         private readonly IPaymentService _paymentService;
         private readonly IPayOSService _payOSService;
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaymentService paymentService, IPayOSService payOSService)
         {
             _paymentService = paymentService;
+            _payOSService = payOSService;
         }
         [Authorize]
         [HttpPost("vietqr")]
