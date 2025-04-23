@@ -16,6 +16,8 @@ namespace Audivia.Domain.DTOs
 
         public string? TypeId { get; set; }
 
+        public string? TourTypeName { get; set; }
+
         public string? ThumbnailUrl { get; set; }
         public double AvgRating { get; set; }
         public IEnumerable<TourCheckpointDTO>? Checkpoints {  get; set; } 
