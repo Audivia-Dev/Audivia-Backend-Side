@@ -15,10 +15,12 @@ namespace Audivia.Application.Services.Implemetation
     public class TourService : ITourService
     {
         private readonly ITourRepository _tourRepository;
+        private readonly ITourCheckpointRepository _tourCheckpointRepository;
 
-        public TourService(ITourRepository tourRepository)
+        public TourService(ITourRepository tourRepository, ITourCheckpointRepository tourCheckpointRepository)
         {
             _tourRepository = tourRepository;
+            _tourCheckpointRepository = tourCheckpointRepository;
         }
 
         public async Task<AudioTourResponse> CreateAudioTour(CreateTourRequest request)
@@ -91,19 +93,17 @@ namespace Audivia.Application.Services.Implemetation
             var tour = await _tourRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (tour == null)
             {
-                return new AudioTourResponse
-                {
-                    Success = false,
-                    Message = "Audio tour not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Audio tour not found!");
             }
+
+            FilterDefinition<TourCheckpoint>? filter = Builders<TourCheckpoint>.Filter.Eq(r => r.TourId, id);
+            var tourCheckpoints = await _tourCheckpointRepository.Search(filter, null, null, null, null);
 
             return new AudioTourResponse
             {
                 Success = true,
                 Message = "Audio tour retrieved successfully",
-                Response = ModelMapper.MapAudioTourToDTO(tour)
+                Response = ModelMapper.MapTourDetailsToDTO(tour, tourCheckpoints)
             };
         }
 

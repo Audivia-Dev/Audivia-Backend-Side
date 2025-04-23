@@ -13,10 +13,6 @@ namespace Audivia.Domain.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? TourId { get; set; }
 
-        [BsonElement("route_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? RouteId { get; set; }
-
         [BsonElement("title")]
         public string Title { get; set; } = string.Empty;
 

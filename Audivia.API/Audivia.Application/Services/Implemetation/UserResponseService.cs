@@ -1,19 +1,9 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
-using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.UserResponse;
-using Audivia.Domain.ModelResponses.Route;
-using Audivia.Domain.ModelResponses.User;
 using Audivia.Domain.ModelResponses.UserResponse;
-using Audivia.Domain.Models;
-using Audivia.Infrastructure.Repositories.Implemetation;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -48,7 +38,7 @@ namespace Audivia.Application.Services.Implemetation
             return new UserResponseResponse
             {
                 Success = true,
-                Message = "Created route successfully!",
+                Message = "Created user response successfully!",
                 Response = ModelMapper.MapUserResponseToDTO(userResponse),
 
             };
@@ -83,7 +73,7 @@ namespace Audivia.Application.Services.Implemetation
             return new UserResponseListResponse
             {
                 Success = true,
-                Message = "Fetched all Route successfully!",
+                Message = "Fetched all user responses successfully!",
                 Response = rs
             };
         }

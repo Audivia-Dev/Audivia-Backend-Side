@@ -12,7 +12,6 @@ namespace Audivia.Domain.DTOs
     {
         public string Id { get; set; } = string.Empty;
         public string? TourId { get; set; }
-        public string? RouteId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public double Latitude { get; set; }
