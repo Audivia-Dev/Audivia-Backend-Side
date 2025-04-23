@@ -25,6 +25,9 @@ namespace Audivia.Domain.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? TypeId { get; set; }
 
+        [BsonElement("tour_type")]
+        public TourType? TourType { get; set; }
+
         [BsonElement("thumbnail_url")]
         public string? ThumbnailUrl { get; set; }
 

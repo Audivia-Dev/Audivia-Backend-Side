@@ -1,4 +1,5 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Application.Utils.QueryBuilders;
 using Audivia.Domain.Commons.Api;
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
@@ -16,11 +17,13 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly ITourRepository _tourRepository;
         private readonly ITourCheckpointRepository _tourCheckpointRepository;
+        private readonly ITourTypeRepository _tourTypeRepository;
 
-        public TourService(ITourRepository tourRepository, ITourCheckpointRepository tourCheckpointRepository)
+        public TourService(ITourRepository tourRepository, ITourCheckpointRepository tourCheckpointRepository, ITourTypeRepository tourTypeRepository)
         {
             _tourRepository = tourRepository;
             _tourCheckpointRepository = tourCheckpointRepository;
+            _tourTypeRepository = tourTypeRepository;
         }
 
         public async Task<AudioTourResponse> CreateAudioTour(CreateTourRequest request)
@@ -42,6 +45,8 @@ namespace Audivia.Application.Services.Implemetation
                 IsDeleted = false
             };
 
+            //tour type is a sub-document 
+            audioTour.TourType = await _tourTypeRepository.FindFirst(t => t.Id == request.TypeId);
             await _tourRepository.Create(audioTour);
 
             return new AudioTourResponse
@@ -54,30 +59,21 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<AudioTourListResponse> GetAllAudioTours(GetToursRequest request)
         {
-            FilterDefinition<Tour>? filter = null; // later
-            SortDefinition<Tour>? sort = null;
+            var filter = TourQueryBuilder.BuildFilter(request);
+            var sort = TourQueryBuilder.BuildSort(request.Sort);
 
-            if (!string.IsNullOrEmpty(request.Sort))
-            {
-                switch (request.Sort)
-                {
-                    case "ratingDesc":
-                        sort = Builders<Tour>.Sort.Descending(t => t.AvgRating);
-                        break;
-                    case "createdAtDesc":
-                        sort = Builders<Tour>.Sort.Descending(t => t.CreatedAt);
-                        break;
-                    default:
-                        throw new KeyNotFoundException("Invalid Sorting Criteria!");
-                }
-            }
+            // get tours
             var tours = await _tourRepository.Search(filter, sort, request.Top, request.PageIndex, request.PageSize);
             var dtos = tours
                 .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapAudioTourToDTO)
                 .ToList();
+
+            // count all tours with filter
             int countAll = await _tourRepository.Count(filter);
+
             int count = request.Top.HasValue ? request.Top.Value : countAll;
+            
             var pagedResponse = new PaginationResponse<TourDTO>(request.PageIndex ?? 1, request.PageSize ?? 5, count, dtos);
             
             return new AudioTourListResponse
@@ -116,13 +112,21 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid TypeId format.");
             }
+
+            // update type
+            if (!string.IsNullOrEmpty(request.TypeId))
+            {
+                tour.TypeId = request.TypeId;
+                var tourType = await _tourTypeRepository.FindFirst(t => t.Id == request.TypeId);
+                tour.TourType = tourType;
+            }
             tour.Title = request.Title ?? tour.Title;
             tour.Description = request.Description ?? tour.Description;
             tour.Price = request.Price ?? tour.Price;
             tour.Duration = request.Duration ?? tour.Duration;
-            tour.TypeId = request.TypeId ?? tour.TypeId;
             tour.ThumbnailUrl = request.ThumbnailUrl ?? tour.ThumbnailUrl;
             tour.UpdatedAt = DateTime.UtcNow;
+
 
             await _tourRepository.Update(tour);
         }
