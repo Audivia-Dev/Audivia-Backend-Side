@@ -1,7 +1,9 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Domain.ModelRequests.PaymentTransaction;
+using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using Org.BouncyCastle.Bcpg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +19,17 @@ namespace Audivia.Application.Services.Implemetation
         private readonly IPayOSService _payOSService;
         private readonly IAuthService _authService;
         private readonly IPaymentTransactionRepository _transactionRepository;
+        private readonly IUserService _userService;
         public PaymentService(
             IPaymentTransactionService transactionService,
             IPayOSService payOSService,
-            IAuthService authService, IPaymentTransactionRepository transactionRepository)
+            IAuthService authService, IPaymentTransactionRepository transactionRepository, IUserService userService)
         {
             _transactionService = transactionService;
             _payOSService = payOSService;
             _authService = authService;
             _transactionRepository = transactionRepository;
+            _userService = userService;
         }
 
         public async Task<string> CreateVietQRTransactionAsync(CreatePaymentRequest req)
@@ -46,6 +50,42 @@ namespace Audivia.Application.Services.Implemetation
             var qrUrl = await _payOSService.CreateVietQR(transaction, req.CancelUrl, req.ReturnUrl);
             return qrUrl;
         }
+
+
+
+        public async Task<object> HandlePaymentStatus(string id, int orderCode)
+        {
+
+            var paymentResponse = await _payOSService.CheckPaymentStatusAsync(id);
+            if (paymentResponse == null)
+            {
+                return new { Message = "Can not found payment!" };
+            }
+            var transaction = await _transactionService.GetByOrderCode(orderCode);
+            transaction.Status = paymentResponse.Status;
+            transaction.PaymentTime = DateTime.UtcNow;
+            await _transactionService.UpdateTransaction(transaction);
+            if (paymentResponse.Status == "PAID")
+            {
+                var user = await _userService.GetById(transaction.UserId);
+                user.BalanceWallet += transaction.Amount;
+                await _userService.UpdateUser(user);
+            }
+            return new
+            {
+                Message = "Update payment successfully!"
+            };
+        }
+
+
+
+
+
+
+
+
+
+
 
         public async Task ProcessPayOSWebHookAsync(JsonElement payload)
         {
@@ -69,5 +109,7 @@ namespace Audivia.Application.Services.Implemetation
                 await _transactionRepository.Update(transaction);
             }    
         }
+
+
     }
 }
