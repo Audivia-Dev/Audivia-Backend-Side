@@ -5,11 +5,6 @@ using Audivia.Domain.ModelResponses.PlaySession;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -32,7 +27,7 @@ namespace Audivia.Application.Services.Implemetation
             var session = new PlaySession
             {
                 UserId = req.UserId,
-                RouteId = req.RouteId,
+                TourId = req.TourId,
                 GroupId = req.GroupId,
                 StartTime = req.StartTime ?? DateTime.UtcNow,
                 EndTime = req.EndTime,
@@ -61,9 +56,9 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            session.UserId = req.UserId;
-            session.GroupId = req.GroupId;
-            session.RouteId = req.RouteId;
+            session.UserId = req.UserId ?? session.UserId;
+            session.GroupId = req.GroupId ?? session.GroupId;
+            session.TourId = req.TourId ?? session.TourId;
             session.StartTime = req.StartTime ?? session.StartTime;
             session.EndTime = req.EndTime;
 

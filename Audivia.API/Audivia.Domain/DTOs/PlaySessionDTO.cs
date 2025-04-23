@@ -12,7 +12,7 @@ namespace Audivia.Domain.DTOs
     {
         public string Id { get; set; }
         public string? UserId { get; set; }
-        public string? RouteId { get; set; }
+        public string? TourId { get; set; }
         public string? GroupId { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }

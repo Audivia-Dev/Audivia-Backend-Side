@@ -30,7 +30,6 @@ namespace Audivia.Infrastructure
             service.AddScoped<IUserCurrentLocationRepository, UserCurrentLocationRepository>();
             service.AddScoped<IUserLocationVisitRepository, UserLocationVisitRepository>();
             service.AddScoped<IUserResponseRepository, UserResponseRepository>();
-            service.AddScoped<IRouteRepository, RouteRepository>();
             
             service.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>(); 
             service.AddScoped<IUserAudioTourRepository, UserAudioTourRepository>();
