@@ -1,5 +1,6 @@
 ﻿using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Domain.ModelRequests.PaymentTransaction;
+using Audivia.Domain.ModelResponses.Payment;
 using Audivia.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,7 @@ namespace Audivia.Application.Services.Interface
         Task<string> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl);
         bool VerifyWebhook(PayOSWebhookRequest requestPayOSWebhookRequest);
         Task ConfirmWebhookAsync();
+
+        Task<PaymentResponse> CheckPaymentStatusAsync(string id);
     }
 }

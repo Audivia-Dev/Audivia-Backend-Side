@@ -104,6 +104,9 @@ namespace Audivia.Application.Services.Implemetation
             throw new NotImplementedException();
         }
 
-
+        public async Task UpdateTransaction(PaymentTransaction transaction)
+        {
+            await _paymentTransactionRepository.Update(transaction);
+        }
     }
 }

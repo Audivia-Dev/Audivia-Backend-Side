@@ -107,5 +107,15 @@ namespace Audivia.Application.Services.Implemetation
 
             await _userRepository.Update(tour);
         }
+
+        public async Task<User> GetById(string id)
+        {
+            return await _userRepository.GetById(new ObjectId(id));
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            await _userRepository.Update(user);
+        }
     }
 }

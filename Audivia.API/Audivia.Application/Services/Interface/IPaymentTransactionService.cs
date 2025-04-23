@@ -18,5 +18,6 @@ namespace Audivia.Application.Services.Interface
         Task<PaymentTransaction> GetByOrderCode(int orderCode);
 
         Task ConfirmPayment(string orderCode, DateTime paidAt);
+        Task UpdateTransaction(PaymentTransaction transaction);
     }
 }
