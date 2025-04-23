@@ -6,7 +6,7 @@ namespace Audivia.API.Controllers.CheckpointAudio
 {
     public class CheckpointAudiosController
     {
-        [Route("api/v1/[controller]")]
+        [Route("api/v1/checkpoint-audios")]
         [ApiController]
         public class CheckpointAudioController : ControllerBase
         {

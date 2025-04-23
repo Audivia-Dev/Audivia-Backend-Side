@@ -6,7 +6,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Audivia.API.Controllers.Auth
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -28,11 +28,11 @@ namespace Audivia.API.Controllers.Auth
         public async Task<IActionResult> VerifyEmail([FromQuery] ConfirmEmailRequest request)
         {
             var result = await _authService.VerifyEmail(request);
-            return Ok(result);
+            return Content(result, "text/html");
         }
 
         // login
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _authService.LoginWithEmailAndPassword(request);
@@ -40,6 +40,15 @@ namespace Audivia.API.Controllers.Auth
         }
 
         // get current user profile
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var profile = await _authService.GetCurrentUserAsync(User);
+            if (profile == null)
+                return Unauthorized(new { Message = "Invalid or expired token." });
+
+            return Ok(profile);
+        }
 
     }
 }

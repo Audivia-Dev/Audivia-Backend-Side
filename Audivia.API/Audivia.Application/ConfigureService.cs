@@ -54,8 +54,12 @@ namespace Audivia.Application
             service.AddScoped<IChatRoomService, ChatRoomService>();
             service.AddScoped<IChatRoomMemberService, ChatRoomMemberService>();
             service.AddScoped<IMessageService, MessageService>();
-
             service.AddScoped<IMailService, MailService>();
+
+
+            service.AddScoped<IPayOSService, PayOSService>(); //communicate with pay os
+            service.AddScoped<IPaymentTransactionService, PaymentTransactionService>();//store db
+            service.AddScoped<IPaymentService, PaymentService>(); // contain logic 
             return service;
         }
     }

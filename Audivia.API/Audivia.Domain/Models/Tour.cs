@@ -28,6 +28,9 @@ namespace Audivia.Domain.Models
         [BsonElement("thumbnail_url")]
         public string? ThumbnailUrl { get; set; }
 
+        [BsonElement("avg_rating")]
+        public double AvgRating { get; set; } = 0;
+
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
 

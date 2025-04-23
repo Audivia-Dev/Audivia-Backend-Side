@@ -74,5 +74,44 @@ namespace Audivia.Infrastructure.Repository
             var idProp = typeof(T).GetProperty("Id") ?? typeof(T).GetProperty("_id");
             return idProp?.GetValue(entity);
         }
+
+        public async Task<IEnumerable<T>> Search(
+            FilterDefinition<T>? filter = null,
+            SortDefinition<T>? sortCondition = null,
+            int? top = null,
+            int? pageIndex = null,
+            int? pageSize = null
+        )
+        {
+            var finalFilter = filter ?? Builders<T>.Filter.Empty;
+            var query = _collection.Find(finalFilter);
+
+            if (sortCondition != null)
+            {
+                query = query.Sort(sortCondition);
+            }
+
+            if (top.HasValue)
+            {
+                // no pagination for top
+                return await query.Limit(top.Value).ToListAsync();
+            }
+
+            if (pageIndex.HasValue && pageSize.HasValue)
+            {
+                int skip = (pageIndex.Value - 1) * pageSize.Value;
+                return await query.Skip(skip).Limit(pageSize.Value).ToListAsync();
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> Count(FilterDefinition<T>? filter)
+        {
+            var finalFilter = filter ?? Builders<T>.Filter.Empty;
+            var query = _collection.Find(finalFilter);
+
+            return (int)await query.CountDocumentsAsync();
+        }
     }
 }

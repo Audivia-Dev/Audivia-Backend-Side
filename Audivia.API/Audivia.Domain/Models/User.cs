@@ -13,6 +13,9 @@ public class User
     [BsonElement("username")]
     public string? Username { get; set; }
 
+    [BsonElement("full_name")]
+    public string? FullName { get; set; }
+
     [BsonElement("password")]
     public string Password { get; set; } = null!;
 
@@ -49,7 +52,7 @@ public class User
 
     [BsonElement("role_id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? RoleId { get; set; }
+    public required string RoleId { get; set; }
 
     [BsonElement("created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -5,6 +5,7 @@ using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.User;
 using Audivia.Domain.ModelResponses.User;
 using Audivia.Infrastructure.Repositories.Interface;
+using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -67,7 +68,7 @@ namespace Audivia.Application.Services.Implemetation
             return new UserResponse
             {
                 Success = true,
-                Message = "Audio tour retrieved successfully",
+                Message = "User retrieved successfully",
                 Response = ModelMapper.MapUserToDTO(tour)
             };
         }
@@ -77,9 +78,16 @@ namespace Audivia.Application.Services.Implemetation
             var user = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (user == null) return;
 
+            if (!string.IsNullOrEmpty(request.AudioCharacterId) && !ObjectId.TryParse(request.AudioCharacterId, out _))
+            {
+                throw new FormatException("Invalid audio character id value!");
+            }
+
+            user.FullName = request.FullName ?? user.FullName;
             user.Phone = request.Phone ?? user.Phone;
             user.AvatarUrl = request.AvatarUrl ?? user.AvatarUrl;
             user.Bio = request.Bio ?? user.Bio;
+            user.BalanceWallet = request.BalanceWallet ?? user.BalanceWallet;
             user.AudioCharacterId = request.AudioCharacterId ?? user.AudioCharacterId;
             user.AutoPlayDistance = request.AutoPlayDistance ?? user.AutoPlayDistance;
             user.TravelDistance = request.TravelDistance ?? user.TravelDistance;

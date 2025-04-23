@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Notification
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/notifications")]
     [ApiController]
     public class NotificationsController : ControllerBase
     {

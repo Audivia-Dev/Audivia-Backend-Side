@@ -1,29 +1,35 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Application.Utils.Helper;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Auth;
 using Audivia.Domain.ModelRequests.Mail;
 using Audivia.Domain.ModelResponses.Auth;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+
 
 namespace Audivia.Application.Services.Implemetation
 {
     public class AuthService : IAuthService
     {
+        
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _configuration = configuration;
             _mailService = mailService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RegisterResponse> Register(RegisterRequest request)
@@ -69,7 +75,7 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request)
+        public async Task<string> VerifyEmail(ConfirmEmailRequest request)
         {
             var user = await _userRepository.GetByTokenConfirm(request.Token);
             if (user == null)
@@ -85,11 +91,7 @@ namespace Audivia.Application.Services.Implemetation
                 Subject = "[Audivia] Welcome to Audivia",
                 Body = EmailContent.WelcomeEmail(user.Username ?? "New Customer")
             });
-            return new ConfirmEmailResponse
-            {
-                Message = "Registered successfully!",
-                Success = true
-            };
+            return ConfirmEmailResponse.VerifyEmailResponse("");
         }
 
         public async Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request)
@@ -115,6 +117,20 @@ namespace Audivia.Application.Services.Implemetation
                 AccessToken = accessToken,
                 RefreshToken = refeshToken
             };
+        }
+
+        public async Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims)
+        {
+            var username = userClaims.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(username))
+                return null;
+
+            var user = await _userRepository.FindFirst(u => u.Username == username);
+            if (user == null)
+                return null;
+
+            return ModelMapper.MapUserToDTO(user);
         }
 
         private async Task<string> GenerateAccessToken(User user)
@@ -144,6 +160,15 @@ namespace Audivia.Application.Services.Implemetation
             };
             var refreshToken = JWTUtils.CreateRefreshToken(claims, _configuration, DateTime.UtcNow);
             return new JwtSecurityTokenHandler().WriteToken(refreshToken).ToString();
+        }
+
+        public async Task<UserDTO?> GetCurrentUserAsync()
+        {
+            var userClaims = _httpContextAccessor.HttpContext?.User;
+            if (userClaims == null)
+                return null;
+
+            return await GetCurrentUserAsync(userClaims); // gọi lại hàm cũ
         }
     }
 }

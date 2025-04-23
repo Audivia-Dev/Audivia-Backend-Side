@@ -15,10 +15,19 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = user.Id,
                 Email = user.Email,
                 UserName = user.Username,
+                FullName = user.FullName,
+                Phone = user.Phone,
+                AvatarUrl = user.AvatarUrl,
+                Bio = user.Bio,
+                BalanceWallet = user.BalanceWallet,
+                AudioCharacterId = user.AudioCharacterId,
+                AutoPlayDistance = user.AutoPlayDistance,
+                TravelDistance = user.TravelDistance,
+                RoleId = user.RoleId,
+                ConfirmedEmail = user.ConfirmedEmail,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
                 IsDeleted = user.IsDeleted,
-                ConfirmedEmail = user.ConfirmedEmail,
             };
         }
         public static TourDTO MapAudioTourToDTO(Tour tour)
@@ -32,6 +41,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Duration = tour.Duration,
                 TypeId = tour.TypeId,
                 ThumbnailUrl = tour.ThumbnailUrl,
+                AvgRating = Math.Round((double)tour.AvgRating, 2),
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
                 UpdatedAt = tour.UpdatedAt
@@ -512,5 +522,21 @@ namespace Audivia.Domain.Commons.Mapper
                 JoinedAt = member.JoinedAt
             };
          }
+
+        public static PaymentTransactionDTO MapPaymentTransactioToDTO(PaymentTransaction paymentTransaction)
+        {
+            return new PaymentTransactionDTO
+            {
+                Id = paymentTransaction.Id,
+                OrderCode = paymentTransaction.OrderCode,
+                UserId = paymentTransaction.UserId,
+                Amount = paymentTransaction.Amount,
+                CreatedAt = paymentTransaction.CreatedAt,
+                Description = paymentTransaction.Description,
+                PaymentTime = paymentTransaction.PaymentTime,
+                Status = paymentTransaction.Status,
+
+            };
+        }
     }
 }

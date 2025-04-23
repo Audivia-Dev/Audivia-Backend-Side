@@ -1,5 +1,7 @@
-﻿using Audivia.Domain.ModelRequests.Auth;
+﻿using Audivia.Domain.DTOs;
+using Audivia.Domain.ModelRequests.Auth;
 using Audivia.Domain.ModelResponses.Auth;
+using System.Security.Claims;
 
 namespace Audivia.Application.Services.Interface
 {
@@ -12,8 +14,11 @@ namespace Audivia.Application.Services.Interface
         Task<RegisterResponse> Register(RegisterRequest request);
 
         //confirm email
-        Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request);
+        Task<string> VerifyEmail(ConfirmEmailRequest request);
 
         // get profile
+        Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims);
+
+        Task<UserDTO?> GetCurrentUserAsync();
     }
 }

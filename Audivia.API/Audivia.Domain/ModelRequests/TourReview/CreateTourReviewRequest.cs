@@ -10,8 +10,8 @@
 
         public int? Rating { get; set; }
 
-        public string? TourId { get; set; }
+        public required string TourId { get; set; }
 
-        public string? CreatedBy { get; set; }
+        public required string CreatedBy { get; set; }
     }
 }
