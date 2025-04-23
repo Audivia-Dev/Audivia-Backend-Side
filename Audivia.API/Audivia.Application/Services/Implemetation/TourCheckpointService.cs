@@ -27,13 +27,13 @@ namespace Audivia.Application.Services.Implemetation
             var model = new TourCheckpoint
             {
                 TourId = req.TourId,
-                RouteId = req.RouteId,
                 Title = req.Title,
                 Description = req.Description,
                 Latitude = req.Latitude,
                 Longitude = req.Longitude,
                 Order = req.Order,
                 CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
 
@@ -60,7 +60,6 @@ namespace Audivia.Application.Services.Implemetation
             }
 
             model.TourId = req.TourId;
-            model.RouteId = req.RouteId;
             model.Title = req.Title;
             model.Description = req.Description;
             model.Latitude = req.Latitude;

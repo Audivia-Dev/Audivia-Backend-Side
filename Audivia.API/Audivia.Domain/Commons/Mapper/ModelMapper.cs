@@ -41,7 +41,26 @@ namespace Audivia.Domain.Commons.Mapper
                 Duration = tour.Duration,
                 TypeId = tour.TypeId,
                 ThumbnailUrl = tour.ThumbnailUrl,
-                AvgRating = Math.Round((double)tour.AvgRating, 2),
+                AvgRating = Math.Round((double)tour.AvgRating, 1),
+                IsDeleted = tour.IsDeleted,
+                CreatedAt = tour.CreatedAt,
+                UpdatedAt = tour.UpdatedAt
+            };
+        }
+
+        public static TourDTO MapTourDetailsToDTO(Tour tour, IEnumerable<TourCheckpoint> checkpoints)
+        {
+            return new TourDTO
+            {
+                Id = tour.Id,
+                Title = tour.Title,
+                Description = tour.Description,
+                Price = tour.Price,
+                Duration = tour.Duration,
+                TypeId = tour.TypeId,
+                ThumbnailUrl = tour.ThumbnailUrl,
+                AvgRating = Math.Round((double)tour.AvgRating, 1),
+                Checkpoints = checkpoints.Select(MapTourCheckpointToDTO),
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
                 UpdatedAt = tour.UpdatedAt
@@ -179,18 +198,6 @@ namespace Audivia.Domain.Commons.Mapper
                 QuestionId = userResponse.QuestionId,
                 RespondedAt = userResponse.RespondedAt,
                 UserId = userResponse.UserId,
-            };
-        }
-
-        public static RouteDTO MapRouteToDTO(Route r)
-        {
-            return new RouteDTO
-            {
-                Id = r.Id,
-                Description = r.Description,
-                Name = r.Name,
-                IsDeleted = r.IsDeleted,
-                TourId = r.TourId,
             };
         }
         public static UserLocationVisitDTO MapUserLocationVisitToDTO(UserLocationVisit userLocationVisit)
@@ -366,8 +373,8 @@ namespace Audivia.Domain.Commons.Mapper
             return new PlaySessionDTO
             {
                 Id = playSession.Id,
+                TourId = playSession.TourId,
                 GroupId = playSession.GroupId,
-                RouteId = playSession.RouteId,
                 UserId = playSession.UserId,
                 StartTime = playSession.StartTime,
                 EndTime = playSession.EndTime,
@@ -444,7 +451,6 @@ namespace Audivia.Domain.Commons.Mapper
                 Latitude = tourCheckpoint.Latitude,
                 Longitude = tourCheckpoint.Longitude,
                 Order = tourCheckpoint.Order,
-                RouteId = tourCheckpoint.RouteId,
                 TourId = tourCheckpoint.TourId,
                 CreatedAt = tourCheckpoint.CreatedAt,
                 UpdatedAt = tourCheckpoint.UpdatedAt,

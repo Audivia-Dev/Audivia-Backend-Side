@@ -1,12 +1,5 @@
-﻿using Audivia.Domain.ModelRequests.Route;
-using Audivia.Domain.ModelRequests.UserLocationVisit;
-using Audivia.Domain.ModelResponses.Route;
+﻿using Audivia.Domain.ModelRequests.UserLocationVisit;
 using Audivia.Domain.ModelResponses.UserLocationVisit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Application.Services.Interface
 {
