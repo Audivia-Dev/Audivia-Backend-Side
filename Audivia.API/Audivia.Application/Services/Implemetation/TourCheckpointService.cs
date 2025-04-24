@@ -1,20 +1,25 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TourCheckpoint;
 using Audivia.Domain.ModelResponses.TourCheckpoint;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
     public class TourCheckpointService : ITourCheckpointService
     {
         private readonly ITourCheckpointRepository _repository;
-
-        public TourCheckpointService(ITourCheckpointRepository repository)
+        private readonly ICheckpointAudioRepository _audioRepository;
+        private readonly ICheckpointImageRepository _imageRepository;
+        public TourCheckpointService(ITourCheckpointRepository repository, ICheckpointAudioRepository audioRepository, ICheckpointImageRepository checkpointImageRepository)
         {
             _repository = repository;
+            _audioRepository = audioRepository;
+            _imageRepository = checkpointImageRepository;
         }
 
         public async Task<TourCheckpointResponse> CreateTourCheckpointAsync(CreateTourCheckpointRequest req)
@@ -120,12 +125,35 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
+            // get images
+            FilterDefinition<CheckpointImage>? imageFilter = Builders<CheckpointImage>.Filter.Eq(i => i.TourCheckpointId, model.Id);
+            var images = await _imageRepository.Search(imageFilter);
+            model.Images = images;
+
+            // get audios
+            FilterDefinition<CheckpointAudio>? audioFilter = Builders<CheckpointAudio>.Filter.Eq(i => i.TourCheckpointId, model.Id);
+            var audios = await _audioRepository.Search(audioFilter);
+            model.Audios = audios;
+
             return new TourCheckpointResponse
             {
                 Success = true,
                 Message = "Fetched tour checkpoint successfully!",
                 Response = ModelMapper.MapTourCheckpointToDTO(model)
             };
+        }
+
+        public async Task<List<TourCheckpoint>> GetTourCheckpointsAsync(FilterDefinition<TourCheckpoint>? filter)
+        {
+            var list = await _repository.Search(filter);
+            var activeList = list.Where(x => !x.IsDeleted).ToList();
+            foreach(TourCheckpoint tc in activeList)
+            {
+                FilterDefinition<CheckpointImage>? imageFilter = Builders<CheckpointImage>.Filter.Eq(i => i.TourCheckpointId, tc.Id);
+                var images = await _imageRepository.Search(imageFilter);
+                tc.Images = images;
+            }
+            return activeList;
         }
     }
 }

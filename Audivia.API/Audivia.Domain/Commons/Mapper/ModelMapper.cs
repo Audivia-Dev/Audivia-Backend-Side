@@ -36,6 +36,7 @@ namespace Audivia.Domain.Commons.Mapper
             {
                 Id = tour.Id,
                 Title = tour.Title,
+                Location = tour.Location,
                 Description = tour.Description,
                 Price = tour.Price,
                 Duration = tour.Duration,
@@ -56,6 +57,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = tour.Id,
                 Title = tour.Title,
                 Description = tour.Description,
+                Location = tour.Location,
                 Price = tour.Price,
                 Duration = tour.Duration,
                 TypeId = tour.TypeId,
@@ -308,7 +310,7 @@ namespace Audivia.Domain.Commons.Mapper
             return new CheckpointAudioDTO
             {
                 Id = checkpointAudio.Id,
-                CheckpointId = checkpointAudio.CheckpointId,
+                TourCheckpointId = checkpointAudio.TourCheckpointId,
                 AudioCharacterId = checkpointAudio.AudioCharacterId,
                 FileUrl = checkpointAudio.FileUrl,
                 IsDefault = checkpointAudio.IsDefault,
@@ -454,6 +456,8 @@ namespace Audivia.Domain.Commons.Mapper
                 Longitude = tourCheckpoint.Longitude,
                 Order = tourCheckpoint.Order,
                 TourId = tourCheckpoint.TourId,
+                Audios = tourCheckpoint.Audios == null ? null : tourCheckpoint.Audios.Select(MapCheckpointAudioToDTO),
+                Images = tourCheckpoint.Images == null ? null : tourCheckpoint.Images.Select(MapCheckpointImageToDTO),
                 CreatedAt = tourCheckpoint.CreatedAt,
                 UpdatedAt = tourCheckpoint.UpdatedAt,
                 IsDeleted = tourCheckpoint.IsDeleted,

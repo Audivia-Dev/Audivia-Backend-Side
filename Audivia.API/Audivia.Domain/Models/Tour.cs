@@ -12,6 +12,9 @@ namespace Audivia.Domain.Models
         [BsonElement("title")]
         public string? Title { get; set; }
 
+        [BsonElement("location")]
+        public string? Location { get; set; } 
+
         [BsonElement("description")]
         public string? Description { get; set; }
 

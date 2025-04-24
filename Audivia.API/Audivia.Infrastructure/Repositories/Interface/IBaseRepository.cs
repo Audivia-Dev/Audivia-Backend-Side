@@ -9,6 +9,7 @@ namespace Audivia.Infrastructure.Interface
     {
         Task<IEnumerable<T>> GetAll();
         Task<IEnumerable<T>> Search(FilterDefinition<T>? filter, SortDefinition<T>? sortCondition, int? top, int? pageIndex, int? pageSize);
+        Task<IEnumerable<T>> Search(FilterDefinition<T>? filter);
         Task<int> Count(FilterDefinition<T>? filter);
         Task<T?> GetById<TId>(TId id);
         Task<T> Create(T entity);
