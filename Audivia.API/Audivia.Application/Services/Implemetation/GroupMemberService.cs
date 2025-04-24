@@ -60,8 +60,8 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            gm.UserId = req.UserId;
-            gm.GroupId = req.GroupId;
+            gm.UserId = req.UserId ?? gm.UserId;
+            gm.GroupId = req.GroupId ?? gm.GroupId;
 
             await _groupMemberRepository.Update(gm);
 

@@ -62,7 +62,7 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            group.Name = req.Name;
+            group.Name = req.Name ?? group.Name;
             await _groupRepository.Update(group);
 
             return new GroupResponse

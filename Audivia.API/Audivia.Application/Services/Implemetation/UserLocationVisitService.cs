@@ -65,8 +65,8 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            visit.UserId = req.UserId;
-            visit.TourcheckpointId = req.TourcheckpointId;
+            visit.UserId = req.UserId ?? visit.UserId;
+            visit.TourcheckpointId = req.TourcheckpointId ?? visit.TourcheckpointId;
             visit.VisitedAt = DateTime.UtcNow;
 
             await _userLocationVisitRepository.Update(visit);

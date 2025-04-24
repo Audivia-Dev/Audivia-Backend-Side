@@ -51,10 +51,10 @@ namespace Audivia.Application.Services.Implemetation
             if (voucher == null)
                 return new VoucherResponse { Success = false, Message = "Not found", Response = null };
 
-            voucher.Code = req.Code;
-            voucher.Discount = req.Discount;
-            voucher.Title = req.Title;
-            voucher.ExpiryDate = req.ExpiryDate;
+            voucher.Code = req.Code ?? voucher.Code;
+            voucher.Discount = req.Discount ?? voucher.Discount;
+            voucher.Title = req.Title ?? voucher.Title;
+            voucher.ExpiryDate = req.ExpiryDate ?? voucher.ExpiryDate;
 
             await _voucherRepository.Update(voucher);
             return new VoucherResponse

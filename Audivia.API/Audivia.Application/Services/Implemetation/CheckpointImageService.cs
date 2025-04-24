@@ -67,9 +67,9 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            model.TourCheckpointId = req.TourCheckpointId;
-            model.ImageUrl = req.ImageUrl;
-            model.Description = req.Description;
+            model.TourCheckpointId = req.TourCheckpointId ?? model.TourCheckpointId;
+            model.ImageUrl = req.ImageUrl ?? model.TourCheckpointId;
+            model.Description = req.Description ?? model.Description;
             model.UpdatedAt = DateTime.UtcNow;
 
             await _checkpointImageRepository.Update(model);

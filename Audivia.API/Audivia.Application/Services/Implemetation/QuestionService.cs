@@ -130,9 +130,9 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-            question.Text = request.Text;   
-            question.Points = request.Points;
-            question.QuizId = request.QuizId;
+            question.Text = request.Text ?? question.Text;   
+            question.Points = request.Points ?? question.Points;
+            question.QuizId = request.QuizId ?? question.QuizId;
             question.UpdatedAt = DateTime.UtcNow;
             await _questionRepository.Update(question);
             return new QuestionResponse

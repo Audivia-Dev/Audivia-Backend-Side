@@ -56,10 +56,10 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            model.TourId = req.TourId;
-            model.UserId = req.UserId;
-            model.Rank = req.Rank;
-            model.Score = req.Score;
+            model.TourId = req.TourId ?? model.TourId;
+            model.UserId = req.UserId ?? model.UserId;
+            model.Rank = req.Rank ?? model.Rank;
+            model.Score = req.Score ?? model.Score;
             model.UpdatedAt = DateTime.UtcNow;
 
             await _repository.Update(model);

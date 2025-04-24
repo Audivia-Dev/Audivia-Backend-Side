@@ -120,11 +120,11 @@ namespace Audivia.Application.Services.Implemetation
             var quiz = await _quizRepository.GetById(objectId);
             if (quiz != null)
             {
-                quiz.Title = req.Title;
-                quiz.QuizFieldId = req.QuizFieldId;
-                quiz.TourCheckpointId = req.TourCheckpointId;   
+                quiz.Title = req.Title ?? quiz.Title;
+                quiz.QuizFieldId = req.QuizFieldId ?? quiz.QuizFieldId;
+                quiz.TourCheckpointId = req.TourCheckpointId ?? quiz.TourCheckpointId;   
                 quiz.UpdatedAt = DateTime.UtcNow;
-                quiz.Image = req.Image;
+                quiz.Image = req.Image ?? quiz.Image;
                 return new QuizReponse
                 {
                     Message = "Update quiz successfully!",
