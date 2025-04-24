@@ -20,19 +20,14 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<CheckpointAudioResponse> CreateCheckpointAudio(CreateCheckpointAudioRequest request)
         {
-            if (!ObjectId.TryParse(request.AudioCharacterId, out _)
+            if ((!string.IsNullOrEmpty(request.AudioCharacterId) && !ObjectId.TryParse(request.AudioCharacterId, out _))
                 || !ObjectId.TryParse(request.CheckpointId, out _))
             {
-                return new CheckpointAudioResponse
-                {
-                    Success = false,
-                    Message = "Invalid character Id or checkpoint Id format",
-                    Response = null
-                };
+                throw new FormatException("Invalid character Id or checkpoint Id format");
             }
             var checkpointAudio = new CheckpointAudio
             {
-                CheckpointId = request.CheckpointId,
+                TourCheckpointId = request.CheckpointId,
                 AudioCharacterId = request.AudioCharacterId,
                 FileUrl = request.FileUrl,
                 IsDefault = request.IsDefault,
@@ -67,12 +62,7 @@ namespace Audivia.Application.Services.Implemetation
             var audio = await _checkpointAudioRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (audio == null)
             {
-                return new CheckpointAudioResponse
-                {
-                    Success = false,
-                    Message = "Audio not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Checkpoint audio not found!");
             }
 
             return new CheckpointAudioResponse
@@ -88,12 +78,12 @@ namespace Audivia.Application.Services.Implemetation
             var audio = await _checkpointAudioRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (audio == null) return;
 
-            if (!ObjectId.TryParse(request.AudioCharacterId, out _)
+            if ((!string.IsNullOrEmpty(request.AudioCharacterId) && !ObjectId.TryParse(request.AudioCharacterId, out _))
                 || !ObjectId.TryParse(request.CheckpointId, out _))
             {
                 throw new FormatException("Invalid character Id or checkpoint Id format");
             }
-            audio.CheckpointId = request.CheckpointId ?? audio.CheckpointId;
+            audio.TourCheckpointId = request.CheckpointId ?? audio.TourCheckpointId;
             audio.AudioCharacterId = request.AudioCharacterId ?? audio.AudioCharacterId;
             audio.FileUrl = request.FileUrl ?? audio.FileUrl;
             audio.IsDefault = request.IsDefault ?? audio.IsDefault;

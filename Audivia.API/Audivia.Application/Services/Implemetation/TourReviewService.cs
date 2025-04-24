@@ -151,7 +151,7 @@ namespace Audivia.Application.Services.Implemetation
         private async Task<double> CalculateAverageRatingAsync(string tourId)
         {
             FilterDefinition<TourReview>? filter = Builders<TourReview>.Filter.Eq(r => r.TourId, tourId);
-            var tourReviews = await _tourReviewRepository.Search(filter, null, null, null, null);
+            var tourReviews = await _tourReviewRepository.Search(filter);
             var validRatings = tourReviews
                                 .Where(r => r.Rating.HasValue)
                                 .Select(r => r.Rating!.Value)

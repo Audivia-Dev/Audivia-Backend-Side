@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Audivia.Domain.DTOs;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Audivia.Domain.Models
@@ -36,5 +37,8 @@ namespace Audivia.Domain.Models
 
         [BsonElement("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        public IEnumerable<CheckpointImage>? Images { get; set; }
+        public IEnumerable<CheckpointAudio>? Audios { get; set; }
     }
 }
