@@ -51,9 +51,9 @@ namespace Audivia.Application.Services.Implemetation
             if (model == null)
                 return new UserVoucherResponse { Success = false, Message = "Not found", Response = null };
 
-            model.UserId = req.UserId;
-            model.VoucherId = req.VoucherId;
-            model.UsedAt = req.UsedAt;
+            model.UserId = req.UserId ?? model.UserId;
+            model.VoucherId = req.VoucherId ?? model.VoucherId;
+            model.UsedAt = req.UsedAt ?? model.UsedAt;
 
             await _userVoucherRepository.Update(model);
             return new UserVoucherResponse

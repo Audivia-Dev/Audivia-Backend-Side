@@ -64,7 +64,7 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            result.SessionId = req.SessionId;
+            result.SessionId = req.SessionId ?? result.SessionId;
             result.Score = req.Score ?? result.Score;
             result.CompletedAt = DateTime.UtcNow;   
             await _playResultRepository.Update(result);
