@@ -36,6 +36,7 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Title = request.Title,
                 Description = request.Description,
+                Location = request.Location,
                 Price = request.Price,
                 Duration = request.Duration,
                 TypeId = request.TypeId,
@@ -122,6 +123,7 @@ namespace Audivia.Application.Services.Implemetation
             }
             tour.Title = request.Title ?? tour.Title;
             tour.Description = request.Description ?? tour.Description;
+            tour.Location = request.Location ?? tour.Location;
             tour.Price = request.Price ?? tour.Price;
             tour.Duration = request.Duration ?? tour.Duration;
             tour.ThumbnailUrl = request.ThumbnailUrl ?? tour.ThumbnailUrl;
