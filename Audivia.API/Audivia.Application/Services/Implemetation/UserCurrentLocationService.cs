@@ -123,10 +123,10 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            location.Latitude = req.Latitude;
-            location.Longitude = req.Longitude;
+            location.Latitude = req.Latitude ?? location.Latitude;
+            location.Longitude = req.Longitude ?? location.Longitude;
             location.UpdatedAt = DateTime.UtcNow;
-            location.Accuracy = req.Accuracy;
+            location.Accuracy = req.Accuracy ?? location.Accuracy;
 
             await _userCurrentLocationRepository.Update(location);
 

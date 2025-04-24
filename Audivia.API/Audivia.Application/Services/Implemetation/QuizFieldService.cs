@@ -96,8 +96,8 @@ namespace Audivia.Application.Services.Implemetation
 
                 };
             }
-            quizField.QuizFieldName = req.Name;
-            quizField.Description = req.Description;
+            quizField.QuizFieldName = req.Name ?? quizField.QuizFieldName;
+            quizField.Description = req.Description ?? quizField.Description;
             await _repo.Update(quizField);
             return new QuizFieldResponse
             {

@@ -54,12 +54,12 @@ namespace Audivia.Application.Services.Implemetation
                 };
             }
 
-            model.TourId = req.TourId;
-            model.Title = req.Title;
-            model.Description = req.Description;
-            model.Latitude = req.Latitude;
-            model.Longitude = req.Longitude;
-            model.Order = req.Order;
+            model.TourId = req.TourId ?? model.TourId;
+            model.Title = req.Title ?? model.Title;
+            model.Description = req.Description ?? model.Description;
+            model.Latitude = req.Latitude ?? model.Latitude;
+            model.Longitude = req.Longitude ?? model.Longitude;
+            model.Order = req.Order ?? model.Order;
             model.UpdatedAt = DateTime.UtcNow;
 
             await _repository.Update(model);

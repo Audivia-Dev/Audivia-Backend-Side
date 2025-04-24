@@ -110,9 +110,9 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null,
                 };
             }
-            userResponse.AnswerId = req.AnswerId;
-            userResponse.UserId = req.UserId;
-            userResponse.QuestionId = req.QuestionId;
+            userResponse.AnswerId = req.AnswerId ?? userResponse.AnswerId;
+            userResponse.UserId = req.UserId ?? userResponse.UserId;
+            userResponse.QuestionId = req.QuestionId ?? userResponse.QuestionId;
             userResponse.RespondedAt = DateTime.UtcNow;
             await _userResponseRepository.Update(userResponse);
             return new UserResponseResponse

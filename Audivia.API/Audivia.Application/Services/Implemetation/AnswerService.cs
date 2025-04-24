@@ -128,9 +128,9 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-            answer.Text = request.Text;
-            answer.IsCorrect = request.IsCorrect;
-            answer.QuestionId = request.QuestionId;
+            answer.Text = request.Text ?? answer.Text;
+            answer.IsCorrect = request.IsCorrect ?? answer.IsCorrect;
+            answer.QuestionId = request.QuestionId ?? answer.QuestionId;
             await _answerRepository.Update(answer);
             return new AnswerResponse
             {
