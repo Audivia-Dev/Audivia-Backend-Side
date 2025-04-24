@@ -10,13 +10,13 @@ namespace Audivia.Domain.Models
 
         public string Id { get; set; }
 
-        [BsonElement("checkpoint_id")]
+        [BsonElement("tour_checkpoint_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string CheckpointId { get; set; }
+        public string TourCheckpointId { get; set; }
 
         [BsonElement("audio_character_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string AudioCharacterId { get; set; }
+        public string? AudioCharacterId { get; set; }
 
         [BsonElement("file_url")]
         public string? FileUrl { get; set; }

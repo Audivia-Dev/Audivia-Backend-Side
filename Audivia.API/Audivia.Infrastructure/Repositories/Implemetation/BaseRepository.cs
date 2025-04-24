@@ -106,6 +106,15 @@ namespace Audivia.Infrastructure.Repository
             return await query.ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> Search(
+            FilterDefinition<T>? filter = null
+        )
+        {
+            var finalFilter = filter ?? Builders<T>.Filter.Empty;
+            var query = _collection.Find(finalFilter);
+            return await query.ToListAsync();
+        }
+
         public async Task<int> Count(FilterDefinition<T>? filter)
         {
             var finalFilter = filter ?? Builders<T>.Filter.Empty;

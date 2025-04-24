@@ -3,7 +3,7 @@
     public class CheckpointAudioDTO
     {
         public string Id { get; set; } = string.Empty;
-        public string CheckpointId { get; set; }
+        public string TourCheckpointId { get; set; }
         public string AudioCharacterId { get; set; }
         public string? FileUrl { get; set; }
         public bool IsDefault { get; set; } = true;

@@ -28,7 +28,7 @@ namespace Audivia.Application.Services.Implemetation
                 return new UserTourProgressResponse
                 {
                     Success = false,
-                    Message = "Invalid format of UserId or TourId or CheckpointId ",
+                    Message = "Invalid format of UserId or TourId or TourCheckpointId ",
                     Response = null
                 };
             }
