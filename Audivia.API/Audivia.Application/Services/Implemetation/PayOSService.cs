@@ -40,7 +40,7 @@ namespace Audivia.Application.Services.Implemetation
             var hash = hmac.ComputeHash(data);
             return BitConverter.ToString(hash).Replace("-", "").ToLower();
         }
-        public async Task<string> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl)
+        public async Task<object> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl)
         {
             var orderCode = transaction.OrderCode;
             var amount = transaction.Amount;
@@ -71,7 +71,7 @@ namespace Audivia.Application.Services.Implemetation
             var responseJson = await res.Content.ReadAsStringAsync();
             var doc = JsonDocument.Parse(responseJson);
 
-            return doc.RootElement.GetProperty("data").GetProperty("checkoutUrl").GetString();
+            return doc.RootElement.GetProperty("data");
         }
 
         public bool VerifyWebhook(PayOSWebhookRequest req)

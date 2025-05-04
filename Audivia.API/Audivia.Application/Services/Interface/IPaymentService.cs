@@ -10,7 +10,7 @@ namespace Audivia.Application.Services.Interface
 {
     public interface IPaymentService
     {
-        Task<string> CreateVietQRTransactionAsync(CreatePaymentRequest req);
+        Task<object> CreateVietQRTransactionAsync(CreatePaymentRequest req);
         Task ProcessPayOSWebHookAsync(JsonElement payload);
         Task<object> HandlePaymentStatus(string id, int orderCode);
     }

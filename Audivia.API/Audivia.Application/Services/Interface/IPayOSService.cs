@@ -12,7 +12,7 @@ namespace Audivia.Application.Services.Interface
 {
     public interface IPayOSService
     {
-        Task<string> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl);
+        Task<object> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl);
         bool VerifyWebhook(PayOSWebhookRequest requestPayOSWebhookRequest);
         Task ConfirmWebhookAsync();
 
