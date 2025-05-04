@@ -32,7 +32,7 @@ namespace Audivia.Application.Services.Implemetation
             _userService = userService;
         }
 
-        public async Task<string> CreateVietQRTransactionAsync(CreatePaymentRequest req)
+        public async Task<object> CreateVietQRTransactionAsync(CreatePaymentRequest req)
         {
             var user = await _authService.GetCurrentUserAsync();
             var orderCode = new Random().Next(1, 100000000);
@@ -47,8 +47,8 @@ namespace Audivia.Application.Services.Implemetation
 
             await _transactionService.CreateTransactionAsync(transaction);
 
-            var qrUrl = await _payOSService.CreateVietQR(transaction, req.CancelUrl, req.ReturnUrl);
-            return qrUrl;
+            var data = await _payOSService.CreateVietQR(transaction, req.CancelUrl, req.ReturnUrl);
+            return data;
         }
 
 
