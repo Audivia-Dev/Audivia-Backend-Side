@@ -15,5 +15,9 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         public TourCheckpointRepository(IMongoDatabase database) : base(database)
         {
         }
+        public async Task<List<TourCheckpoint>> GetTourCheckpointsByTourId(string tourId)
+        {
+            return await _collection.Find(c =>  c.TourId == tourId).ToListAsync();
+        }
     }
 }

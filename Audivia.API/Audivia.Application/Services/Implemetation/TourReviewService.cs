@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TourReview;
 using Audivia.Domain.ModelResponses.TourReview;
 using Audivia.Domain.Models;
@@ -7,6 +8,7 @@ using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -161,6 +163,12 @@ namespace Audivia.Application.Services.Implemetation
                 return 0;
 
             return validRatings.Average();
+        }
+
+        public async Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId)
+        {
+            var rs = await _tourReviewRepository.GetReviewsByTourId(tourId);
+            return rs.Select(ModelMapper.MapTourReviewToDTO).ToList();
         }
     }
 }

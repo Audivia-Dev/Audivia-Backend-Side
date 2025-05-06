@@ -10,5 +10,6 @@ namespace Audivia.Infrastructure.Repositories.Interface
 {
     public interface ITourCheckpointRepository : IBaseRepository<TourCheckpoint>, IDisposable
     {
+        Task<List<TourCheckpoint>> GetTourCheckpointsByTourId(string tourId);
     }
 }
