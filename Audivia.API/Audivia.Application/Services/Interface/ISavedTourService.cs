@@ -15,5 +15,6 @@ namespace Audivia.Application.Services.Interface
         Task UpdateSavedTour(string id, UpdateSavedTourRequest request);
 
         Task DeleteSavedTour(string id);
+        Task<List<SavedTourDTO>> GetSavedTourByUserId(string userId);
     }
 }

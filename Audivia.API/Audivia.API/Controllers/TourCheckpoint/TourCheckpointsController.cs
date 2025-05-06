@@ -50,5 +50,12 @@ namespace Audivia.API.Controllers.TourCheckpoint
             var rs = await _service.GetTourCheckpointByIdAsync(id);
             return Ok(rs);
         }
+
+        [HttpGet("tourId/{tourId}")]
+        public async Task<IActionResult> GetTourCheckpointByTourId(string tourId)
+        {
+            var rs = await _service.GetTourCheckpointsByTourId(tourId);
+            return Ok(rs);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.SavedTour;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Tsp;
 
 namespace Audivia.API.Controllers.SavedTour
 {
@@ -48,6 +49,13 @@ namespace Audivia.API.Controllers.SavedTour
         {
             await _savedTourService.DeleteSavedTour(id);
             return NoContent();
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetSavedTourByUserId(string userId)
+        {
+            var rs = await _savedTourService.GetSavedTourByUserId(userId);
+            return Ok(rs);
         }
     }
 }

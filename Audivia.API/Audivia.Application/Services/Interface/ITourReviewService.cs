@@ -1,6 +1,7 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TourReview;
 using Audivia.Domain.ModelResponses.TourReview;
+using Audivia.Domain.Models;
 
 namespace Audivia.Application.Services.Interface
 {
@@ -15,5 +16,6 @@ namespace Audivia.Application.Services.Interface
         Task UpdateTourReview(string id, UpdateTourReviewRequest request);
 
         Task DeleteTourReview(string id);
+        Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId);
     }
 }

@@ -93,5 +93,12 @@ namespace Audivia.Application.Services.Implemetation
             await _savedTourRepository.Delete(tour);
         }
 
+        public async Task<List<SavedTourDTO>> GetSavedTourByUserId(string userId)
+        {
+            var savedTours = await _savedTourRepository.GetSavedTourByUserId(userId);
+            return savedTours
+            .Select(ModelMapper.MapSavedTourToDTO)
+            .ToList();
+        }
     }
 }
