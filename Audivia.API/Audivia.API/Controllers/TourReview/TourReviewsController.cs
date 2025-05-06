@@ -49,5 +49,12 @@ namespace Audivia.API.Controllers.TourReview
             await _tourReviewService.DeleteTourReview(id);
             return NoContent();
         }
+
+        [HttpGet("tour/{tourId}")]
+        public async Task<IActionResult> GetReviewsByTourId(string tourId)
+        {
+            var rs = await _tourReviewService.GetReviewsByTourId(tourId);
+            return Ok(rs);
+        }
     }
 }

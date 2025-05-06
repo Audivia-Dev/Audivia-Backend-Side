@@ -155,6 +155,13 @@ namespace Audivia.Application.Services.Implemetation
             }
             return activeList;
         }
+
+        public async Task<List<TourCheckpointDTO>> GetTourCheckpointsByTourId(string tourId)
+        {
+           var rs = await _repository.GetTourCheckpointsByTourId(tourId);
+           return rs.Select(ModelMapper.MapTourCheckpointToDTO)
+                    .ToList();
+        }
     }
 }
 

@@ -19,5 +19,6 @@ namespace Audivia.Application.Services.Interface
         Task<TourCheckpointListResponse> GetAllTourCheckpointsAsync();
         Task<List<TourCheckpoint>> GetTourCheckpointsAsync(FilterDefinition<TourCheckpoint>? filter);
         Task<TourCheckpointResponse> GetTourCheckpointByIdAsync(string id);
+        Task<List<TourCheckpointDTO>> GetTourCheckpointsByTourId(string tourId);
     }
 }
