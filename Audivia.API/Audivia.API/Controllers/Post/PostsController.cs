@@ -29,6 +29,13 @@ namespace Audivia.API.Controllers.Post
             return Ok(result);
         }
 
+        [HttpGet("users/{userId}")]
+        public async Task<IActionResult> GetAllByUserId(string userId)
+        {
+            var result = await _postService.GetAllPostsByUserId(userId);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {

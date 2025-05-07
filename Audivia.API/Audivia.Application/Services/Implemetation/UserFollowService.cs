@@ -1,11 +1,11 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
-using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.UserFollow;
 using Audivia.Domain.ModelResponses.UserFollow;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -48,13 +48,19 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<List<UserFollowDTO>> GetAllUserFollows()
+        public async Task<UserFollowListResponse> GetAllUserFollows()
         {
             var follows = await _userFollowRepository.GetAll();
-            return follows
+            var followDtos = follows
                 .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapUserFollowToDTO)
                 .ToList();
+            return new UserFollowListResponse
+            {
+                Success = true,
+                Message = "Follows retrieved successfully",
+                Response = followDtos
+            };
         }
 
         public async Task<UserFollowResponse> GetUserFollowById(string id)
@@ -86,7 +92,7 @@ namespace Audivia.Application.Services.Implemetation
             if (!ObjectId.TryParse(request.FollowerId, out _) || !ObjectId.TryParse(request.FollowingId, out _))
             {
                 return;
-                  
+
             }
             follow.FollowerId = request.FollowerId ?? follow.FollowerId;
             follow.FollowingId = request.FollowingId ?? follow.FollowingId;
@@ -104,6 +110,31 @@ namespace Audivia.Application.Services.Implemetation
             follow.UpdatedAt = DateTime.UtcNow;
 
             await _userFollowRepository.Update(follow);
+        }
+
+        public async Task<UserFollowListResponse> GetAllUserFollowsByUserId(GetAllUserFollowersByUserIdRequest request)
+        {
+            if ((!string.IsNullOrEmpty(request.FollowingId) && !ObjectId.TryParse(request.FollowingId, out _)) || (!string.IsNullOrEmpty(request.FollowerId) && !ObjectId.TryParse(request.FollowerId, out _)))
+            {
+                throw new FormatException("Invalid user id!");
+            }
+
+            var filter = Builders<UserFollow>.Filter.And(
+                string.IsNullOrEmpty(request.FollowerId) ? Builders<UserFollow>.Filter.Empty : Builders<UserFollow>.Filter.Eq(f => f.FollowerId, request.FollowerId),
+                string.IsNullOrEmpty(request.FollowingId) ? Builders<UserFollow>.Filter.Empty : Builders<UserFollow>.Filter.Eq(f => f.FollowingId, request.FollowingId)
+            );
+
+            var userFollows = await _userFollowRepository.Search(filter);
+            var userFollowDtos = userFollows
+                .Where(t => !t.IsDeleted)
+                .Select(ModelMapper.MapUserFollowToDTO)
+                .ToList();
+            return new UserFollowListResponse
+            {
+                Success = true,
+                Message = "UserFollows of user retrieved successfully",
+                Response = userFollowDtos
+            };
         }
 
     }
