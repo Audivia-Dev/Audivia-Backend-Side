@@ -29,6 +29,13 @@ namespace Audivia.API.Controllers.UserFollow
             return Ok(result);
         }
 
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllByUserId([FromQuery] GetAllUserFollowersByUserIdRequest request)
+        {
+            var result = await _userFollowService.GetAllUserFollowsByUserId(request);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {

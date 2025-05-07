@@ -15,5 +15,9 @@ namespace Audivia.Application.Services.Interface
         Task UpdatePost(string id, UpdatePostRequest request);
 
         Task DeletePost(string id);
+
+        // by user id
+        Task<PostListResponse> GetAllPostsByUserId(string userId);
+
     }
 }
