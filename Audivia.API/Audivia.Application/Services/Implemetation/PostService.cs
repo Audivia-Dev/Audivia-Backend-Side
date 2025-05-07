@@ -6,6 +6,7 @@ using Audivia.Domain.ModelResponses.Post;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -114,6 +115,27 @@ namespace Audivia.Application.Services.Implemetation
             post.UpdatedAt = DateTime.UtcNow;
 
             await _postRepository.Update(post);
+        }
+
+        public async Task<PostListResponse> GetAllPostsByUserId (string userId)
+        {
+            if (!ObjectId.TryParse(userId, out _))
+            {
+                throw new FormatException("Invalid user id!");
+            }
+
+            FilterDefinition<Post>? filter = Builders<Post>.Filter.Eq(p => p.CreatedBy, userId);
+            var posts = await _postRepository.Search(filter);
+            var postDtos = posts
+                .Where(t => !t.IsDeleted)
+                .Select(ModelMapper.MapPostToDTO)
+                .ToList();
+            return new PostListResponse
+            {
+                Success = true,
+                Message = "Posts of user retrieved successfully",
+                Response = postDtos
+            };
         }
     }
 }

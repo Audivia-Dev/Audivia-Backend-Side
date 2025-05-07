@@ -8,12 +8,14 @@ namespace Audivia.Application.Services.Interface
     {
         Task<UserFollowResponse> CreateUserFollow(CreateUserFollowRequest request);
 
-        Task<List<UserFollowDTO>> GetAllUserFollows();
+        Task<UserFollowListResponse> GetAllUserFollows();
 
         Task<UserFollowResponse> GetUserFollowById(string id);
 
         Task UpdateUserFollow(string id, UpdateUserFollowRequest request);
 
         Task DeleteUserFollow(string id);
+
+        Task<UserFollowListResponse> GetAllUserFollowsByUserId (GetAllUserFollowersByUserIdRequest request);
     }
 }
