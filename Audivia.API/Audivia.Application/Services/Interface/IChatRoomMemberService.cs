@@ -1,4 +1,5 @@
-﻿using Audivia.Domain.ModelRequests.ChatRoomMember;
+﻿using Audivia.Domain.DTOs;
+using Audivia.Domain.ModelRequests.ChatRoomMember;
 using Audivia.Domain.ModelResponses.ChatRoomMember;
 
 namespace Audivia.Application.Services.Interface
@@ -14,5 +15,6 @@ namespace Audivia.Application.Services.Interface
         Task UpdateChatRoomMember(string id, UpdateChatRoomMemberRequest request);
 
         Task DeleteChatRoomMember(string id);
+        Task<ChatRoomMemberDTO> GetMemberById(string id);
     }
 }

@@ -1,6 +1,8 @@
-﻿using Audivia.Application.Services.Interface;
+﻿using Audivia.API.Hubs;
+using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.ChatRoom;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Audivia.API.Controllers.ChatRoom
 {
@@ -9,10 +11,11 @@ namespace Audivia.API.Controllers.ChatRoom
     public class ChatRoomsController : ControllerBase
     {
         private readonly IChatRoomService _chatRoomService;
-
-        public ChatRoomsController(IChatRoomService chatRoomService)
+        private readonly IHubContext<ChatHub> _hubContext;  
+        public ChatRoomsController(IChatRoomService chatRoomService, IHubContext<ChatHub> hubContext)
         {
             _chatRoomService = chatRoomService;
+            _hubContext = hubContext;
         }
 
         [HttpPost]

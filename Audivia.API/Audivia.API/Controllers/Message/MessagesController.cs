@@ -1,6 +1,8 @@
-﻿using Audivia.Application.Services.Interface;
+﻿using Audivia.API.Hubs;
+using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Message;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Audivia.API.Controllers.Message
 {
@@ -9,16 +11,20 @@ namespace Audivia.API.Controllers.Message
     public class MessagesController : ControllerBase
     {
         private readonly IMessageService _messageService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessagesController(IMessageService messageService)
+        public MessagesController(IMessageService messageService, IHubContext<ChatHub> hubContext)
         {
             _messageService = messageService;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateMessageRequest request)
         {
             var result = await _messageService.CreateMessage(request);
+            await _hubContext.Clients.Group(request.ChatRoomId)
+               .SendAsync("ReceiveMessage", result);
             return Ok(result);
         }
 
@@ -39,14 +45,28 @@ namespace Audivia.API.Controllers.Message
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateMessageRequest request)
         {
-            await _messageService.UpdateMessage(id, request);
-            return NoContent();
+            var message = await _messageService.UpdateMessage(id, request);
+            try
+            {
+                await _hubContext.Clients.Group(message.ChatRoomId).SendAsync("UpdateMessage", message);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Ok(message);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _messageService.DeleteMessage(id);
+            var message = await _messageService.DeleteMessage(id);
+            try
+            {
+                await _hubContext.Clients.Group(message.ChatRoomId)
+                    .SendAsync("DeleteMessage", message);
+            }
+            catch {  }
             return NoContent();
         }
     }
