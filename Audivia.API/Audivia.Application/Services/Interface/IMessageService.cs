@@ -1,4 +1,5 @@
-﻿using Audivia.Domain.ModelRequests.Message;
+﻿using Audivia.Domain.DTOs;
+using Audivia.Domain.ModelRequests.Message;
 using Audivia.Domain.ModelResponses.Message;
 
 namespace Audivia.Application.Services.Interface
@@ -11,8 +12,8 @@ namespace Audivia.Application.Services.Interface
 
         Task<MessageResponse> GetMessageById(string id);
 
-        Task UpdateMessage(string id, UpdateMessageRequest request);
+        Task<MessageDTO> UpdateMessage(string id, UpdateMessageRequest request);
 
-        Task DeleteMessage(string id);
+        Task<MessageDTO> DeleteMessage(string id);
     }
 }

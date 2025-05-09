@@ -1,3 +1,4 @@
+using Audivia.API.Hubs;
 using Audivia.API.Middlewares;
 using Audivia.Application;
 using Audivia.Domain.Commons.Mail;
@@ -21,7 +22,7 @@ namespace Audivia.API
             // Add services to the container.
 
             builder.Services.AddControllers();
-            
+            builder.Services.AddSignalR();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -99,7 +100,10 @@ namespace Audivia.API
             builder.Services.AddScoped<ErrorHandlingMiddleware>();
             builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
             builder.Services.AddHttpContextAccessor();
-
+            // Thêm SignalR
+            builder.Services.AddSignalR(hubOptions => {
+                hubOptions.EnableDetailedErrors = true;
+            });
             var app = builder.Build();
 
             app.UseSwagger();
@@ -117,12 +121,13 @@ namespace Audivia.API
             app.UseHttpsRedirection();
 
             app.UseCors("app-cors");
-
+           // app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-
+            // Map SignalR Hub
+            app.MapHub<ChatHub>("/chatHub");
             app.MapControllers();
 
             app.Run();

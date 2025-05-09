@@ -1,10 +1,12 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Message;
 using Audivia.Domain.ModelResponses.Message;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -83,24 +85,26 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task UpdateMessage(string id, UpdateMessageRequest request)
+        public async Task<MessageDTO> UpdateMessage(string id, UpdateMessageRequest request)
         {
             var message = await _messageRepository.FindFirst(t => t.Id == id);
-            if (message == null) return;
+            if (message == null) return null;
             
             message.Type = request.Type ?? message.Type;
             message.Content = request.Content ?? message.Content;
             message.Status = request.Status ?? message.Status;
 
             await _messageRepository.Update(message);
+            return ModelMapper.MapMessageToDTO(message);
         }
 
-        public async Task DeleteMessage(string id)
+        public async Task<MessageDTO> DeleteMessage(string id)
         {
             var message = await _messageRepository.FindFirst(t => t.Id == id);
-            if (message == null) return;
+            if (message == null) return null;
 
             await _messageRepository.Delete(message);
+            return ModelMapper.MapMessageToDTO(message);
         }
     }
 }
