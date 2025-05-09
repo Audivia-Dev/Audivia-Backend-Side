@@ -67,22 +67,25 @@ namespace Audivia.Application.Services.Implemetation
             List<PostDTO> postsList = new List<PostDTO>();
             foreach (Post p in posts)
             {
-                var user = await _userRepository.FindFirst(u => u.Id == p.CreatedBy);
-                if (user == null)
+                if (!p.IsDeleted)
                 {
-                    throw new KeyNotFoundException("User is not existed!");
+                    var user = await _userRepository.FindFirst(u => u.Id == p.CreatedBy);
+                    if (user == null)
+                    {
+                        throw new KeyNotFoundException("User is not existed!");
+                    }
+                    // count likes
+                    FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, p.Id);
+                    int likes = await _reactionRepository.Count(filterLikes);
+
+                    // count comments
+                    FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, p.Id);
+                    int comments = await _commentRepository.Count(filterComments);
+
+                    // time
+                    string time = TimeUtils.GetTimeElapsed((DateTime)p.CreatedAt);
+                    postsList.Add(ModelMapper.MapPostToDTO(p, user, likes, comments, time));
                 }
-                // count likes
-                FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, p.Id);
-                int likes = await _reactionRepository.Count(filterLikes);
-
-                // count comments
-                FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, p.Id);
-                int comments = await _commentRepository.Count(filterComments);
-
-                // time
-                string time = TimeUtils.GetTimeElapsed((DateTime)p.CreatedAt);
-                postsList.Add(ModelMapper.MapPostToDTO(p, user, likes, comments, time));
             }
             return new PostListResponse
             {
@@ -173,7 +176,9 @@ namespace Audivia.Application.Services.Implemetation
                 throw new FormatException("Invalid user id!");
             }
 
-            FilterDefinition<Post>? filter = Builders<Post>.Filter.Eq(p => p.CreatedBy, userId);
+            FilterDefinition<Post>? filter = Builders<Post>.Filter.And(
+                Builders<Post>.Filter.Eq(p => p.IsDeleted, false), 
+                Builders<Post>.Filter.Eq(p => p.CreatedBy, userId));
             var posts = await _postRepository.Search(filter);
 
             var user = await _userRepository.FindFirst(u => u.Id == userId);
