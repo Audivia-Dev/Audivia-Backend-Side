@@ -7,12 +7,12 @@
             DateTime now = DateTime.UtcNow;
             TimeSpan elapsed = now - createdAt;
 
-            if (elapsed.TotalDays >= 2)
+            if (elapsed.TotalDays >= 1)
             {
                 int days = (int)elapsed.TotalDays;
                 return $"{days} ngày trước";
             }
-            else if (elapsed.TotalHours >= 2)
+            else if (elapsed.TotalHours >= 1)
             {
                 int hours = (int)elapsed.TotalHours;
                 return $"{hours} giờ trước";
