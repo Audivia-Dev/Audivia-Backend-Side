@@ -4,7 +4,9 @@
     {
         public string? Title { get; set; }
 
-        public string? ImageUrl { get; set; }
+        public string[]? Images { get; set; }
+
+        public string? Location { get; set; }
 
         public string? Content { get; set; }
 

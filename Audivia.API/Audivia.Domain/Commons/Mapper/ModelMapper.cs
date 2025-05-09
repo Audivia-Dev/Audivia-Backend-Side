@@ -30,6 +30,17 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = user.IsDeleted,
             };
         }
+
+        public static UserShortDTO MapUserToShortDTO(User user)
+        {
+            return new UserShortDTO
+            {
+                Id = user.Id,
+                UserName = user.Username,
+                FullName = user.FullName,
+                AvatarUrl = user.AvatarUrl,
+            };
+        }
         public static TourDTO MapAudioTourToDTO(Tour tour)
         {
             return new TourDTO
@@ -94,17 +105,21 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static PostDTO MapPostToDTO(Post post)
+        public static PostDTO MapPostToDTO(Post post, User user, int? likes = null, int? comments = null, string? time = null)
         {
             return new PostDTO
             {
                 Id = post.Id,
                 Title = post.Title,
                 Content = post.Content,
-                ImageUrl = post.ImageUrl,
+                Images = post.Images,
+                Location = post.Location,
+                Likes = likes,
+                Comments = comments,
+                Time = time,
                 CreatedAt = post.CreatedAt,
                 UpdatedAt = post.UpdatedAt,
-                CreatedBy = post.CreatedBy,
+                User = MapUserToShortDTO(user),
                 IsDeleted = post.IsDeleted
             };
         }

@@ -1,4 +1,5 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Application.Utils.Helper;
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Post;
@@ -7,16 +8,23 @@ using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Audivia.Application.Services.Implemetation
 {
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IReactionRepository _reactionRepository;
+        private readonly ICommentRepository _commentRepository;
 
-        public PostService(IPostRepository postRepository)
+        public PostService(IPostRepository postRepository, IUserRepository userRepository, IReactionRepository reactionRepository, ICommentRepository commentRepository)
         {
             _postRepository = postRepository;
+            _userRepository = userRepository;
+            _reactionRepository = reactionRepository;
+            _commentRepository = commentRepository;
         }
 
         public async Task<PostResponse> CreatePost(CreatePostRequest request)
@@ -25,11 +33,18 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid created by value!");
             }
+
+            var user = await _userRepository.FindFirst(u => u.Id == request.CreatedBy);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User is not existed!");
+            }
             var post = new Post
             {
                 Title = request.Title,
                 Content = request.Content,
-                ImageUrl = request.ImageUrl,
+                Images = request.Images,
+                Location = request.Location,
                 CreatedBy = request.CreatedBy,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
@@ -42,22 +57,38 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Success = true,
                 Message = "Post created successfully",
-                Response = ModelMapper.MapPostToDTO(post)
+                Response = ModelMapper.MapPostToDTO(post, user)
             };
         }
 
         public async Task<PostListResponse> GetAllPosts()
         {
             var posts = await _postRepository.GetAll();
-            var postDtos = posts
-                .Where(t => !t.IsDeleted)
-                .Select(ModelMapper.MapPostToDTO)
-                .ToList();
+            List<PostDTO> postsList = new List<PostDTO>();
+            foreach (Post p in posts)
+            {
+                var user = await _userRepository.FindFirst(u => u.Id == p.CreatedBy);
+                if (user == null)
+                {
+                    throw new KeyNotFoundException("User is not existed!");
+                }
+                // count likes
+                FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, p.Id);
+                int likes = await _reactionRepository.Count(filterLikes);
+
+                // count comments
+                FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, p.Id);
+                int comments = await _commentRepository.Count(filterComments);
+
+                // time
+                string time = TimeUtils.GetTimeElapsed((DateTime)p.CreatedAt);
+                postsList.Add(ModelMapper.MapPostToDTO(p, user, likes, comments, time));
+            }
             return new PostListResponse
             {
                 Success = true,
                 Message = "Posts retrieved successfully",
-                Response = postDtos
+                Response = postsList
             };
         }
 
@@ -73,11 +104,29 @@ namespace Audivia.Application.Services.Implemetation
                 throw new KeyNotFoundException("Post not found!");
             }
 
+            // get user of the post
+            var user = await _userRepository.FindFirst(u => u.Id == post.CreatedBy);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User is not existed!");
+            }
+
+            // count likes
+            FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, id);
+            int likes = await _reactionRepository.Count(filterLikes);
+
+            // count comments
+            FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, id);
+            int comments = await _commentRepository.Count(filterComments);
+
+            // time
+            string time = TimeUtils.GetTimeElapsed((DateTime)post.CreatedAt);
+
             return new PostResponse
             {
                 Success = true,
                 Message = "Post retrieved successfully",
-                Response = ModelMapper.MapPostToDTO(post)
+                Response = ModelMapper.MapPostToDTO(post, user, likes, comments, time)
             };
         }
 
@@ -96,7 +145,7 @@ namespace Audivia.Application.Services.Implemetation
             }
             post.Title = request.Title ?? post.Title;
             post.Content = request.Content ?? post.Content;
-            post.ImageUrl = request.ImageUrl ?? post.ImageUrl;
+            post.Images = request.Images ?? post.Images;
             post.UpdatedAt = DateTime.UtcNow;
 
             await _postRepository.Update(post);
@@ -126,15 +175,32 @@ namespace Audivia.Application.Services.Implemetation
 
             FilterDefinition<Post>? filter = Builders<Post>.Filter.Eq(p => p.CreatedBy, userId);
             var posts = await _postRepository.Search(filter);
-            var postDtos = posts
-                .Where(t => !t.IsDeleted)
-                .Select(ModelMapper.MapPostToDTO)
-                .ToList();
+
+            var user = await _userRepository.FindFirst(u => u.Id == userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User is not existed!");
+            }
+            List<PostDTO> postsList = new List<PostDTO>();
+            foreach (Post p in posts)
+            {
+                // count likes
+                FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, p.Id);
+                int likes = await _reactionRepository.Count(filterLikes);
+
+                // count comments
+                FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, p.Id);
+                int comments = await _commentRepository.Count(filterComments);
+
+                // time
+                string time = TimeUtils.GetTimeElapsed((DateTime)p.CreatedAt);
+                postsList.Add(ModelMapper.MapPostToDTO(p, user, likes, comments, time));
+            }
             return new PostListResponse
             {
                 Success = true,
                 Message = "Posts of user retrieved successfully",
-                Response = postDtos
+                Response = postsList
             };
         }
     }
