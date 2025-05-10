@@ -96,9 +96,11 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<List<SavedTourDTO>> GetSavedTourByUserId(string userId)
         {
             var savedTours = await _savedTourRepository.GetSavedTourByUserId(userId);
+            //dto.Tour = tours.FirstOrDefault(t => t.Id == saved.TourId); // gán thêm Tour
             return savedTours
             .Select(ModelMapper.MapSavedTourToDTO)
             .ToList();
+
         }
     }
 }
