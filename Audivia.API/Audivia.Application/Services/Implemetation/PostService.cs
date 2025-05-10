@@ -63,8 +63,9 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<PostListResponse> GetAllPosts()
         {
             var posts = await _postRepository.GetAll();
+            var sortedPosts = posts.Where(p => !p.IsDeleted).OrderByDescending(posts => posts.CreatedAt);
             List<PostDTO> postsList = new List<PostDTO>();
-            foreach (Post p in posts.Where(p => !p.IsDeleted))
+            foreach (Post p in sortedPosts)
             {
                     var postDTO = await FinalMapPostToDTO(p);
                     postsList.Add(postDTO);
@@ -97,29 +98,6 @@ namespace Audivia.Application.Services.Implemetation
                 Message = "Post retrieved successfully",
                 Response = await FinalMapPostToDTO(post)
             };
-        }
-
-        private async Task<PostDTO> FinalMapPostToDTO(Post post)
-        {
-            // get user of the post
-            var user = await _userRepository.FindFirst(u => u.Id == post.CreatedBy);
-            if (user == null)
-            {
-                throw new KeyNotFoundException("User is not existed!");
-            }
-
-            // count likes
-            FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, post.Id);
-            int likes = await _reactionRepository.Count(filterLikes);
-
-            // count comments
-            FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, post.Id);
-            int comments = await _commentRepository.Count(filterComments);
-
-            // time
-            string time = TimeUtils.GetTimeElapsed((DateTime)post.CreatedAt);
-
-            return ModelMapper.MapPostToDTO(post, user, likes, comments, time);
         }
         public async Task UpdatePost(string id, UpdatePostRequest request)
         {
@@ -174,27 +152,44 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new KeyNotFoundException("User is not existed!");
             }
+
+            var sortedPosts = posts.Where(p => !p.IsDeleted).OrderByDescending(posts => posts.CreatedAt);
             List<PostDTO> postsList = new List<PostDTO>();
-            foreach (Post p in posts)
+            foreach (Post p in sortedPosts)
             {
-                // count likes
-                FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, p.Id);
-                int likes = await _reactionRepository.Count(filterLikes);
-
-                // count comments
-                FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, p.Id);
-                int comments = await _commentRepository.Count(filterComments);
-
-                // time
-                string time = TimeUtils.GetTimeElapsed((DateTime)p.CreatedAt);
-                postsList.Add(ModelMapper.MapPostToDTO(p, user, likes, comments, time));
+                var postDTO = await FinalMapPostToDTO(p);
+                postsList.Add(postDTO);
             }
+
             return new PostListResponse
             {
                 Success = true,
                 Message = "Posts of user retrieved successfully",
                 Response = postsList
             };
+        }
+
+        private async Task<PostDTO> FinalMapPostToDTO(Post post)
+        {
+            // get user of the post
+            var user = await _userRepository.FindFirst(u => u.Id == post.CreatedBy);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User is not existed!");
+            }
+
+            // count likes
+            FilterDefinition<Reaction>? filterLikes = Builders<Reaction>.Filter.Eq(i => i.PostId, post.Id);
+            int likes = await _reactionRepository.Count(filterLikes);
+
+            // count comments
+            FilterDefinition<Comment>? filterComments = Builders<Comment>.Filter.Eq(i => i.PostId, post.Id);
+            int comments = await _commentRepository.Count(filterComments);
+
+            // time
+            string time = TimeUtils.GetTimeElapsed((DateTime)post.CreatedAt);
+
+            return ModelMapper.MapPostToDTO(post, user, likes, comments, time);
         }
     }
 }
