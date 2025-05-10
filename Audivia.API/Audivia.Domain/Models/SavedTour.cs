@@ -22,5 +22,9 @@ namespace Audivia.Domain.Models
 
         [BsonElement("planned_time")] 
         public DateTime? PlannedTime { get; set; }
+
+        [BsonElement("tour")]
+        [BsonIgnoreIfNull]
+        public Tour? Tour { get; set; }
     }
 }

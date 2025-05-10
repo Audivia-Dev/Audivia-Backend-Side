@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using Audivia.Domain.Models;
 
 namespace Audivia.Domain.DTOs
 {
@@ -10,5 +11,6 @@ namespace Audivia.Domain.DTOs
         public string? TourId { get; set; }
         public DateTime? SavedAt { get; set; }
         public DateTime? PlannedTime { get; set; }
+        public Tour? Tour { get; set; }
     }
 }
