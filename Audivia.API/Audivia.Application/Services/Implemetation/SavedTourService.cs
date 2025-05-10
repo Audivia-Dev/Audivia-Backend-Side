@@ -1,4 +1,5 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Application.Utils.Helper;
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.SavedTour;
@@ -26,6 +27,16 @@ namespace Audivia.Application.Services.Implemetation
                 {
                     Success = false,
                     Message = "Invalid Tour Id or User Id format",
+                    Response = null
+                };
+            }
+            var existingSavedTour = await _savedTourRepository.FindByUserIdAndTourIdAsync(request.UserId, request.TourId);
+            if (existingSavedTour != null)
+            {
+                return new SavedTourResponse
+                {
+                    Success = false,
+                    Message = "Tour has already been saved by this user",
                     Response = null
                 };
             }
@@ -57,7 +68,7 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<SavedTourResponse> GetSavedTourById(string id)
         {
-            var tour = await _savedTourRepository.FindFirst(t => t.Id == id);
+            var tour = await _savedTourRepository.GetByIdWithTour(id);
             if (tour == null)
             {
                 return new SavedTourResponse
@@ -67,12 +78,13 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-
+            var dto = ModelMapper.MapSavedTourToDTO(tour);
+            dto.TimeAgo = TimeUtils.GetTimeElapsed((DateTime)tour.SavedAt);
             return new SavedTourResponse
             {
                 Success = true,
                 Message = "Saved tour retrieved successfully",
-                Response = ModelMapper.MapSavedTourToDTO(tour)
+                Response = dto
             };
         }
 
@@ -96,10 +108,13 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<List<SavedTourDTO>> GetSavedTourByUserId(string userId)
         {
             var savedTours = await _savedTourRepository.GetSavedTourByUserId(userId);
-            //dto.Tour = tours.FirstOrDefault(t => t.Id == saved.TourId); // gán thêm Tour
             return savedTours
-            .Select(ModelMapper.MapSavedTourToDTO)
-            .ToList();
+            .Select(t =>
+            {
+                var dto = ModelMapper.MapSavedTourToDTO(t);
+                dto.TimeAgo = TimeUtils.GetTimeElapsed((DateTime)t.SavedAt);
+                return dto;
+            }).ToList();
 
         }
     }
