@@ -103,13 +103,9 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteUserFollow(string id)
         {
-            var follow = await _userFollowRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (follow == null) return;
-
-            follow.IsDeleted = true;
-            follow.UpdatedAt = DateTime.UtcNow;
-
-            await _userFollowRepository.Update(follow);
+            var follow = await _userFollowRepository.FindFirst(t => t.Id == id);
+            if (follow == null) throw new KeyNotFoundException("Follow not found!");
+            await _userFollowRepository.Delete(follow);
         }
 
         public async Task<UserFollowListResponse> GetAllUserFollowsByUserId(GetAllUserFollowersByUserIdRequest request)
@@ -135,6 +131,20 @@ namespace Audivia.Application.Services.Implemetation
                 Message = "UserFollows of user retrieved successfully",
                 Response = userFollowDtos
             };
+        }
+
+        public async Task<int> CountByFollowerId(string userId)
+        {
+            FilterDefinition<UserFollow> filter = Builders<UserFollow>.Filter.Eq(i => i.FollowerId, userId);
+            int count = await _userFollowRepository.Count(filter);
+            return count;
+        }
+
+        public async Task<int> CountByFollowingId(string userId)
+        {
+            FilterDefinition<UserFollow> filter = Builders<UserFollow>.Filter.Eq(i => i.FollowingId, userId);
+            int count = await _userFollowRepository.Count(filter);
+            return count;
         }
 
     }
