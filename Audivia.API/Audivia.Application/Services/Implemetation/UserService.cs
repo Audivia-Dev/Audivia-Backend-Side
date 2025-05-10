@@ -13,10 +13,12 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository)
+        private readonly IUserFollowService _userFollowService;
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IUserFollowService userFollowService)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _userFollowService = userFollowService;
         }
 
         public async Task<UserResponse> CreateUser(UserCreateRequest request)
@@ -45,32 +47,39 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<List<UserDTO>> GetAllUsers()
         {
-            var tours = await _userRepository.GetAll();
-            return tours
-            .Where(t => !t.IsDeleted)
-                .Select(ModelMapper.MapUserToDTO)
-                .ToList();
+            var users = await _userRepository.GetAll();
+            var userDtos = new List<UserDTO>();
+
+            foreach (var user in users.Where(t => !t.IsDeleted))
+            {
+                var dto = await FinalMapUserToDTO(user);
+                userDtos.Add(dto);
+            }
+            return userDtos;
         }
 
         public async Task<UserResponse> GetUserById(string id)
         {
-            var tour = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (tour == null)
+            var user = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            if (user == null)
             {
-                return new UserResponse
-                {
-                    Success = false,
-                    Message = "User not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("User not found!");
             }
-
+            
             return new UserResponse
             {
                 Success = true,
                 Message = "User retrieved successfully",
-                Response = ModelMapper.MapUserToDTO(tour)
+                Response = await FinalMapUserToDTO(user)
             };
+        }
+
+        private async Task<UserDTO> FinalMapUserToDTO(User user)
+        {
+            int followers = await _userFollowService.CountByFollowingId(user.Id);
+            int following = await _userFollowService.CountByFollowerId(user.Id);
+
+            return ModelMapper.MapUserToDTO(user, followers, following);
         }
 
         public async Task UpdateUser(string id, UserUpdateRequest request)
@@ -90,6 +99,7 @@ namespace Audivia.Application.Services.Implemetation
             user.FullName = request.FullName ?? user.FullName;
             user.Phone = request.Phone ?? user.Phone;
             user.AvatarUrl = request.AvatarUrl ?? user.AvatarUrl;
+            user.CoverPhoto = request.CoverPhoto ?? user.CoverPhoto;
             user.Bio = request.Bio ?? user.Bio;
             user.BalanceWallet = request.BalanceWallet ?? user.BalanceWallet;
             user.AudioCharacterId = request.AudioCharacterId ?? user.AudioCharacterId;
@@ -102,13 +112,13 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task DeleteUser(string id)
         {
-            var tour = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (tour == null) return;
+            var user = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            if (user == null) return;
 
-            tour.IsDeleted = true;
-            tour.UpdatedAt = DateTime.UtcNow;
+            user.IsDeleted = true;
+            user.UpdatedAt = DateTime.UtcNow;
 
-            await _userRepository.Update(tour);
+            await _userRepository.Update(user);
         }
 
         public async Task<User> GetById(string id)

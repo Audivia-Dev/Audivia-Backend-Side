@@ -25,6 +25,9 @@ public class User
     [BsonElement("avatar_url")]
     public string? AvatarUrl { get; set; }
 
+    [BsonElement("cover_photo")]
+    public string? CoverPhoto { get; set; }
+
     [BsonElement("bio")]
     public string? Bio { get; set; }
 

@@ -17,5 +17,7 @@ namespace Audivia.Application.Services.Interface
         Task DeleteUserFollow(string id);
 
         Task<UserFollowListResponse> GetAllUserFollowsByUserId (GetAllUserFollowersByUserIdRequest request);
+        Task<int> CountByFollowerId(string userId);
+        Task<int> CountByFollowingId(string userId); 
     }
 }

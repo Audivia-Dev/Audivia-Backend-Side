@@ -1,4 +1,6 @@
-﻿namespace Audivia.Domain.DTOs
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace Audivia.Domain.DTOs
 {
     public class UserDTO
     {
@@ -8,6 +10,9 @@
         public string? FullName { get; set; }
         public string? Phone { get; set; }
         public string? AvatarUrl { get; set; }
+        public string? CoverPhoto { get; set; }
+        public int? Followers { get; set; }
+        public int? Following { get; set; }
         public string? Bio {  get; set; }
         public int BalanceWallet { get; set; }
         public string? AudioCharacterId { get; set; }

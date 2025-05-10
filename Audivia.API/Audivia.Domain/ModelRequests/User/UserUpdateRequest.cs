@@ -5,6 +5,7 @@
         public string? FullName { get; set; }
         public string? Phone { get; set; }
         public string? AvatarUrl { get; set; }
+        public string? CoverPhoto { get; set; }
         public string? Bio { get; set; }
         public int? BalanceWallet { get; set; }
         public string? AudioCharacterId { get; set; }
