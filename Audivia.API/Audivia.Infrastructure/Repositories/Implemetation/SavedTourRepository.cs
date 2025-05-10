@@ -15,26 +15,37 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         }
         public async Task<List<SavedTour>> GetSavedTourByUserId(string userId)
         {
-          //  return await _collection.Find(t => t.UserId == userId).ToListAsync();
-            var pipeline = new BsonDocument[]
-            {
-                new BsonDocument("$match", new BsonDocument("user_id", new ObjectId(userId))),
-                new BsonDocument("$lookup", new BsonDocument
-                {
-                    { "from", "Tour" },
-                    { "localField", "tour_id" },
-                    { "foreignField", "_id" },
-                    { "as", "tour" }
-                }),
-                new BsonDocument("$unwind", new BsonDocument
-                {
-                    { "path", "$tour" },
-                    { "preserveNullAndEmptyArrays", true }
-                })
-            };
-
-            var aggregate = await _collection.Aggregate<SavedTour>(pipeline).ToListAsync();
-            return aggregate;
+            var objectId = new ObjectId(userId);
+            return await GetSavedTourWithTourLookup()
+                .Match(t => t.UserId == userId).ToListAsync();
         }
+
+        public async Task<SavedTour?> FindByUserIdAndTourIdAsync(string userId, string tourId)
+        {
+            return await _collection.Find(t => t.UserId == userId && t.TourId == tourId).FirstOrDefaultAsync();
+        }
+        public async Task<SavedTour?> GetByIdWithTour(string id)
+        {
+            var objectId = new ObjectId(id);
+            return await GetSavedTourWithTourLookup()
+                .Match(t => t.Id == id || t.Id == objectId.ToString())
+                .FirstOrDefaultAsync();
+        }
+        private IAggregateFluent<SavedTour> GetSavedTourWithTourLookup()
+        {
+            return _collection.Aggregate()
+                .Lookup(
+                    foreignCollectionName: "Tour",
+                    localField: "tour_id",
+                    foreignField: "_id",
+                    @as: "tour"
+                )
+                .Unwind("tour", new AggregateUnwindOptions<SavedTour>
+                {
+                    PreserveNullAndEmptyArrays = true
+                });
+        }
+
+
     }
 }

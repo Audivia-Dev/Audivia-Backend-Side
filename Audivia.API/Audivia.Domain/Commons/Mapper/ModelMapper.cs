@@ -349,6 +349,7 @@ namespace Audivia.Domain.Commons.Mapper
                 PlannedTime = savedTour.PlannedTime,
                 SavedAt = savedTour.SavedAt,
                 Tour = savedTour.Tour,
+   
             };
         }
 
