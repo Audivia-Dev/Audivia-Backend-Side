@@ -15,7 +15,26 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         }
         public async Task<List<SavedTour>> GetSavedTourByUserId(string userId)
         {
-            return await _collection.Find(t => t.UserId == userId).ToListAsync();
+          //  return await _collection.Find(t => t.UserId == userId).ToListAsync();
+            var pipeline = new BsonDocument[]
+            {
+                new BsonDocument("$match", new BsonDocument("user_id", new ObjectId(userId))),
+                new BsonDocument("$lookup", new BsonDocument
+                {
+                    { "from", "Tour" },
+                    { "localField", "tour_id" },
+                    { "foreignField", "_id" },
+                    { "as", "tour" }
+                }),
+                new BsonDocument("$unwind", new BsonDocument
+                {
+                    { "path", "$tour" },
+                    { "preserveNullAndEmptyArrays", true }
+                })
+            };
+
+            var aggregate = await _collection.Aggregate<SavedTour>(pipeline).ToListAsync();
+            return aggregate;
         }
     }
 }
