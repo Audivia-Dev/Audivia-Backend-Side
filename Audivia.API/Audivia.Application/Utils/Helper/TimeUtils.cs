@@ -10,22 +10,22 @@
             if (elapsed.TotalDays >= 1)
             {
                 int days = (int)elapsed.TotalDays;
-                return $"{days} days ago";
+                return $"{days} ngày trước";
             }
             else if (elapsed.TotalHours >= 1)
             {
                 int hours = (int)elapsed.TotalHours;
-                return $"{hours} hours ago";
+                return $"{hours} giờ trước";
             }
             else if (elapsed.TotalMinutes >= 1)
             {
                 int minutes = (int)elapsed.TotalMinutes;
-                return $"{minutes} minutes ago";
+                return $"{minutes} phút trước";
             }
             else
             {
                 int seconds = (int)elapsed.TotalSeconds;
-                return $"{seconds} seconds ago";
+                return $"{seconds} giây trước";
             }
         }
     }
