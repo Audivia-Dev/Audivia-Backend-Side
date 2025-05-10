@@ -12,5 +12,6 @@ namespace Audivia.Domain.DTOs
         public DateTime? SavedAt { get; set; }
         public DateTime? PlannedTime { get; set; }
         public Tour? Tour { get; set; }
+        public string? TimeAgo { get; set; }
     }
 }
