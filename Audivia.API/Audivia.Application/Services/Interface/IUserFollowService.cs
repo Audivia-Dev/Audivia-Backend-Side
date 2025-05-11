@@ -7,15 +7,11 @@ namespace Audivia.Application.Services.Interface
     public interface IUserFollowService
     {
         Task<UserFollowResponse> CreateUserFollow(CreateUserFollowRequest request);
-
         Task<UserFollowListResponse> GetAllUserFollows();
-
         Task<UserFollowResponse> GetUserFollowById(string id);
-
-        Task UpdateUserFollow(string id, UpdateUserFollowRequest request);
-
         Task DeleteUserFollow(string id);
-
+        Task DeleteUserFollow(CreateUserFollowRequest request);
+        Task<UserFollowStatusResponse> GetUserFollowStatus(GetFollowRequest request);
         Task<UserFollowListResponse> GetAllUserFollowsByUserId (GetAllUserFollowersByUserIdRequest request);
         Task<int> CountByFollowerId(string userId);
         Task<int> CountByFollowingId(string userId); 

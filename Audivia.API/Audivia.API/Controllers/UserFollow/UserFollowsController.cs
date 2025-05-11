@@ -36,6 +36,20 @@ namespace Audivia.API.Controllers.UserFollow
             return Ok(result);
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> Delete([FromQuery] CreateUserFollowRequest request)
+        {
+            await _userFollowService.DeleteUserFollow(request);
+            return NoContent();
+        }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> GetFollowStatus ([FromQuery] GetFollowRequest request)
+        {
+            var result = await _userFollowService.GetUserFollowStatus(request);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -43,12 +57,6 @@ namespace Audivia.API.Controllers.UserFollow
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] UpdateUserFollowRequest request)
-        {
-            await _userFollowService.UpdateUserFollow(id, request);
-            return NoContent();
-        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
