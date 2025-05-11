@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-
-namespace Audivia.Domain.ModelRequests.UserFollow
+﻿namespace Audivia.Domain.ModelRequests.UserFollow
 {
     public class CreateUserFollowRequest
     {

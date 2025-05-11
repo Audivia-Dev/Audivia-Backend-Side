@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.Enums;
 using Audivia.Domain.ModelRequests.UserFollow;
 using Audivia.Domain.ModelResponses.UserFollow;
 using Audivia.Domain.Models;
@@ -22,13 +23,16 @@ namespace Audivia.Application.Services.Implemetation
         {
             if (!ObjectId.TryParse(request.FollowerId, out _) || !ObjectId.TryParse(request.FollowingId, out _))
             {
-                return new UserFollowResponse
-                {
-                    Success = false,
-                    Message = "Invalid ID format",
-                    Response = null
-                };
+                throw new FormatException("Invalid user id format!");
             }
+
+            var existedUserFollow = await _userFollowRepository.FindFirst(u => u.FollowerId == request.FollowerId && u.FollowingId == request.FollowingId);
+
+            if (existedUserFollow != null)
+            {
+                throw new HttpRequestException("Followed before!");
+            }
+
             var userFollow = new UserFollow
             {
                 FollowerId = request.FollowerId,
@@ -43,7 +47,7 @@ namespace Audivia.Application.Services.Implemetation
             return new UserFollowResponse
             {
                 Success = true,
-                Message = "Audio follow created successfully",
+                Message = "User follow created successfully",
                 Response = ModelMapper.MapUserFollowToDTO(userFollow)
             };
         }
@@ -68,44 +72,51 @@ namespace Audivia.Application.Services.Implemetation
             var follow = await _userFollowRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
             if (follow == null)
             {
-                return new UserFollowResponse
-                {
-                    Success = false,
-                    Message = "Audio follow not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Follow is not existed!");
             }
 
             return new UserFollowResponse
             {
                 Success = true,
-                Message = "Audio follow retrieved successfully",
+                Message = "User follow retrieved successfully",
                 Response = ModelMapper.MapUserFollowToDTO(follow)
             };
         }
 
-        public async Task UpdateUserFollow(string id, UpdateUserFollowRequest request)
-        {
-            var follow = await _userFollowRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (follow == null) return;
-
-            if (!ObjectId.TryParse(request.FollowerId, out _) || !ObjectId.TryParse(request.FollowingId, out _))
-            {
-                return;
-
-            }
-            follow.FollowerId = request.FollowerId ?? follow.FollowerId;
-            follow.FollowingId = request.FollowingId ?? follow.FollowingId;
-            follow.UpdatedAt = DateTime.UtcNow;
-
-            await _userFollowRepository.Update(follow);
-        }
-
         public async Task DeleteUserFollow(string id)
         {
-            var follow = await _userFollowRepository.FindFirst(t => t.Id == id);
-            if (follow == null) throw new KeyNotFoundException("Follow not found!");
+            var follow = await _userFollowRepository.FindFirst(t => t.Id == id) ?? throw new KeyNotFoundException("Follow not found!");
             await _userFollowRepository.Delete(follow);
+        }
+
+        public async Task DeleteUserFollow(CreateUserFollowRequest request)
+        {
+            var follow = await _userFollowRepository.FindFirst(t => t.FollowerId == request.FollowerId && t.FollowingId == request.FollowingId) ?? throw new KeyNotFoundException("Follow not found!");
+            await _userFollowRepository.Delete(follow);
+        }
+
+        public async Task<UserFollowStatusResponse> GetUserFollowStatus(GetFollowRequest request)
+        {
+            var follow = await _userFollowRepository.FindFirst(t => t.FollowerId == request.CurrentUserId && t.FollowingId == request.TargetUserId);
+            if (follow == null) return new UserFollowStatusResponse
+            {
+                Success = true,
+                FollowStatusNumber = (int)FollowStatus.NotFollowing,
+                FollowStatusString = FollowStatus.NotFollowing.ToString()
+            };
+
+            var status = FollowStatus.Following;
+            var followBack = await _userFollowRepository.FindFirst(t => t.FollowerId == request.TargetUserId && t.FollowingId == request.CurrentUserId);
+            if (followBack != null)
+            {
+                status = FollowStatus.Friends;
+            }
+            return new UserFollowStatusResponse
+            {
+                Success = true,
+                FollowStatusNumber = (int)status,
+                FollowStatusString = status.ToString() 
+            };
         }
 
         public async Task<UserFollowListResponse> GetAllUserFollowsByUserId(GetAllUserFollowersByUserIdRequest request)
