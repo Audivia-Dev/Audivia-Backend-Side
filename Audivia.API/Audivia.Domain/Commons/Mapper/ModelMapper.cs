@@ -8,7 +8,7 @@ namespace Audivia.Domain.Commons.Mapper
 {
     public static class ModelMapper
     {
-        public static UserDTO MapUserToDTO(User user, int? followers = null, int? following = null)
+        public static UserDTO MapUserToDTO(User user, int? followers = null, int? following = null, int? friends = null)
         {
             return new UserDTO
             {
@@ -21,6 +21,7 @@ namespace Audivia.Domain.Commons.Mapper
                 CoverPhoto = user.CoverPhoto,
                 Followers = followers,
                 Following = following,
+                Friends = friends,
                 Bio = user.Bio,
                 BalanceWallet = user.BalanceWallet,
                 AudioCharacterId = user.AudioCharacterId,
@@ -304,6 +305,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = userFollow.Id,
                 FollowerId = userFollow.FollowerId,
                 FollowingId = userFollow.FollowingId,
+                AreFriends = userFollow.AreFriends,
                 CreatedAt = userFollow.CreatedAt,
                 UpdatedAt = userFollow.UpdatedAt,
                 IsDeleted = userFollow.IsDeleted,

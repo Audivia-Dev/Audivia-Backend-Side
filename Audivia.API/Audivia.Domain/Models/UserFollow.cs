@@ -20,6 +20,9 @@ namespace Audivia.Domain.Models
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
 
+        [BsonElement("are_friends")]
+        public bool AreFriends { get; set; } = false;
+
         [BsonElement("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
