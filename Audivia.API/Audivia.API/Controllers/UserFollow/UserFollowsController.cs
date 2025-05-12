@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.UserFollow
             return Ok(result);
         }
 
+        [HttpGet("friends")]
+        public async Task<IActionResult> GetFriendList([FromQuery] string userId)
+        {
+            var result = await _userFollowService.GetFriendsList(userId);
+            return Ok(result);
+        }
+
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] CreateUserFollowRequest request)
         {

@@ -1,7 +1,9 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.Enums;
 using Audivia.Domain.ModelRequests.UserFollow;
+using Audivia.Domain.ModelResponses.User;
 using Audivia.Domain.ModelResponses.UserFollow;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
@@ -13,10 +15,12 @@ namespace Audivia.Application.Services.Implemetation
     public class UserFollowService : IUserFollowService
     {
         private readonly IUserFollowRepository _userFollowRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserFollowService(IUserFollowRepository userFollowRepository)
+        public UserFollowService(IUserFollowRepository userFollowRepository, IUserRepository userRepository)
         {
             _userFollowRepository = userFollowRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<UserFollowResponse> CreateUserFollow(CreateUserFollowRequest request)
@@ -41,6 +45,15 @@ namespace Audivia.Application.Services.Implemetation
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
+
+            var existedFollowFromFollowingUser = await _userFollowRepository.FindFirst(u => u.FollowerId == request.FollowingId && u.FollowingId == request.FollowerId);
+            
+            if (existedFollowFromFollowingUser != null)
+            {
+                userFollow.AreFriends = true;
+                existedFollowFromFollowingUser.AreFriends = true;
+                await _userFollowRepository.Update(existedFollowFromFollowingUser);
+            }
 
             await _userFollowRepository.Create(userFollow);
 
@@ -87,35 +100,58 @@ namespace Audivia.Application.Services.Implemetation
         {
             var follow = await _userFollowRepository.FindFirst(t => t.Id == id) ?? throw new KeyNotFoundException("Follow not found!");
             await _userFollowRepository.Delete(follow);
+
+            var existedFollowFromFollowingUser = await _userFollowRepository.FindFirst(u => u.FollowerId == follow.FollowingId && u.FollowingId == follow.FollowerId);
+            if (existedFollowFromFollowingUser != null)
+            {
+                existedFollowFromFollowingUser.AreFriends = false;
+                await _userFollowRepository.Update(existedFollowFromFollowingUser);
+            }
         }
 
         public async Task DeleteUserFollow(CreateUserFollowRequest request)
         {
             var follow = await _userFollowRepository.FindFirst(t => t.FollowerId == request.FollowerId && t.FollowingId == request.FollowingId) ?? throw new KeyNotFoundException("Follow not found!");
             await _userFollowRepository.Delete(follow);
+
+            var existedFollowFromFollowingUser = await _userFollowRepository.FindFirst(u => u.FollowerId == follow.FollowingId && u.FollowingId == follow.FollowerId);
+            if (existedFollowFromFollowingUser != null)
+            {
+                existedFollowFromFollowingUser.AreFriends = false;
+                await _userFollowRepository.Update(existedFollowFromFollowingUser);
+            }
         }
 
         public async Task<UserFollowStatusResponse> GetUserFollowStatus(GetFollowRequest request)
         {
             var follow = await _userFollowRepository.FindFirst(t => t.FollowerId == request.CurrentUserId && t.FollowingId == request.TargetUserId);
-            if (follow == null) return new UserFollowStatusResponse
-            {
-                Success = true,
-                FollowStatusNumber = (int)FollowStatus.NotFollowing,
-                FollowStatusString = FollowStatus.NotFollowing.ToString()
-            };
+            
+            var followBack = await _userFollowRepository.FindFirst(t => t.FollowerId == request.TargetUserId && t.FollowingId == request.CurrentUserId);
 
             var status = FollowStatus.Following;
-            var followBack = await _userFollowRepository.FindFirst(t => t.FollowerId == request.TargetUserId && t.FollowingId == request.CurrentUserId);
-            if (followBack != null)
+            if (follow == null)
             {
-                status = FollowStatus.Friends;
+                if (followBack != null)
+                {
+                    status = FollowStatus.NotFollowedBack;
+                }
+                else
+                {
+                    status = FollowStatus.NotFollowing;
+                }
+            } else
+            {
+                if (followBack != null)
+                {
+                    status = FollowStatus.Friends;
+                }
             }
+           
             return new UserFollowStatusResponse
             {
                 Success = true,
                 FollowStatusNumber = (int)status,
-                FollowStatusString = status.ToString() 
+                FollowStatusString = status.ToString()
             };
         }
 
@@ -158,5 +194,37 @@ namespace Audivia.Application.Services.Implemetation
             return count;
         }
 
+        public async Task<int> CountFriends(string userId)
+        {
+            FilterDefinition<UserFollow> filter = Builders<UserFollow>.Filter.And(Builders<UserFollow>.Filter.Eq(i => i.FollowerId, userId), Builders<UserFollow>.Filter.Eq(i => i.AreFriends, true));
+            int count = await _userFollowRepository.Count(filter);
+            return count;
+        }
+
+        public async Task<UserShortListResponse> GetFriendsList(string userId)
+        {
+            FilterDefinition<UserFollow> filter = Builders<UserFollow>.Filter.And(Builders<UserFollow>.Filter.Eq(i => i.FollowerId, userId), Builders<UserFollow>.Filter.Eq(i => i.AreFriends, true));
+            
+            // lookup User that has Id == FollowingId from User Follow list filtered by above filter
+            var userFollows = await _userFollowRepository.Search(filter);
+            var followingIds = userFollows.Select(i => i.FollowingId).ToList();
+            var users = await _userRepository.Search(Builders<User>.Filter.In(i => i.Id, followingIds));
+            
+            var userDtos = new List<UserShortDTO>();
+            foreach (var user in users.Where(t => !t.IsDeleted))
+            {
+                var dto = ModelMapper.MapUserToShortDTO(user);
+                userDtos.Add(dto);
+            }
+
+            // return UserShortListResponse
+            return new UserShortListResponse
+            {
+                Message = "Friend List retrieved successfully!",
+                Response = userDtos,
+                Success = true
+            };
+
+        }
     }
 }

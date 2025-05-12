@@ -13,6 +13,7 @@ namespace Audivia.Domain.DTOs
         public string? CoverPhoto { get; set; }
         public int? Followers { get; set; }
         public int? Following { get; set; }
+        public int? Friends { get; set; }
         public string? Bio {  get; set; }
         public int BalanceWallet { get; set; }
         public string? AudioCharacterId { get; set; }
