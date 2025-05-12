@@ -78,8 +78,9 @@ namespace Audivia.Application.Services.Implemetation
         {
             int followers = await _userFollowService.CountByFollowingId(user.Id);
             int following = await _userFollowService.CountByFollowerId(user.Id);
+            int friends = await _userFollowService.CountFriends(user.Id);
 
-            return ModelMapper.MapUserToDTO(user, followers, following);
+            return ModelMapper.MapUserToDTO(user, followers, following, friends);
         }
 
         public async Task UpdateUser(string id, UserUpdateRequest request)

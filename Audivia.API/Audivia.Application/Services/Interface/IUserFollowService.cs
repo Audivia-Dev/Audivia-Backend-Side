@@ -1,5 +1,6 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.UserFollow;
+using Audivia.Domain.ModelResponses.User;
 using Audivia.Domain.ModelResponses.UserFollow;
 
 namespace Audivia.Application.Services.Interface
@@ -14,6 +15,8 @@ namespace Audivia.Application.Services.Interface
         Task<UserFollowStatusResponse> GetUserFollowStatus(GetFollowRequest request);
         Task<UserFollowListResponse> GetAllUserFollowsByUserId (GetAllUserFollowersByUserIdRequest request);
         Task<int> CountByFollowerId(string userId);
-        Task<int> CountByFollowingId(string userId); 
+        Task<int> CountByFollowingId(string userId);
+        Task<int> CountFriends(string userId); // friends: follow 2 chieu
+        Task<UserShortListResponse> GetFriendsList(string userId);
     }
 }
