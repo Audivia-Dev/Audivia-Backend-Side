@@ -53,70 +53,14 @@ namespace Audivia.Application.Services.Implemetation
 
 
 
-        public async Task<object> HandlePaymentStatus(string id, int orderCode)
-        {
-
-            var paymentResponse = await _payOSService.CheckPaymentStatusAsync(id);
-            if (paymentResponse == null)
-            {
-                return new { Message = "Can not found payment!" };
-            }
-            var transaction = await _transactionService.GetByOrderCode(orderCode);
-            transaction.Status = paymentResponse.Status;
-            transaction.PaymentTime = DateTime.UtcNow;
-            await _transactionService.UpdateTransaction(transaction);
-            if (paymentResponse.Status == "PAID")
-            {
-                var user = await _userService.GetById(transaction.UserId);
-                user.BalanceWallet += transaction.Amount;
-                await _userService.UpdateUser(user);
-            }
-            return new
-            {
-                Message = "Update payment successfully!"
-            };
-        }
-
-
-
-
-
-
-
-
-
-
-
-        //public async Task ProcessPayOSWebHookAsync(JsonElement payload)
-        //{
-        //    var orderCode = payload.GetProperty("data").GetProperty("orderCode").GetInt32();
-        //    var amount = payload.GetProperty("data").GetProperty("amount").GetInt32();
-        //    var status = payload.GetProperty("data").GetProperty("status").GetString();
-        //    var transaction = await _transactionService.GetByOrderCode(orderCode);
-        //    if (transaction == null || transaction.Status == "PAID" || transaction.Status == "CANCELLED")
-        //        return;
-        //    if (status == "PAID")
-        //    {
-        //        // Thanh toán thành công
-        //        transaction.Status = "PAID";
-        //        transaction.PaymentTime = DateTime.UtcNow;
-        //        await _transactionRepository.Update(transaction);
-        //       // await _walletService.IncreaseBalanceAsync(transaction.UserId, amount);
-        //    }
-        //    else if (status == "CANCELLED")
-        //    {
-        //        transaction.Status = "CANCELLED";
-        //        await _transactionRepository.Update(transaction);
-        //    }    
-        //}
         public async Task ProcessPayOSWebHookAsync(JsonElement payload)
         {
             var data = payload.GetProperty("data");
 
             var orderCode = data.GetProperty("orderCode").GetInt32();
             var amount = data.GetProperty("amount").GetInt32();
-            var code = data.GetProperty("code").GetString(); // "00" = thành công
-            var desc = data.GetProperty("desc").GetString(); // mô tả giao dịch
+            var code = data.GetProperty("code").GetString(); 
+            var desc = data.GetProperty("desc").GetString(); 
             var paymentTimeString = data.GetProperty("transactionDateTime").GetString();
 
             var transaction = await _transactionService.GetByOrderCode(orderCode);
@@ -133,12 +77,12 @@ namespace Audivia.Application.Services.Implemetation
 
                 await _transactionRepository.Update(transaction);
 
-                // Nếu cần cập nhật ví tiền
-                // await _walletService.IncreaseBalanceAsync(transaction.UserId, amount);
+                //cập nhật ví tiền
+                await _userService.IncreaseBalanceAsync(transaction.UserId, amount);
             }
             else
             {
-                transaction.Status = "CANCELLED"; // Hoặc có thể đặt là "FAILED"
+                transaction.Status = "CANCELLED"; 
                 await _transactionRepository.Update(transaction);
             }
         }

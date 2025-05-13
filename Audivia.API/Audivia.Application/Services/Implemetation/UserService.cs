@@ -131,5 +131,13 @@ namespace Audivia.Application.Services.Implemetation
         {
             await _userRepository.Update(user);
         }
+
+        public async Task IncreaseBalanceAsync(string userId, int ammount)
+        {
+            var user = await _userRepository.FindFirst(t => t.Id == userId && !t.IsDeleted);
+            if (user == null) return;
+            user.BalanceWallet += ammount;
+
+        }
     }
 }

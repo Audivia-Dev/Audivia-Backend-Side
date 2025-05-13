@@ -14,10 +14,9 @@ namespace Audivia.Application.Services.Interface
     public interface IPayOSService
     {
         Task<object> CreateVietQR(CreatePaymentTransactionRequest transaction, string cancelUrl, string returnUrl);
-        bool VerifyWebhook(PayOSWebhookRequest requestPayOSWebhookRequest);
         Task ConfirmWebhookAsync();
 
-        Task<PaymentResponse> CheckPaymentStatusAsync(string id);
+        //Task<PaymentResponse> CheckPaymentStatusAsync(string id);
         bool VerifyBankWebhook(JsonElement payload);
     }
 }
