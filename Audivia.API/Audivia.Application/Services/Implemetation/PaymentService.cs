@@ -87,27 +87,60 @@ namespace Audivia.Application.Services.Implemetation
 
 
 
+        //public async Task ProcessPayOSWebHookAsync(JsonElement payload)
+        //{
+        //    var orderCode = payload.GetProperty("data").GetProperty("orderCode").GetInt32();
+        //    var amount = payload.GetProperty("data").GetProperty("amount").GetInt32();
+        //    var status = payload.GetProperty("data").GetProperty("status").GetString();
+        //    var transaction = await _transactionService.GetByOrderCode(orderCode);
+        //    if (transaction == null || transaction.Status == "PAID" || transaction.Status == "CANCELLED")
+        //        return;
+        //    if (status == "PAID")
+        //    {
+        //        // Thanh toán thành công
+        //        transaction.Status = "PAID";
+        //        transaction.PaymentTime = DateTime.UtcNow;
+        //        await _transactionRepository.Update(transaction);
+        //       // await _walletService.IncreaseBalanceAsync(transaction.UserId, amount);
+        //    }
+        //    else if (status == "CANCELLED")
+        //    {
+        //        transaction.Status = "CANCELLED";
+        //        await _transactionRepository.Update(transaction);
+        //    }    
+        //}
         public async Task ProcessPayOSWebHookAsync(JsonElement payload)
         {
-            var orderCode = payload.GetProperty("data").GetProperty("orderCode").GetInt32();
-            var amount = payload.GetProperty("data").GetProperty("amount").GetInt32();
-            var status = payload.GetProperty("data").GetProperty("status").GetString();
+            var data = payload.GetProperty("data");
+
+            var orderCode = data.GetProperty("orderCode").GetInt32();
+            var amount = data.GetProperty("amount").GetInt32();
+            var code = data.GetProperty("code").GetString(); // "00" = thành công
+            var desc = data.GetProperty("desc").GetString(); // mô tả giao dịch
+            var paymentTimeString = data.GetProperty("transactionDateTime").GetString();
+
             var transaction = await _transactionService.GetByOrderCode(orderCode);
+
             if (transaction == null || transaction.Status == "PAID" || transaction.Status == "CANCELLED")
                 return;
-            if (status == "PAID")
+
+            if (code == "00")
             {
-                // Thanh toán thành công
                 transaction.Status = "PAID";
-                transaction.PaymentTime = DateTime.UtcNow;
+                transaction.PaymentTime = DateTime.TryParse(paymentTimeString, out var time)
+                    ? time.ToUniversalTime()
+                    : DateTime.UtcNow;
+
                 await _transactionRepository.Update(transaction);
-               // await _walletService.IncreaseBalanceAsync(transaction.UserId, amount);
+
+                // Nếu cần cập nhật ví tiền
+                // await _walletService.IncreaseBalanceAsync(transaction.UserId, amount);
             }
-            else if (status == "CANCELLED")
+            else
             {
-                transaction.Status = "CANCELLED";
+                transaction.Status = "CANCELLED"; // Hoặc có thể đặt là "FAILED"
                 await _transactionRepository.Update(transaction);
-            }    
+            }
         }
 
 
