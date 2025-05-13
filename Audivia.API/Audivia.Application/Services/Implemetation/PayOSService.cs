@@ -84,7 +84,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             var payload = new
             {
-                webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url"
+                webhookUrl = "https://audivia-backend.azurewebsites.net/webhook-url/"
             };
             var json = JsonSerializer.Serialize(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
