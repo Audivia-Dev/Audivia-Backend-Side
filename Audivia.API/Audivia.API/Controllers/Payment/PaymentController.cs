@@ -28,20 +28,6 @@ namespace Audivia.API.Controllers.Payment
             return Ok(new { qrCode = qr });
         }
 
-      //  [AllowAnonymous]
-        [HttpPost("webhook")]
-        public async Task<IActionResult> HandleWebhook([FromBody] JsonElement payload)
-        {
-            try
-            {
-                await _paymentService.ProcessPayOSWebHookAsync(payload);
-                return Ok(new { message = "Webhook processed." });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
 
         [HttpPost("init-webhook")]
         public async Task<IActionResult> InitWebhook()
@@ -50,11 +36,11 @@ namespace Audivia.API.Controllers.Payment
             return Ok("Webhook URL registered.");
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdatePayment(string id, int orderCode)
-        {
-            var rs = await _paymentService.HandlePaymentStatus(id, orderCode);
-            return Ok(rs);
-        }
+        //[HttpPut]
+        //public async Task<IActionResult> UpdatePayment(string id, int orderCode)
+        //{
+        //    var rs = await _paymentService.HandlePaymentStatus(id, orderCode);
+        //    return Ok(rs);
+        //}
     }
 }
