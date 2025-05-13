@@ -12,9 +12,12 @@ namespace Audivia.API.Controllers.Payment
     public class WebHookController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
-        public WebHookController(IPaymentService paymentService)
+
+        private readonly IPayOSService _payOSService;
+        public WebHookController(IPaymentService paymentService, IPayOSService payOSService)
         {
-            _paymentService = paymentService;   
+            _paymentService = paymentService; 
+            _payOSService = payOSService;
         }
         [HttpPost]
         [AllowAnonymous]
@@ -22,6 +25,11 @@ namespace Audivia.API.Controllers.Payment
         {
             try
             {
+                if (!_payOSService.VerifyBankWebhook(payload))
+                {
+                    return BadRequest(new { error = "Invalid signature" });
+                }
+
                 await _paymentService.ProcessPayOSWebHookAsync(payload);
                 return Ok(new { message = "Webhook processed." });
             }

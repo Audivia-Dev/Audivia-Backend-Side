@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Audivia.Application.Services.Interface
@@ -17,5 +18,6 @@ namespace Audivia.Application.Services.Interface
         Task ConfirmWebhookAsync();
 
         Task<PaymentResponse> CheckPaymentStatusAsync(string id);
+        bool VerifyBankWebhook(JsonElement payload);
     }
 }

@@ -118,7 +118,7 @@ namespace Audivia.API
                 app.UseSwaggerUI();
             }
            
-    //        app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseCors("app-cors");
            // app.UseMiddleware<ErrorHandlingMiddleware>();

@@ -187,6 +187,34 @@ namespace Audivia.Application.Services.Implemetation
             };
             return paymentResponse;
         }
+
+        public  bool VerifyBankWebhook(JsonElement payload)
+        {
+            var data = payload.GetProperty("data");
+
+            // Tạo dictionary chứa tất cả các key-value trong "data"
+            var dict = new SortedDictionary<string, string>();
+            foreach (var prop in data.EnumerateObject())
+            {
+                dict[prop.Name] = prop.Value.GetRawText().Trim('"');
+            }
+
+            // Build raw data string: key1=value1&key2=value2&...
+            var rawBuilder = new StringBuilder();
+            foreach (var kvp in dict)
+            {
+                rawBuilder.Append($"{kvp.Key}={kvp.Value}&");
+            }
+            rawBuilder.Length--; // Bỏ dấu '&' cuối cùng
+
+            var rawData = rawBuilder.ToString();
+            var generatedSignature = GenerateSignature(rawData);
+            var providedSignature = payload.GetProperty("signature").GetString();
+
+            return generatedSignature == providedSignature;
+        }
+
+
     }
 
 }
