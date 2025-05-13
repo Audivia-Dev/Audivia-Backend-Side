@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace Audivia.API.Controllers.Payment
 {
-    [Route("webhook-url/")]
+    [Route("webhook-url")]
     [ApiController]
     public class WebHookController : ControllerBase
     {
