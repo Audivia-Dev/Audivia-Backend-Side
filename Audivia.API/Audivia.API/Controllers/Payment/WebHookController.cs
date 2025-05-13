@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Implemetation;
 using Audivia.Application.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -16,6 +17,7 @@ namespace Audivia.API.Controllers.Payment
             _paymentService = paymentService;   
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> HandleWebhook([FromBody] JsonElement payload)
         {
             try
