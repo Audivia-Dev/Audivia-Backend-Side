@@ -52,5 +52,12 @@ namespace Audivia.API.Controllers.ChatRoom
             await _chatRoomService.DeleteChatRoom(id);
             return NoContent();
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetChatRoomOfUser(string userId)
+        {
+            var rs = await _chatRoomService.GetChatRoomsOfUser(userId);
+            return Ok(rs);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.ChatRoom;
 using Audivia.Domain.ModelResponses.ChatRoom;
 using Audivia.Domain.Models;
@@ -107,6 +108,10 @@ namespace Audivia.Application.Services.Implemetation
             await _chatRoomRepository.Update(chatRoom);
         }
 
-
+        public async Task<List<ChatRoomDTO>> GetChatRoomsOfUser(string userId)
+        {
+            var rs = await _chatRoomRepository.GetChatRoomsOfUser(userId);
+            return rs.Select(ModelMapper.MapChatRoomToDTO).ToList();
+        }
     }
 }
