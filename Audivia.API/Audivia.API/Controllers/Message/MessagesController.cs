@@ -69,5 +69,12 @@ namespace Audivia.API.Controllers.Message
             catch {  }
             return NoContent();
         }
+
+        [HttpGet("chatroom/{id}")]
+        public async Task<IActionResult> GetMessagesByChatRoomId(string id)
+        {
+            var rs = await _messageService.GetMessagesByChatRoomId(id);
+            return Ok(rs);
+        }
     }
 }

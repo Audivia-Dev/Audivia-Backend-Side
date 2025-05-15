@@ -12,5 +12,6 @@ namespace Audivia.Domain.DTOs
         public string Status { get; set; } // enum
         public string SenderId { get; set; }
         public string ChatRoomId { get; set; }
+        public User? Sender { get; set; }
     }
 }

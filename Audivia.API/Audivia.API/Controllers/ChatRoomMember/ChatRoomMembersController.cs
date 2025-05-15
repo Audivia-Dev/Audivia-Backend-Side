@@ -62,5 +62,12 @@ namespace Audivia.API.Controllers.ChatRoomMember
                 );
             return NoContent();
         }
+
+        [HttpPost("private/{user1}/{user2}")]
+        public async Task<IActionResult> GetPrivateRoomBetweenUser(string user1, string user2)
+        {
+            var rs = await _chatRoomMemberService.GetPrivateChatRoomBetweenUsers(user1, user2);
+            return Ok(rs);
+        }
     }
 }

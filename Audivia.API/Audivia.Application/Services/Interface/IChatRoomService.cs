@@ -1,5 +1,6 @@
 ﻿using Audivia.Domain.ModelRequests.ChatRoom;
 using Audivia.Domain.ModelResponses.ChatRoom;
+using Audivia.Domain.Models;
 
 namespace Audivia.Application.Services.Interface
 {

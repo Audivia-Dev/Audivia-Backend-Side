@@ -541,6 +541,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Type = message.Type,
                 CreatedAt = message.CreatedAt,
                 Status = message.Status,
+                Sender = message.Sender,
             };
         }
 
