@@ -1,6 +1,7 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Message;
 using Audivia.Domain.ModelResponses.Message;
+using Audivia.Domain.Models;
 
 namespace Audivia.Application.Services.Interface
 {
@@ -15,5 +16,6 @@ namespace Audivia.Application.Services.Interface
         Task<MessageDTO> UpdateMessage(string id, UpdateMessageRequest request);
 
         Task<MessageDTO> DeleteMessage(string id);
+        Task<List<MessageDTO>> GetMessagesByChatRoomId(string chatRoomId);
     }
 }

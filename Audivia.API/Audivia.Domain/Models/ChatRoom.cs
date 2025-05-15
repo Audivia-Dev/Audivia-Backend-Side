@@ -27,6 +27,5 @@ namespace Audivia.Domain.Models
         
         [BsonElement("type")]
         public string Type { get; set; } // enum
-
     }
 }

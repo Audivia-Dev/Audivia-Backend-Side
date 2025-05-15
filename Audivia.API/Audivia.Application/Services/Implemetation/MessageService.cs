@@ -106,5 +106,11 @@ namespace Audivia.Application.Services.Implemetation
             await _messageRepository.Delete(message);
             return ModelMapper.MapMessageToDTO(message);
         }
+
+        public async Task<List<MessageDTO>> GetMessagesByChatRoomId(string chatRoomId)
+        {
+            var rs = await _messageRepository.GetMessagesByChatRoomId(chatRoomId);
+            return rs.Select(ModelMapper.MapMessageToDTO).ToList();
+        }
     }
 }
