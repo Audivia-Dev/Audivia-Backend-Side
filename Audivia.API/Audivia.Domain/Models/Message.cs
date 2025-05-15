@@ -27,5 +27,9 @@ namespace Audivia.Domain.Models
         [BsonElement("chatroom_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string ChatRoomId { get; set; }
+
+        [BsonElement("Sender")]
+        [BsonIgnoreIfNull]
+        public User? Sender { get; set; }
     }
 }

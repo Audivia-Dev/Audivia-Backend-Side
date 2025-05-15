@@ -1,5 +1,6 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.ChatRoomMember;
+using Audivia.Domain.ModelResponses.ChatRoom;
 using Audivia.Domain.ModelResponses.ChatRoomMember;
 
 namespace Audivia.Application.Services.Interface
@@ -16,5 +17,6 @@ namespace Audivia.Application.Services.Interface
 
         Task DeleteChatRoomMember(string id);
         Task<ChatRoomMemberDTO> GetMemberById(string id);
+        Task<ChatRoomDTO> GetPrivateChatRoomBetweenUsers(string user1, string user2);
     }
 }
