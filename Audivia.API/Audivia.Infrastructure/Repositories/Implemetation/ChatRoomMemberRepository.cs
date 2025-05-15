@@ -9,10 +9,10 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 {
     public class ChatRoomMemberRepository : BaseRepository<ChatRoomMember>, IChatRoomMemberRepository
     {
-        private readonly IChatRoomRepository _chatRoomRepository;
-        public ChatRoomMemberRepository(IMongoDatabase database, IChatRoomRepository chatRoomRepository) : base(database)
+        private readonly IMongoCollection<ChatRoom> _chatRoomCollection;
+        public ChatRoomMemberRepository(IMongoDatabase database) : base(database)
         {
-            _chatRoomRepository = chatRoomRepository;
+            _chatRoomCollection = database.GetCollection<ChatRoom>("ChatRoom");
         }
 
         public async Task<ChatRoom> GetPrivateChatRoomBetweenUsers(string user1, string user2)
@@ -23,8 +23,8 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
                 .Project(x => x.ChatRoomId).ToListAsync();
             foreach (var roomId in commonRoomIds)
             {
-                var room = await _chatRoomRepository.GetById(new ObjectId(roomId));
-                if (room != null && room.Type == "private")
+                var room = await _chatRoomCollection.Find(x => x.Id == roomId && x.Type == "private").FirstOrDefaultAsync();
+                if (room != null)
                 {
                     var memberCount = await _collection.CountDocumentsAsync(x => x.ChatRoomId == roomId);
                     if (memberCount == 2)
