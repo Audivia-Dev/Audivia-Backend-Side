@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using Audivia.Domain.Models;
 
 namespace Audivia.Domain.DTOs
 {
@@ -12,6 +13,6 @@ namespace Audivia.Domain.DTOs
         public string Type { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-
+        public List<ChatRoomMember> Members { get; set; }
     }
 }

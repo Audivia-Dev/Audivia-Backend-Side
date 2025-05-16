@@ -24,5 +24,7 @@ namespace Audivia.Domain.Models
         public bool IsHost { get; set; }
         [BsonElement("joined_at")]
         public DateTime? JoinedAt { get; set; }
+        [BsonIgnore]
+        public User User { get; set; } = null!;
     }
 }
