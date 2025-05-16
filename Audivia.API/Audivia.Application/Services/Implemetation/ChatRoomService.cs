@@ -66,7 +66,7 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<ChatRoomResponse> GetChatRoomById(string id)
         {
-            var chatRoom = await _chatRoomRepository.FindFirst(t => t.Id == id && t.IsActive);
+            var chatRoom = await _chatRoomRepository.GetChatRoomById(id);
             if (chatRoom == null)
             {
                 return new ChatRoomResponse
