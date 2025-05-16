@@ -526,6 +526,7 @@ namespace Audivia.Domain.Commons.Mapper
                 CreatedBy = chatRoom.CreatedBy,
                 CreatedAt = chatRoom.CreatedAt,
                 UpdatedAt = chatRoom.UpdatedAt,
+                Members = chatRoom.Members,
             };
         }
 
