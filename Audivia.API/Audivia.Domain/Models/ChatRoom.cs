@@ -27,5 +27,7 @@ namespace Audivia.Domain.Models
         
         [BsonElement("type")]
         public string Type { get; set; } // enum
+        [BsonIgnore]
+        public List<ChatRoomMember> Members { get; set; }
     }
 }
