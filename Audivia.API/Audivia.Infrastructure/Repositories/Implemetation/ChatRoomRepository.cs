@@ -44,5 +44,30 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 
             return rooms;
         }
+
+        public async Task<ChatRoom> GetChatRoomById(string id)
+        {
+            // 1. Lấy chatRoom theo id
+            var chatRoom = await _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+            if (chatRoom == null) return null;
+
+            // 2. Lấy member của chatRoom
+            var members = await _memberCollection
+                .Find(m => m.ChatRoomId == chatRoom.Id)
+                .ToListAsync();
+
+            // 3. Lấy user cho từng member
+            foreach (var member in members)
+            {
+                member.User = await _userCollection
+                    .Find(u => u.Id == member.UserId)
+                    .FirstOrDefaultAsync();
+            }
+
+            // 4. Gán members có user info cho chatRoom
+            chatRoom.Members = members;
+
+            return chatRoom;
+        }
     }
 }
