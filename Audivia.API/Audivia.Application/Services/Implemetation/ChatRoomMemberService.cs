@@ -112,6 +112,8 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<ChatRoomDTO> GetPrivateChatRoomBetweenUsers(string user1, string user2)
         {
             var rs = await _chatRoomMemberRepository.GetPrivateChatRoomBetweenUsers(user1, user2);
+            if (rs == null)
+                return null;
             return ModelMapper.MapChatRoomToDTO(rs);
         }
     }
