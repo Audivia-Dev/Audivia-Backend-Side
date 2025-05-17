@@ -54,17 +54,27 @@ namespace Audivia.API
                 });
             });
 
+            //builder.Services.AddCors(options =>
+            //{
+            //    options.AddPolicy("app-cors",
+            //        builder =>
+            //        {
+            //            builder.AllowAnyOrigin()
+            //            .AllowAnyHeader()
+            //            .AllowAnyMethod();
+            //        });
+            //});
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("app-cors",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
+                options.AddPolicy("app-cors", builder =>
+                {
+                    builder
+                        .SetIsOriginAllowed(_ => true) // Dung thay vi AllowAnyOrigin()
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
-                    });
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // Bat buoc cho SignalR
+                });
             });
-
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
