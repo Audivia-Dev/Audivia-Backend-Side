@@ -12,6 +12,8 @@ namespace Audivia.Application.Services.Interface
 
         Task<CheckpointAudioResponse> GetCheckpointAudioById(string id);
 
+        Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId);
+        
         Task UpdateCheckpointAudio(string id, UpdateCheckpointAudioRequest request);
 
         Task DeleteCheckpointAudio(string id);
