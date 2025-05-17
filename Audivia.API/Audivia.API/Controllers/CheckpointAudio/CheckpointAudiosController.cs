@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.CheckpointAudio
             return Ok(result);
         }
 
+        [HttpGet("checkpointId/{checkpointId}")]
+        public async Task<IActionResult> GetByTourCheckpointId(string checkpointId)
+        {
+            var result = await _checkpointAudioService.GetCheckpointAudioByTourCheckpointId(checkpointId);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateCheckpointAudioRequest request)
         {
