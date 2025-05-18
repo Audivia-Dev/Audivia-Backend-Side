@@ -38,6 +38,13 @@ namespace Audivia.API.Controllers.AudioTour
             return Ok(result);
         }
 
+        [HttpGet("suggested")]
+        public async Task<IActionResult> GetSuggestedTours([FromQuery] GetSuggestedTourRequest request)
+        {
+            var result = await _tourService.GetSuggestedTour(request);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateTourRequest request)
         {

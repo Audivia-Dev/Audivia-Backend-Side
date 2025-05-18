@@ -28,6 +28,7 @@ namespace Audivia.Application.Utils.QueryBuilders
             return filter;
         }
 
+
         public static SortDefinition<Tour>? BuildSort(string? sortBy)
         {
             return sortBy switch
