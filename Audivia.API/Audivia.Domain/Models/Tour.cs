@@ -37,6 +37,12 @@ namespace Audivia.Domain.Models
         [BsonElement("avg_rating")]
         public double AvgRating { get; set; } = 0;
 
+        [BsonElement("start_latitude")] // latitude of checkpoint 1 of this tour
+        public double? StartLatitude { get; set; }
+
+        [BsonElement("start_longitude")] // longitude of checkpoint 1 of this tour
+        public double? StartLongitude { get; set; }
+
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
 
