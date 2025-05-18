@@ -15,6 +15,8 @@ namespace Audivia.Application.Services.Interface
 
         Task<AudioTourResponse> GetAudioTourById(string id);
 
+        Task<AudioTourListResponse> GetSuggestedTour(GetSuggestedTourRequest request);
+
         Task UpdateAudioTour(string id, UpdateTourRequest request);
 
         Task DeleteAudioTour(string id);

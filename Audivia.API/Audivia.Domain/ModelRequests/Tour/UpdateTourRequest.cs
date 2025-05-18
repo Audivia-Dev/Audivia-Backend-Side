@@ -10,6 +10,10 @@ namespace Audivia.Domain.ModelRequests.AudioTour
 
         public string? Location { get; set; }
 
+        public double? StartLatitude { get; set; }
+
+        public double? StartLongitude { get; set; }
+
         public decimal? Price { get; set; }
 
         public int? Duration { get; set; }

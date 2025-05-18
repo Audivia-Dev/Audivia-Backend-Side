@@ -1,4 +1,5 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Application.Utils.Helper;
 using Audivia.Application.Utils.QueryBuilders;
 using Audivia.Domain.Commons.Api;
 using Audivia.Domain.Commons.Mapper;
@@ -37,6 +38,8 @@ namespace Audivia.Application.Services.Implemetation
                 Title = request.Title,
                 Description = request.Description,
                 Location = request.Location,
+                StartLatitude = request.StartLatitude,
+                StartLongitude = request.StartLongitude,
                 Price = request.Price,
                 Duration = request.Duration,
                 TypeId = request.TypeId,
@@ -74,15 +77,15 @@ namespace Audivia.Application.Services.Implemetation
             int countAll = await _tourRepository.Count(filter);
 
             int count = request.Top.HasValue ? request.Top.Value : countAll;
-            
+
             var pagedResponse = new PaginationResponse<TourDTO>(request.PageIndex ?? 1, request.PageSize ?? 5, count, dtos);
-            
+
             return new AudioTourListResponse
             {
                 Success = true,
                 Message = "Audio tour list retrieved successfully",
                 Response = pagedResponse
-            }; 
+            };
         }
 
         public async Task<AudioTourResponse> GetAudioTourById(string id)
@@ -124,6 +127,8 @@ namespace Audivia.Application.Services.Implemetation
             tour.Title = request.Title ?? tour.Title;
             tour.Description = request.Description ?? tour.Description;
             tour.Location = request.Location ?? tour.Location;
+            tour.StartLongitude = request.StartLongitude ?? tour.StartLongitude;
+            tour.StartLatitude = request.StartLatitude ?? tour.StartLatitude;
             tour.Price = request.Price ?? tour.Price;
             tour.Duration = request.Duration ?? tour.Duration;
             tour.ThumbnailUrl = request.ThumbnailUrl ?? tour.ThumbnailUrl;
@@ -144,6 +149,42 @@ namespace Audivia.Application.Services.Implemetation
             await _tourRepository.Update(tour);
         }
 
+        public async Task<AudioTourListResponse> GetSuggestedTour(GetSuggestedTourRequest request)
+        {
+            // Input validation
+            if (request == null || request.Radius <= 0)
+            {
+                throw new HttpRequestException("Invalid radius!");
+            }
 
+            if (request.Latitude < -90 || request.Latitude > 90 || request.Longitude < -180 || request.Longitude > 180)
+            {
+                throw new HttpRequestException("Invalid coordination!");
+            }
+
+            var tours = await _tourRepository.GetAll();
+
+            // Apply Haversine filter on the smaller dataset
+            var nearbyTours = tours
+                .Where(t => DistanceUtils.CalculateDistance(request.Latitude, request.Longitude, t.StartLatitude ?? 0, t.StartLongitude ?? 0) <= request.Radius)
+                .Take(3) // Limit to 3 nearest tours
+                .ToList();
+
+            var totalCount = nearbyTours.Count;
+
+            // Map to DTOs
+            var dtos = nearbyTours.Select(ModelMapper.MapAudioTourToDTO).ToList();
+
+            // Pagination response
+            var pagedResponse = new PaginationResponse<TourDTO>(1, 3, totalCount, dtos);
+
+            return new AudioTourListResponse
+            {
+                Success = true,
+                Message = "Audio tour list retrieved successfully",
+                Response = pagedResponse
+            };
+
+        }
     }
 }
