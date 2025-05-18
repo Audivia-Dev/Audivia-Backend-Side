@@ -10,6 +10,10 @@ namespace Audivia.Domain.DTOs
 
         public string? Location { get; set; }
 
+        public double? StartLatitude { get; set; }
+
+        public double? StartLongitude { get; set; }
+
         public string? Description { get; set; }
 
         public decimal? Price { get; set; }
@@ -22,7 +26,7 @@ namespace Audivia.Domain.DTOs
 
         public string? ThumbnailUrl { get; set; }
         public double AvgRating { get; set; }
-        public IEnumerable<TourCheckpointDTO>? Checkpoints {  get; set; } 
+        public IEnumerable<TourCheckpointDTO>? Checkpoints { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
