@@ -98,12 +98,13 @@ namespace Audivia.Application.Services.Implemetation
 
             FilterDefinition<TourCheckpoint>? filter = Builders<TourCheckpoint>.Filter.Eq(i => i.TourId, id);
             var tourCheckpoints = await _tourCheckpointService.GetTourCheckpointsAsync(filter);
+            var result = tourCheckpoints.OrderBy(t => t.Order).ToList();
 
             return new AudioTourResponse
             {
                 Success = true,
                 Message = "Audio tour retrieved successfully",
-                Response = ModelMapper.MapTourDetailsToDTO(tour, tourCheckpoints)
+                Response = ModelMapper.MapTourDetailsToDTO(tour, result)
             };
         }
 
