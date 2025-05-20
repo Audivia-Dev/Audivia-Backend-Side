@@ -16,11 +16,13 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly ITourReviewRepository _tourReviewRepository;
         private readonly ITourRepository _tourRepository;
+        private readonly IUserRepository _userRepository;
 
-        public TourReviewService(ITourReviewRepository tourReviewRepository, ITourRepository tourRepository)
+        public TourReviewService(ITourReviewRepository tourReviewRepository, ITourRepository tourRepository, IUserRepository userRepository)
         {
             _tourReviewRepository = tourReviewRepository;
             _tourRepository = tourRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<TourReviewResponse> CreateTourReview(CreateTourReviewRequest request)
@@ -168,7 +170,34 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId)
         {
             var rs = await _tourReviewRepository.GetReviewsByTourId(tourId);
-            return rs.Select(ModelMapper.MapTourReviewToDTO).ToList();
+            var reviews = rs.Where(r => !r.IsDeleted).ToList();
+
+            // Lấy tất cả CreatedBy khác nhau
+            var userIds = reviews
+                .Where(r => !string.IsNullOrEmpty(r.CreatedBy))
+                .Select(r => r.CreatedBy)
+                .Distinct()
+                .ToList();
+
+            // Lấy toàn bộ user 1 lần
+            var filter = Builders<User>.Filter.In(u => u.Id, userIds);
+            var users = await _userRepository.Search(filter);
+            var userDict = users.ToDictionary(u => u.Id, u => u);
+
+            var result = new List<TourReviewDTO>();
+            foreach (var review in reviews)
+            {
+                var dto = ModelMapper.MapTourReviewToDTO(review);
+
+                if (!string.IsNullOrEmpty(review.CreatedBy) && userDict.TryGetValue(review.CreatedBy, out var user))
+                {
+                    dto.UserName = user?.Username;
+                    dto.AvatarUrl = user?.AvatarUrl;
+                }
+
+                result.Add(dto);
+            }
+            return result;
         }
     }
 }
