@@ -135,6 +135,21 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
+        public async Task<ReactionListResponse> GetReactionsByUser(string userId)
+        {
+            FilterDefinition<Reaction> filter = Builders<Reaction>.Filter.Eq(i => i.CreatedBy, userId);
+            var reactions = await _reactionRepository.Search(filter);
+            var reactionDtos = reactions
+                .Select(ModelMapper.MapReactionToDTO)
+                .ToList();
+            return new ReactionListResponse
+            {
+                Success = true,
+                Message = "Reactions retrieved successfully",
+                Response = reactionDtos
+            };
+        }
+
         public async Task<ReactionResponse> GetReactionsByPostAndUser(string postId, string userId)
         {
             var reaction = await _reactionRepository.FindFirst(t => t.PostId == postId && t.CreatedBy == userId);
