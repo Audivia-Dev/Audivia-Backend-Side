@@ -12,6 +12,7 @@ namespace Audivia.Infrastructure.Repositories.Interface
     public interface IPaymentTransactionRepository : IBaseRepository<PaymentTransaction>, IDisposable
     {
         Task<PaymentTransaction> GetByOrderCodeAsync(int orderCode);
+        Task<List<PaymentTransaction>> GetPaymentTransactionByUser(string userId);
 
     }
 }

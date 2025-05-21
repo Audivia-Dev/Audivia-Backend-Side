@@ -112,5 +112,13 @@ namespace Audivia.Application.Services.Implemetation
                 .Select(ModelMapper.MapTransactionHistoryToDTO)
                 .ToList();
         }
+
+        public async Task<TransactionHistoryDTO> GetTransactionHistoryByUserIdAndTourId(string userId, string tourId)
+        {
+            var trans = await _transactionHistoryRepository.GetTransactionHistoryByUserIdAndTourId(userId, tourId);
+            if (trans is null)
+                return null;
+            return ModelMapper.MapTransactionHistoryToDTO(trans);
+        }
     }
 }

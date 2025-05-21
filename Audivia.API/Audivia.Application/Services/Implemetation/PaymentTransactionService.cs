@@ -3,8 +3,10 @@ using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Payment;
 using Audivia.Domain.ModelRequests.PaymentTransaction;
+using Audivia.Domain.ModelResponses.GroupMember;
 using Audivia.Domain.ModelResponses.PaymentTransaction;
 using Audivia.Domain.Models;
+using Audivia.Infrastructure.Repositories.Implemetation;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
 using Org.BouncyCastle.Ocsp;
@@ -107,6 +109,18 @@ namespace Audivia.Application.Services.Implemetation
         public async Task UpdateTransaction(PaymentTransaction transaction)
         {
             await _paymentTransactionRepository.Update(transaction);
+        }
+
+
+        public async Task<PaymentTransactionListResponse> GetPaymentTransactionByUser(string userId)
+        {
+            var list = await _paymentTransactionRepository.GetPaymentTransactionByUser(userId);
+            return new PaymentTransactionListResponse
+            {
+                Success = true,
+                Message = "Fetched all payment transaction successfully!",
+                Response = list.Select(ModelMapper.MapPaymentTransactioToDTO).ToList(),
+            };
         }
     }
 }
