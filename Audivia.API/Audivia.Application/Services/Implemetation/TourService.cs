@@ -163,7 +163,7 @@ namespace Audivia.Application.Services.Implemetation
                 throw new HttpRequestException("Invalid coordination!");
             }
 
-            var tours = await _tourRepository.GetAll();
+            var tours = await _tourRepository.GetAll(); // must be optimized when scope expand
 
             // Apply Haversine filter on the smaller dataset
             var nearbyTours = tours

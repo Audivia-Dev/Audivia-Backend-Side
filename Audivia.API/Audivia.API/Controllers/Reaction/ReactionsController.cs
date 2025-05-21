@@ -22,6 +22,22 @@ namespace Audivia.API.Controllers.Reaction
             return Ok(result);
         }
 
+        [HttpGet("posts/{postId}")]
+        public async Task<IActionResult> GetByPost(string postId)
+        {
+            var result = await _reactionService.GetReactionsByPost(postId);
+            return Ok(result);
+        }
+
+        [HttpGet("posts/{postId}/users/{userId}")]
+        public async Task<IActionResult> GetByPostAndUser(string postId, string userId)
+        {
+            var result = await _reactionService.GetReactionsByPostAndUser(postId, userId);
+            return Ok(result);
+        }
+
+        // other apis
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
