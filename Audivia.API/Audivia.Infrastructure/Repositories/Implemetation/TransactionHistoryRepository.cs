@@ -13,5 +13,9 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         {
             return await _collection.Find(x => x.UserId == userId).ToListAsync();
         }
+        public async Task<TransactionHistory> GetTransactionHistoryByUserIdAndTourId(string userId, string tourId)
+        {
+            return await _collection.Find(x => x.UserId == userId && x.TourId == tourId).FirstOrDefaultAsync();
+        }
     }
 }

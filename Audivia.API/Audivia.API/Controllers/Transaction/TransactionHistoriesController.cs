@@ -56,6 +56,11 @@ namespace Audivia.API.Controllers.Transaction
             var rs = await _transactionHistoryService.GetTransactionHistoryByUserId(userId);
             return Ok(rs);
         }
-
+        [HttpGet("user/{userId}/tour{tourId}")]
+        public async Task<IActionResult> GetTransactionHistoryByUserIdAndTourId(string userId, string tourId)
+        {
+            var rs = await _transactionHistoryService.GetTransactionHistoryByUserIdAndTourId(userId, tourId);
+            return Ok(rs);
+        }
     }
 }
