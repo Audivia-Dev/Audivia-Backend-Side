@@ -5,6 +5,7 @@ using Audivia.Domain.ModelResponses.Reaction;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -23,6 +24,20 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid created by value!");
             }
+
+            var existedReaction = await _reactionRepository.FindFirst(t => t.PostId == request.PostId && t.CreatedBy == request.CreatedBy);
+
+            if (existedReaction != null)
+            {
+                await _reactionRepository.Delete(existedReaction);
+                return new ReactionResponse
+                {
+                    Success = true,
+                    Message = "Reaction existed! Delete reaction successfully!",
+                    Response = ModelMapper.MapReactionToDTO(existedReaction)
+                };
+            }
+
             var reaction = new Reaction
             {
                 Type = request.Type,
@@ -105,5 +120,35 @@ namespace Audivia.Application.Services.Implemetation
             await _reactionRepository.Delete(reaction);
         }
 
+        public async Task<ReactionListResponse> GetReactionsByPost(string postId)
+        {
+            FilterDefinition<Reaction> filter = Builders<Reaction>.Filter.Eq(i => i.PostId, postId);
+            var reactions = await _reactionRepository.Search(filter);
+            var reactionDtos = reactions
+                .Select(ModelMapper.MapReactionToDTO)
+                .ToList();
+            return new ReactionListResponse
+            {
+                Success = true,
+                Message = "Reactions retrieved successfully",
+                Response = reactionDtos
+            };
+        }
+
+        public async Task<ReactionResponse> GetReactionsByPostAndUser(string postId, string userId)
+        {
+            var reaction = await _reactionRepository.FindFirst(t => t.PostId == postId && t.CreatedBy == userId);
+            if (reaction == null)
+            {
+                throw new KeyNotFoundException("Reaction not found!");
+            }
+
+            return new ReactionResponse
+            {
+                Success = true,
+                Message = "Reaction retrieved successfully",
+                Response = ModelMapper.MapReactionToDTO(reaction)
+            };
+        }
     }
 }
