@@ -5,6 +5,7 @@ using Audivia.Domain.ModelResponses.Comment;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -113,6 +114,22 @@ namespace Audivia.Application.Services.Implemetation
             comment.UpdatedAt = DateTime.UtcNow;
 
             await _commentRepository.Update(comment);
+        }
+
+        public async Task<CommentListResponse> GetByPost(string postId)
+        {
+            FilterDefinition<Comment> filter = Builders<Comment>.Filter.Eq(c => c.PostId, postId);
+            var comments = await _commentRepository.Search(filter);
+            var commentDtos = comments
+                .Where(t => !t.IsDeleted)
+                .Select(ModelMapper.MapCommentToDTO)
+                .ToList();
+            return new CommentListResponse
+            {
+                Success = true,
+                Message = "Comments retrieved successfully",
+                Response = commentDtos
+            };
         }
     }
 }

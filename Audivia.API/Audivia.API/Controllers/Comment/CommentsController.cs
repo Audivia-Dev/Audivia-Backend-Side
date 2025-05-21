@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.Comment
             return Ok(result);
         }
 
+        [HttpGet("posts/{postId}")]
+        public async Task<IActionResult> GetByPostId(string postId)
+        {
+            var result = await _commentService.GetByPost(postId);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateCommentRequest request)
         {

@@ -9,6 +9,10 @@ namespace Audivia.Application.Services.Interface
 
         Task<ReactionListResponse> GetAllReactions();
 
+        Task<ReactionListResponse> GetReactionsByPost(string postId);
+
+        Task<ReactionResponse> GetReactionsByPostAndUser(string postId, string userId);
+
         Task<ReactionResponse> GetReactionById(string id);
 
         Task UpdateReaction(string id, UpdateReactionRequest request);
