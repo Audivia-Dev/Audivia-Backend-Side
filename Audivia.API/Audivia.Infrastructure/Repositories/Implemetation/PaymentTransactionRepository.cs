@@ -26,7 +26,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         {
             var builder = Builders<PaymentTransaction>.Filter;
             var filter = builder.Eq(x => x.UserId, userId) & builder.Eq(x => x.Status, "PAID");
-            return await _collection.Find(filter).ToListAsync();
+            return await _collection.Find(filter).SortByDescending(x => x.PaymentTime).ToListAsync();
         }
     }
 }
