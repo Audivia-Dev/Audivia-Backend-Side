@@ -139,5 +139,14 @@ namespace Audivia.Application.Services.Implemetation
             user.BalanceWallet += ammount;
             await _userRepository.Update(user);
         }
+
+        public async Task<bool> DeductBalanceAsync(string userId, double ammount)
+        {
+            var user = await _userRepository.FindFirst(t => t.Id == userId && !t.IsDeleted);
+            if (user == null) return false;
+            user.BalanceWallet -= ammount;
+            await _userRepository.Update(user);
+            return true;
+        }
     }
 }

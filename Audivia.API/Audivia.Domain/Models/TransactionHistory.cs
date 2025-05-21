@@ -37,5 +37,9 @@ namespace Audivia.Domain.Models
 
         [BsonElement("updated_at")]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        [BsonElement("Tour")]
+        [BsonIgnoreIfNull]
+        public Tour Tour { get; set; }
     }
 }

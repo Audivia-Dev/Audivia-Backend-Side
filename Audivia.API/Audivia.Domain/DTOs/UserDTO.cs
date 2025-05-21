@@ -15,7 +15,7 @@ namespace Audivia.Domain.DTOs
         public int? Following { get; set; }
         public int? Friends { get; set; }
         public string? Bio {  get; set; }
-        public int BalanceWallet { get; set; }
+        public double BalanceWallet { get; set; }
         public string? AudioCharacterId { get; set; }
         public int? AutoPlayDistance { get; set; }
         public int? TravelDistance { get; set; }
