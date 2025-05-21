@@ -8,6 +8,7 @@
         public DateTime? UpdatedAt { get; set; }
         public string? PostId { get; set; }
         public string? CreatedBy { get; set; }
+        public string? UserName { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

@@ -149,7 +149,7 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static CommentDTO MapCommentToDTO(Comment comment)
+        public static CommentDTO MapCommentToDTO(Comment comment, string? username = null)
         {
             return new CommentDTO
             {
@@ -158,6 +158,7 @@ namespace Audivia.Domain.Commons.Mapper
                 CreatedAt = comment.CreatedAt,
                 UpdatedAt = comment.UpdatedAt,
                 CreatedBy = comment.CreatedBy,
+                UserName = username,
                 IsDeleted = comment.IsDeleted,
                 PostId = comment.PostId,
             };
