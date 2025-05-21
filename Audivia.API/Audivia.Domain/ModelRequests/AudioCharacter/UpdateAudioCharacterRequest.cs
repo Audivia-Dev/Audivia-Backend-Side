@@ -6,5 +6,6 @@
         public string? VoiceType { get; set; }
         public string? Description { get; set; }
         public string? AvatarUrl { get; set; }
+        public string? AudioUrl { get; set; }
     }
 }

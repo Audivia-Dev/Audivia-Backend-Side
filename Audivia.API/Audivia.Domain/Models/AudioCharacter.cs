@@ -20,6 +20,8 @@ namespace Audivia.Domain.Models
 
         [BsonElement("avatar_url")]
         public string? AvatarUrl { get; set; }
+        [BsonElement("audio_url")]
+        public string? AudioUrl { get; set; }
 
         [BsonElement("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

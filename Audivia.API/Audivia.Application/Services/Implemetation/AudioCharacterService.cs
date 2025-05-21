@@ -25,6 +25,7 @@ namespace Audivia.Application.Services.Implemetation
                 Name= request.Name,
                 VoiceType = request.VoiceType,
                 AvatarUrl = request.AvatarUrl,
+                AudioUrl = request.AudioUrl,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -79,6 +80,7 @@ namespace Audivia.Application.Services.Implemetation
             character.Name = request.Name ?? character.Name;
             character.VoiceType = request.VoiceType ?? character.VoiceType;
             character.AvatarUrl = request.AvatarUrl ?? character.AvatarUrl;
+            character.AudioUrl = request.AudioUrl ?? character.AudioUrl;
             character.UpdatedAt = DateTime.UtcNow;
 
             await _audioCharacterRepository.Update(character);

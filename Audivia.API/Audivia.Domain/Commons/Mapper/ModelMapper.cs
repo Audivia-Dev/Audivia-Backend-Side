@@ -369,6 +369,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Description = audioCharacter.Description,
                 AvatarUrl = audioCharacter.AvatarUrl,
                 VoiceType = audioCharacter.VoiceType,
+                AudioUrl = audioCharacter.AudioUrl,
                 CreatedAt = audioCharacter.CreatedAt,
                 UpdatedAt = audioCharacter.UpdatedAt,
                 IsDeleted = audioCharacter.IsDeleted,
