@@ -26,6 +26,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
             var filter = Builders<User>.Filter.Eq(u => u.Username, username);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
+
     }
 
 }

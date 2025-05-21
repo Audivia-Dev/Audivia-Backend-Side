@@ -1,4 +1,6 @@
-﻿namespace Audivia.Domain.DTOs
+﻿using Audivia.Domain.Models;
+
+namespace Audivia.Domain.DTOs
 {
     public class TransactionHistoryDTO
     {
@@ -12,5 +14,6 @@
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public Tour Tour { get; set; }
     }
 }

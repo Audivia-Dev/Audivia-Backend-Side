@@ -12,14 +12,17 @@ namespace Audivia.Application.Services.Implemetation
     public class TransactionHistoryService : ITransactionHistoryService
     {
         private readonly ITransactionHistoryRepository _transactionHistoryRepository;
+        private readonly IUserService _userService;
 
-        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository)
+        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository, IUserService userService)
         {
             _transactionHistoryRepository = transactionHistoryRepository;
+            _userService = userService;
         }
 
         public async Task<TransactionHistoryResponse> CreateTransactionHistory(CreateTransactionHistoryRequest request)
         {
+
             if (!ObjectId.TryParse(request.UserId, out _) || !ObjectId.TryParse(request.TourId, out _))
             {
                 return new TransactionHistoryResponse
@@ -43,6 +46,7 @@ namespace Audivia.Application.Services.Implemetation
             };
 
             await _transactionHistoryRepository.Create(transactionHistory);
+            await _userService.DeductBalanceAsync(request.UserId, request.Amount);
 
             return new TransactionHistoryResponse
             {
