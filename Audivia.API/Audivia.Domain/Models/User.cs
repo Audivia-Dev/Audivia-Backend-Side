@@ -32,7 +32,7 @@ public class User
     public string? Bio { get; set; }
 
     [BsonElement("balance_wallet")]
-    public int BalanceWallet { get; set; } = 0;
+    public double BalanceWallet { get; set; } = 0;
 
     [BsonElement("audio_character_id")]
     [BsonRepresentation(BsonType.ObjectId)]

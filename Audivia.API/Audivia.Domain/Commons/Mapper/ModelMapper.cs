@@ -280,6 +280,7 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = transaction.IsDeleted,
                 CreatedAt = transaction.CreatedAt,
                 UpdatedAt = transaction.UpdatedAt,
+                Tour = transaction.Tour,
             };
         }
 
