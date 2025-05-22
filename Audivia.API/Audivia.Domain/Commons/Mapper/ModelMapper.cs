@@ -273,6 +273,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = transaction.Id,
                 UserId = transaction.UserId,
                 TourId = transaction.TourId,
+                AudioCharacterId = transaction.AudioCharacterId,
                 Amount = transaction.Amount,
                 Description = transaction.Description,
                 Type = transaction.Type,

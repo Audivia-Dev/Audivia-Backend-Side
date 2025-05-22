@@ -42,6 +42,12 @@ namespace Audivia.API.Controllers.Transaction
             await _transactionHistoryService.UpdateTransactionHistory(id, request);
             return NoContent();
         }
+        [HttpPut("character/{id}")]
+        public async Task<IActionResult> UpdateAudioCharacter(string id, [FromBody] UpdateCharacterIdRequest request)
+        {
+            await _transactionHistoryService.UpdateCharacterSelection(id, request);
+            return NoContent();
+        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)

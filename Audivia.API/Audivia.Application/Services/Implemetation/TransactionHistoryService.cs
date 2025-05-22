@@ -124,5 +124,15 @@ namespace Audivia.Application.Services.Implemetation
                 return null;
             return ModelMapper.MapTransactionHistoryToDTO(trans);
         }
+
+        public async Task UpdateCharacterSelection(string id, UpdateCharacterIdRequest request)
+        {
+            var transaction = await  _transactionHistoryRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+
+            if (transaction == null)  throw new Exception("Transaction not found");
+
+            transaction.AudioCharacterId = request.AudioCharacterId;
+            await _transactionHistoryRepository.Update(transaction);
+        }
     }
 }

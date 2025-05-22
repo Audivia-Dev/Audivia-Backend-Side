@@ -16,6 +16,9 @@ namespace Audivia.Domain.Models
         [BsonElement("tour_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? TourId { get; set; }
+        [BsonElement("audio_character_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? AudioCharacterId { get; set; }
 
         [BsonElement("amount")]
         public double Amount { get; set; } = 0;
