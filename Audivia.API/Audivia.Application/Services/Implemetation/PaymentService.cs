@@ -34,13 +34,13 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<object> CreateVietQRTransactionAsync(CreatePaymentRequest req)
         {
-            var user = await _authService.GetCurrentUserAsync();
+           // var user = await _authService.GetCurrentUserAsync();
             var orderCode = new Random().Next(1, 100000000);
 
             var transaction = new CreatePaymentTransactionRequest
             {
                 OrderCode = orderCode,
-                UserId = user.Id,
+                UserId = req.UserId,
                 Amount = req.Amount,
                 Description = req.Description,
             };
