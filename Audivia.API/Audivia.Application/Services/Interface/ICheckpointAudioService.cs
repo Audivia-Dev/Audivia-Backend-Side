@@ -12,7 +12,7 @@ namespace Audivia.Application.Services.Interface
 
         Task<CheckpointAudioResponse> GetCheckpointAudioById(string id);
 
-        Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId);
+        Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId, string characterId);
 
         Task<CheckpointAudioResponse> GetNextAudioByTourCheckpointId(string checkpointId);
 

@@ -108,9 +108,11 @@ namespace Audivia.Application.Services.Implemetation
             await _checkpointAudioRepository.Update(audio);
         }
 
-        public async Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId)
+        public async Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId, string characterId)
         {
-            var audio =  await _checkpointAudioRepository.FindFirst(t => t.TourCheckpointId == checkpointId && !t.IsDeleted);
+            var audio =  await _checkpointAudioRepository.FindFirst(t => t.TourCheckpointId == checkpointId
+            && t.AudioCharacterId == characterId
+            && !t.IsDeleted);
             if (audio == null)
             {
                 throw new KeyNotFoundException("Checkpoint audio not found!");
