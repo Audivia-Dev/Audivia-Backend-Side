@@ -89,13 +89,8 @@ namespace Audivia.Application.Services.Implemetation
         public async Task UpdateNotification(string id, UpdateNotificationRequest request)
         {
             var notification = await _notificationRepository.FindFirst(t => t.Id == id && t.IsDeleted == false);
-            if (notification == null) return;
-
-            
-            notification.UserId = request.UserId ?? notification.UserId;
-            notification.Content = request.Content ?? notification.Content;
-            notification.Type = request.Type ?? notification.Type;
-
+            if (notification == null) return;  
+            notification.IsRead = true;
             await _notificationRepository.Update(notification);
         }
 
