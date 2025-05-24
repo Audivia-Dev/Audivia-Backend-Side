@@ -34,9 +34,9 @@ namespace Audivia.Application.Services.Implemetation
                 UserId = request.UserId,
                 Content = request.Content,
                 Type = request.Type,
-                IsRead = request.IsRead,
+                IsRead = false,
                 CreatedAt = DateTime.UtcNow,
-                TourId = request.UserId,
+                TourId = request.TourId,
                 
             };
 
