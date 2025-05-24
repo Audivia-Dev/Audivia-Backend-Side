@@ -26,5 +26,8 @@ namespace Audivia.Domain.Models
         public DateTime? CreatedAt { get; set; }
         [BsonElement("is_deleted")]
         public bool IsDeleted {  get; set; }
+        [BsonElement("tour_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? TourId { get; set; }
     }
 }
