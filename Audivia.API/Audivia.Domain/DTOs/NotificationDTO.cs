@@ -12,5 +12,6 @@ namespace Audivia.Domain.DTOs
         public bool IsRead { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string? TourId { get; set; }
+        public string? TimeAgo { get; set; }
     }
 }
