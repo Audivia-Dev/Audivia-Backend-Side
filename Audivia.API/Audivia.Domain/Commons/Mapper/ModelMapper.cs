@@ -400,6 +400,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Type = notification.Type,
                 IsRead = notification.IsRead,
                 CreatedAt = notification.CreatedAt,
+                TourId = notification.TourId,
             };
         }
         public static PlaySessionDTO MapPlaySessionToDTO(PlaySession playSession)

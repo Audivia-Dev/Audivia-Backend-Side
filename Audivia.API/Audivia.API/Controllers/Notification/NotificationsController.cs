@@ -49,5 +49,12 @@ namespace Audivia.API.Controllers.Notification
             await _notificationService.DeleteNotification(id);
             return NoContent();
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetNotificationsByUser(string userId)
+        {
+            var rs = await _notificationService.GetNotificationsByUserIdAsync(userId);
+            return Ok(rs);
+        }
     }
 }

@@ -34,7 +34,9 @@ namespace Audivia.Application.Services.Implemetation
                 Content = request.Content,
                 Type = request.Type,
                 IsRead = request.IsRead,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                TourId = request.UserId,
+                
             };
 
             await _notificationRepository.Create(notification);
@@ -104,6 +106,30 @@ namespace Audivia.Application.Services.Implemetation
             notification.IsDeleted = true;
 
             await _notificationRepository.Update(notification);
+        }
+
+        public async Task<NotificationListResponse> GetNotificationsByUserIdAsync(string userId)
+        {
+            var notifications = await _notificationRepository.GetNotificationsByUserIdAsync(userId);
+            if (notifications is null)
+            {
+                return new NotificationListResponse
+                {
+                    Success = false,
+                    Message = "List not found",
+                    Response = null
+                };
+            }
+            var notificationDtos = notifications
+                .Where(t => t.IsDeleted == false)
+                .Select(ModelMapper.MapNotificationToDTO)
+                .ToList();
+            return new NotificationListResponse
+            {
+                Success = true,
+                Message = "Fetch list of notifiations successfully!",
+                Response = notificationDtos
+            };
         }
     }
 }
