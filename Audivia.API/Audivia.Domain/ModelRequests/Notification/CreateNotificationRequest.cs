@@ -6,5 +6,6 @@
         public string? Content { get; set; }
         public string? Type { get; set; } // enum
         public bool IsRead { get; set; } = false;
+        public string? TourId { get; set; } 
     }
 }
