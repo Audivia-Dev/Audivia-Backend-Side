@@ -1,4 +1,5 @@
 ﻿using Audivia.Application.Services.Interface;
+using Audivia.Application.Utils.Helper;
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.ModelRequests.Notification;
 using Audivia.Domain.ModelResponses.Notification;
@@ -122,8 +123,12 @@ namespace Audivia.Application.Services.Implemetation
             }
             var notificationDtos = notifications
                 .Where(t => t.IsDeleted == false)
-                .Select(ModelMapper.MapNotificationToDTO)
-                .ToList();
+                .Select(n =>
+                {
+                    var dto = ModelMapper.MapNotificationToDTO(n);
+                    dto.TimeAgo = TimeUtils.GetTimeElapsed((DateTime)n.CreatedAt);
+                    return dto;
+                }).ToList();
             return new NotificationListResponse
             {
                 Success = true,
