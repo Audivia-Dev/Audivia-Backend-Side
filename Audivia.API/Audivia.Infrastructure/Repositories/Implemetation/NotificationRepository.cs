@@ -9,6 +9,11 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
     {
         public NotificationRepository(IMongoDatabase database) : base(database)
         {
+
+        }
+        public async Task<List<Notification>> GetNotificationsByUserIdAsync(string userId)
+        {
+            return  await _collection.Find(n => n.UserId == userId).SortByDescending(n => n.CreatedAt).ToListAsync();
         }
     }
 }
