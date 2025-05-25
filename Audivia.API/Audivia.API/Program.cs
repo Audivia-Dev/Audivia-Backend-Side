@@ -137,7 +137,9 @@ namespace Audivia.API
             app.UseAuthorization();
 
             // Map SignalR Hub
+
             app.MapHub<ChatHub>("/chatHub");
+            app.MapHub<NotificationHub>("/notificationHub");
             app.MapControllers();
 
             app.Run();
