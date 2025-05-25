@@ -5,6 +5,7 @@ using Audivia.Domain.ModelRequests.Notification;
 using Audivia.Domain.ModelResponses.Notification;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
@@ -12,7 +13,6 @@ namespace Audivia.Application.Services.Implemetation
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
-
         public NotificationService(INotificationRepository notificationRepository)
         {
             _notificationRepository = notificationRepository;

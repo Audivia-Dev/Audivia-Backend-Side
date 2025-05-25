@@ -7,6 +7,8 @@ namespace Audivia.API.Hubs
         public override async Task OnConnectedAsync()
         {
             var userId = Context.User?.FindFirst("userId")?.Value;
+            Console.WriteLine($"OnConnectedAsync called - userId: {userId}, ConnectionId: {Context.ConnectionId}");
+
             if (!string.IsNullOrEmpty(userId))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, userId);
