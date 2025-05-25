@@ -15,5 +15,13 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
         {
             return  await _collection.Find(n => n.UserId == userId).SortByDescending(n => n.CreatedAt).ToListAsync();
         }
+
+        public async Task<int> CountUnreadNotificationAsync(string userId)
+        {
+            var filter = Builders<Notification>.Filter.And(
+            Builders<Notification>.Filter.Eq(n => n.UserId, userId),
+            Builders<Notification>.Filter.Eq(n => n.IsRead, false));
+            return (int)await _collection.CountDocumentsAsync(filter);
+        }
     }
 }

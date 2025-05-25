@@ -131,5 +131,9 @@ namespace Audivia.Application.Services.Implemetation
                 Response = notificationDtos
             };
         }
+        public async Task<int> CountUnreadNotificationAsync(string userId)
+        {
+            return await _notificationRepository.CountUnreadNotificationAsync(userId);
+        }
     }
 }

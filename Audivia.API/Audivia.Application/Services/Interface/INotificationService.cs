@@ -18,5 +18,7 @@ namespace Audivia.Application.Services.Interface
         Task DeleteNotification(string id);
 
         Task<NotificationListResponse> GetNotificationsByUserIdAsync(string userId);
+
+        Task<int> CountUnreadNotificationAsync(string userId);
     }
 }
