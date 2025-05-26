@@ -28,8 +28,6 @@ namespace Audivia.API.Hubs
 
             await Clients.All.SendAsync("UserOnline", userId);
             await base.OnConnectedAsync();
-
-            await base.OnConnectedAsync();
         }
         public async Task JoinRoom(string chatRoomId)
         {
