@@ -12,13 +12,25 @@ namespace Audivia.API.Hubs
         private readonly IMessageService _messageService;
         private readonly IChatRoomMemberService _chatRoomMemberService;
         private readonly IChatRoomService _chatRoomService;
+        private static readonly Dictionary<string, string> ConnectedUsers = new();
         public ChatHub(IMessageService messageService, IChatRoomService chatRoomService, IChatRoomMemberService chatRoomMemberService)
         {
             _chatRoomMemberService = chatRoomMemberService;
             _messageService = messageService;
             _chatRoomService = chatRoomService;
         }
+        public override async Task OnConnectedAsync()
+        {
+            var userId = Context.User?.FindFirst("userId")?.Value;
+            Console.WriteLine($"OnConnectedAsync ChatHub called - userId: {userId}, ConnectionId: {Context.ConnectionId}");
 
+            ConnectedUsers[Context.ConnectionId] = userId;
+
+            await Clients.All.SendAsync("UserOnline", userId);
+            await base.OnConnectedAsync();
+
+            await base.OnConnectedAsync();
+        }
         public async Task JoinRoom(string chatRoomId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, chatRoomId);
@@ -29,6 +41,14 @@ namespace Audivia.API.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatRoomId);
         }
 
+        public async Task SendTyping(string chatRoomId, string userId)
+        {
+            await Clients.OthersInGroup(chatRoomId).SendAsync("UserTyping", new
+            {
+                chatRoomId,
+                userId
+            });
+        }
 
         //for testing
         public async Task SendMessage(CreateMessageRequest req)
