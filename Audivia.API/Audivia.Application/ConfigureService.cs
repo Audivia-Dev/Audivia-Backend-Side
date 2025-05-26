@@ -60,6 +60,8 @@ namespace Audivia.Application
             service.AddScoped<IPayOSService, PayOSService>(); //communicate with pay os
             service.AddScoped<IPaymentTransactionService, PaymentTransactionService>();//store db
             service.AddScoped<IPaymentService, PaymentService>(); // contain logic 
+
+            service.AddScoped<IChatBotService, ChatBotService>();
             return service;
         }
     }
