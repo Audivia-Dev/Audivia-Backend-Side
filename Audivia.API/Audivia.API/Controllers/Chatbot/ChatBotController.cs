@@ -2,6 +2,10 @@
 using Audivia.Domain.ModelRequests.ChatBot;
 using Audivia.Domain.ModelResponses.ChatBot;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
+using Audivia.Domain.Models.ChatBotHistory;
+using System.Collections.Generic;
 
 namespace Audivia.API.Controllers.Chatbot
 {
@@ -19,22 +23,18 @@ namespace Audivia.API.Controllers.Chatbot
         [HttpPost("send")]
         public async Task<ActionResult<MessageResponse>> SendMessage([FromBody] MessageRequest request)
         {
-            if (string.IsNullOrEmpty(request.Text) || string.IsNullOrEmpty(request.SessionId))
-            {
-                return BadRequest("Text and SessionId are required.");
-            }
+            var response = await _chatBotService.DetectIntentAsync(request);
+            return Ok(response);
+        }
 
-            try
-            {
-                // Gọi phương thức từ service đã được inject
-                var response = await _chatBotService.DetectIntentAsync(request);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An internal server error occurred.");
-            }
+        [HttpGet("history/{clientSessionId}")]
+        public async Task<ActionResult<IEnumerable<ChatBotMessage>>> GetHistory(
+            string clientSessionId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 20)
+        {
+            var messages = await _chatBotService.GetChatHistoryAsync(clientSessionId, pageNumber, pageSize);
+            return Ok(messages);
         }
     }
 }

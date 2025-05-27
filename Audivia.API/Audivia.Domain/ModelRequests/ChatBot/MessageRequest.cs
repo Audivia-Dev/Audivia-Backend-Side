@@ -2,7 +2,8 @@
 {
     public class MessageRequest
     {
-        public string Text { get; set; }
-        public string SessionId { get; set; }
+        public required string Text { get; set; }
+        public required string UserId { get; set; }
+        public required string ClientSessionId { get; set; }
     }
 }

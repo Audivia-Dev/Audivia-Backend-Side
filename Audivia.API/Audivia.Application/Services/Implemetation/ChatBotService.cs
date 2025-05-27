@@ -4,6 +4,9 @@ using Audivia.Domain.ModelResponses.ChatBot;
 using Microsoft.Extensions.Logging;
 using Google.Cloud.Dialogflow.Cx.V3;
 using Microsoft.Extensions.Configuration;
+using Audivia.Domain.Models.ChatBotHistory;
+using Audivia.Infrastructure.Repositories.Interface;
+using MongoDB.Bson;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -11,14 +14,22 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly SessionsClient _sessionsClient;
         private readonly ILogger<ChatBotService> _logger;
+        private readonly IChatBotSessionRepository _sessionRepository;
+        private readonly IChatBotMessageRepository _messageRepository;
 
         private readonly string _projectId;
         private readonly string _locationId;
         private readonly string _agentId;
+        private const int SessionTimeoutMinutes = 30;
 
-        public ChatBotService(ILogger<ChatBotService> logger, IConfiguration configuration)
+        public ChatBotService(ILogger<ChatBotService> logger, 
+                              IConfiguration configuration, 
+                              IChatBotSessionRepository sessionRepository,
+                              IChatBotMessageRepository messageRepository)
         {
             _logger = logger;
+            _sessionRepository = sessionRepository;
+            _messageRepository = messageRepository;
 
             _projectId = configuration["DialogflowSettings:ProjectId"];
             _locationId = configuration["DialogflowSettings:LocationId"];
@@ -36,21 +47,61 @@ namespace Audivia.Application.Services.Implemetation
             }.Build();
         }
 
-
         public async Task<MessageResponse> DetectIntentAsync(MessageRequest request)
         {
-            if (string.IsNullOrEmpty(request.Text) || string.IsNullOrEmpty(request.SessionId))
+            if (string.IsNullOrEmpty(request.Text) || string.IsNullOrEmpty(request.ClientSessionId) || string.IsNullOrEmpty(request.UserId) || !ObjectId.TryParse(request.UserId, out _))
             {
-                _logger.LogWarning("Text or SessionId is missing in the request.");
-                throw new ArgumentException("Text or SessionId is missing in the request.");
+                _logger.LogWarning("Text or ClientSessionId or UserId is missing in the request.");
+                throw new ArgumentException("Text or SessionId or UserId is missing in the request.");
             }
 
-            var sessionName = SessionName.FromProjectLocationAgentSession(_projectId, _locationId, _agentId, request.SessionId);
+            ChatBotSession? currentSession = await _sessionRepository.GetByClientSessionIdAsync(request.ClientSessionId);
+
+            if (currentSession != null && currentSession.LastAccessedAt < DateTime.UtcNow.AddMinutes(-SessionTimeoutMinutes))
+            {
+                _logger.LogInformation($"Session {currentSession.ClientSessionId} timed out. Marking as inactive.");
+                currentSession.IsActive = false;
+                await _sessionRepository.Update(currentSession);
+                currentSession = null; 
+            }
+
+            // create new session
+            if (currentSession == null)
+            {
+                _logger.LogInformation($"No active session found or session timed out for ClientSessionId {request.ClientSessionId}. Creating a new session.");
+                currentSession = new ChatBotSession
+                {
+                    ClientSessionId = request.ClientSessionId, 
+                    UserId = request.UserId,
+                    CreatedAt = DateTime.UtcNow,
+                    LastAccessedAt = DateTime.UtcNow,
+                    IsActive = true,
+                };
+                await _sessionRepository.Create(currentSession);
+            }
+            else
+            {
+                currentSession.LastAccessedAt = DateTime.UtcNow;
+                await _sessionRepository.Update(currentSession);
+            }
+            
+            // create message and send to model
+            var userMessage = new ChatBotMessage
+            {
+                ChatSessionId = currentSession.Id,
+                ClientSessionId = currentSession.ClientSessionId,
+                Sender = SenderType.User,
+                Text = request.Text,
+                Timestamp = DateTime.UtcNow
+            };
+            await _messageRepository.Create(userMessage);
+
+            var sessionName = SessionName.FromProjectLocationAgentSession(_projectId, _locationId, _agentId, currentSession.ClientSessionId);
 
             var queryInput = new QueryInput
             {
                 Text = new TextInput { Text = request.Text },
-                LanguageCode = "vi" 
+                LanguageCode = "vi"
             };
 
             var detectIntentRequest = new DetectIntentRequest
@@ -61,28 +112,55 @@ namespace Audivia.Application.Services.Implemetation
 
             try
             {
-                DetectIntentResponse response = await _sessionsClient.DetectIntentAsync(detectIntentRequest);
+                // get message from bot
+                DetectIntentResponse dialogflowResponse = await _sessionsClient.DetectIntentAsync(detectIntentRequest);
 
-                var reply = "No response from bot.";
-                if (response.QueryResult?.ResponseMessages?.Count > 0)
+                var replyText = "No response from bot.";
+                if (dialogflowResponse.QueryResult?.ResponseMessages?.Count > 0)
                 {
-                    foreach (var message in response.QueryResult.ResponseMessages)
+                    foreach (var message in dialogflowResponse.QueryResult.ResponseMessages)
                     {
                         if (message.Text?.Text_?.Count > 0)
                         {
-                            reply = message.Text.Text_[0];
+                            replyText = message.Text.Text_[0];
                             break;
                         }
                     }
                 }
 
-                return new MessageResponse { Reply = reply };
+                var botMessage = new ChatBotMessage
+                {
+                    ChatSessionId = currentSession.Id,
+                    ClientSessionId = currentSession.ClientSessionId, 
+                    Sender = SenderType.Bot,
+                    Text = replyText,
+                    Timestamp = DateTime.UtcNow
+                };
+                await _messageRepository.Create(botMessage);
+
+                return new MessageResponse { Reply = replyText };
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error calling Dialogflow CX for session {SessionId}.", request.SessionId);
-                throw;
+                _logger.LogError(ex, "Error calling Dialogflow CX for session {SessionId}.", currentSession.ClientSessionId);
+                throw; 
             }
+        }
+
+        public async Task<IEnumerable<ChatBotMessage>> GetChatHistoryAsync(string clientSessionId, int pageNumber, int pageSize)
+        {
+            if (string.IsNullOrEmpty(clientSessionId))
+            {
+                _logger.LogWarning("ClientSessionId is required to fetch chat history.");
+                throw new ArgumentNullException(nameof(clientSessionId));
+            }
+
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 10; 
+
+            _logger.LogInformation($"Fetching chat history for ClientSessionId: {clientSessionId}, Page: {pageNumber}, Size: {pageSize}");
+            
+            return await _messageRepository.GetMessagesByClientSessionIdAsync(clientSessionId, pageNumber, pageSize);
         }
     }
 }
