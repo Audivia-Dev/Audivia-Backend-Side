@@ -8,6 +8,6 @@ namespace Audivia.Application.Services.Interface
     {
         Task<MessageResponse> DetectIntentAsync(MessageRequest request);
 
-        Task<IEnumerable<ChatBotMessage>> GetChatHistoryAsync(string clientSessionId, int pageNumber, int pageSize);
+        Task<IEnumerable<MessageResponse>> GetChatHistoryAsync(string clientSessionId, int pageNumber, int pageSize);
     }
 }
