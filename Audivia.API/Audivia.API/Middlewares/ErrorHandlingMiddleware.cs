@@ -54,6 +54,11 @@
                 _logger.LogError(ex, ex.Message);
                 await WriteToResponse(context, StatusCodes.Status400BadRequest, ex.Message);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await WriteToResponse(context, StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
