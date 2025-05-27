@@ -96,7 +96,7 @@ namespace Audivia.Application.Services.Implemetation
             };
             await _messageRepository.Create(userMessage);
 
-            var sessionName = SessionName.FromProjectLocationAgentSession(_projectId, _locationId, _agentId, currentSession.ClientSessionId);
+            var sessionName = SessionName.FromProjectLocationAgentSession(_projectId, _locationId, _agentId, currentSession.Id);
 
             var queryInput = new QueryInput
             {
