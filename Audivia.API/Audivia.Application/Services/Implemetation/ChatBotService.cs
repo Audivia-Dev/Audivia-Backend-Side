@@ -127,18 +127,18 @@ namespace Audivia.Application.Services.Implemetation
                         }
                     }
                 }
-
+                var replyTime = DateTime.UtcNow;
                 var botMessage = new ChatBotMessage
                 {
                     ChatSessionId = currentSession.Id,
                     ClientSessionId = currentSession.ClientSessionId, 
                     Sender = SenderType.Bot,
                     Text = replyText,
-                    Timestamp = DateTime.UtcNow
+                    Timestamp = replyTime
                 };
                 await _messageRepository.Create(botMessage);
 
-                return new MessageResponse { Reply = replyText };
+                return new MessageResponse { Reply = replyText, Sender = SenderType.Bot, Timestamp = replyTime.ToString() };
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace Audivia.Application.Services.Implemetation
             }
         }
 
-        public async Task<IEnumerable<ChatBotMessage>> GetChatHistoryAsync(string clientSessionId, int pageNumber, int pageSize)
+        public async Task<IEnumerable<MessageResponse>> GetChatHistoryAsync(string clientSessionId, int pageNumber, int pageSize)
         {
             if (string.IsNullOrEmpty(clientSessionId))
             {
@@ -160,7 +160,13 @@ namespace Audivia.Application.Services.Implemetation
 
             _logger.LogInformation($"Fetching chat history for ClientSessionId: {clientSessionId}, Page: {pageNumber}, Size: {pageSize}");
             
-            return await _messageRepository.GetMessagesByClientSessionIdAsync(clientSessionId, pageNumber, pageSize);
+            var list = await _messageRepository.GetMessagesByClientSessionIdAsync(clientSessionId, pageNumber, pageSize);
+            List<MessageResponse> response = new List<MessageResponse>();
+            foreach (ChatBotMessage m in list)
+            {
+                response.Add(new MessageResponse { Reply =  m.Text, Sender = m.Sender, Timestamp = m.Timestamp.ToString() });
+            }
+            return response;
         }
     }
 }
