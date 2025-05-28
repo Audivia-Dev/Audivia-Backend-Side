@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Audivia.API.Controllers.Chatbot
 {
-    [Route("api/chat-bot")]
+    [Route("api/v1/chat-bot")]
     [ApiController]
     public class ChatBotController : ControllerBase
     {
