@@ -57,7 +57,15 @@ namespace Audivia.API.Controllers.Notification
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            var notification = await _notificationService.GetNotificationById(id);
+            if (notification == null)
+                return NotFound();
+
             await _notificationService.DeleteNotification(id);
+            await _hubContext.Clients.Group(notification.Response.UserId)
+                .SendAsync("NotificationDeleted", id);
+            var countUnread = await _notificationService.CountUnreadNotificationAsync(notification.Response.UserId);
+            await _hubContext.Clients.Group(notification.Response.UserId).SendAsync("ReceiveUnreadCount", countUnread);
             return NoContent();
         }
 
