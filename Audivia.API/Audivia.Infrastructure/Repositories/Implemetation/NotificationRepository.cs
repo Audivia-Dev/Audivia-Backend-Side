@@ -7,13 +7,34 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 {
     public class NotificationRepository : BaseRepository<Notification>, INotificationRepository
     {
+        private readonly IMongoCollection<UserFollow> _userFollowCollection;
         public NotificationRepository(IMongoDatabase database) : base(database)
         {
-
+            _userFollowCollection = database.GetCollection<UserFollow>("UserFollow");
         }
         public async Task<List<Notification>> GetNotificationsByUserIdAsync(string userId)
         {
-            return  await _collection.Find(n => (n.UserId == userId && n.IsDeleted == false)).SortByDescending(n => n.CreatedAt).ToListAsync();
+            // Lấy danh sách các FollowingId mà user đang follow
+            var followingIds = await _userFollowCollection
+                .Find(uf => uf.FollowerId == userId && uf.IsDeleted == false)
+                .Project(uf => uf.FollowingId!)
+                .ToListAsync();
+
+            // Tạo filter riêng biệt
+            var builder = Builders<Notification>.Filter;
+            var selfFilter = builder.Eq(n => n.UserId, userId) & builder.Eq(n => n.IsDeleted, false) & builder.Ne(n => n.Type, "Bài viết");
+            var followingFilter = builder.In(n => n.UserId, followingIds) &
+                                  builder.Eq(n => n.Type, "Bài viết") &
+                                  builder.Eq(n => n.IsDeleted, false);
+
+            var combinedFilter = builder.Or(selfFilter, followingFilter);
+
+            var notifications = await _collection
+                .Find(combinedFilter)
+                .SortByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            return notifications;
         }
 
         public async Task<int> CountUnreadNotificationAsync(string userId)
