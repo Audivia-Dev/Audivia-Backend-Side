@@ -10,6 +10,8 @@ namespace Audivia.Application.Services.Interface
         // login
         Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request);
 
+        Task<LoginResponse> LoginWithGoogle(string token);
+
         // register
         Task<RegisterResponse> Register(RegisterRequest request);
 
