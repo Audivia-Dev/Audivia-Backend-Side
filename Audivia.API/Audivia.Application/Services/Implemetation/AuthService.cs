@@ -7,6 +7,7 @@ using Audivia.Domain.ModelRequests.Mail;
 using Audivia.Domain.ModelResponses.Auth;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -169,6 +170,63 @@ namespace Audivia.Application.Services.Implemetation
                 return null;
 
             return await GetCurrentUserAsync(userClaims); // gọi lại hàm cũ
+        }
+
+        public async Task<LoginResponse> LoginWithGoogle(string token)
+        {
+            var clientId = _configuration["GoogleAuth:ClientId"];
+            GoogleJsonWebSignature.Payload googlePayload;
+            try
+            {
+                googlePayload = await GoogleJsonWebSignature.ValidateAsync(token, new GoogleJsonWebSignature.ValidationSettings
+                {
+                    Audience = new[] { clientId }
+                });
+            }
+            catch (InvalidJwtException)
+            {
+                throw new HttpRequestException("Invalid Google token.");
+            }
+            catch (Exception ex)
+            {
+                throw new HttpRequestException("Failed to validate Google token.", ex);
+            }
+
+            var email = googlePayload.Email;
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new HttpRequestException("Could not get email from Google token.");
+            }
+
+            var user = await _userRepository.GetByEmail(email);
+            if (user == null)
+            {
+                // Người dùng chưa tồn tại -> Đăng ký mới
+                var newUser = new User 
+                {
+                    Email = email,
+                    Username = googlePayload.Name ?? email,
+                    ConfirmedEmail = true,
+                    RoleId = (await _roleRepository.GetByRoleName("customer")).Id,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    IsDeleted = false
+                };
+
+                await _userRepository.Create(newUser); 
+                user = newUser;
+            }
+
+            var accessToken = await GenerateAccessToken(user);
+            var refeshToken = GenerateRefreshToken(user.Email);
+
+
+            return new LoginResponse()
+            {
+                Message = user == null ? "Registered and logged in successfully!" : "Login successfully!",
+                AccessToken = accessToken,
+                RefreshToken = refeshToken
+            };
         }
     }
 }

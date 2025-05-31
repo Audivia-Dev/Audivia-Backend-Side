@@ -39,6 +39,36 @@ namespace Audivia.API.Controllers.Auth
             return Ok(result);
         }
 
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Token))
+            {
+                return BadRequest("Google token is required.");
+            }
+
+            try
+            {
+                // Gọi service để xử lý Google login
+                var result = await _authService.LoginWithGoogle(request.Token);
+                return Ok(result);
+            }
+            catch (HttpRequestException ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex) 
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred during Google login.");
+            }
+        }
+
+
         // get current user profile
         [HttpGet("profile")]
         public async Task<IActionResult> GetMyProfile()
