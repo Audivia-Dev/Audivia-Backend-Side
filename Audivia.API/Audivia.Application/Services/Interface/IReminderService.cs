@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Audivia.Application.Services.Interface
 {
-    internal interface IReminderService
+    public interface IReminderService
     {
+        Task ProcessTourRemindersAsync();
     }
 }
