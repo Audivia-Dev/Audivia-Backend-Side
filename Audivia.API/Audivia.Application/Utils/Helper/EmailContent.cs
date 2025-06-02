@@ -5,23 +5,23 @@ namespace Audivia.Application.Utils.Helper
     public class EmailContent
     {
 
-        public static string EmailOTPContent(string username, int otp)
-        {
-            return $@"
-                    <div style='background-color:#eaf7f6;font-family:sans-serif;padding:20px'>
-                      <div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px;color:#003f5c'>
-                        <h2 style='color:#1A469E;'>🎧 Audivia - Xác minh tài khoản</h2>
-                        <p>Xin chào <strong>{username}</strong>,</p>
-                        <p>Bạn vừa yêu cầu mã OTP để xác minh tài khoản của mình tại <strong>Audivia</strong> – nền tảng trải nghiệm du lịch bằng âm thanh.</p>
-                        <p style='text-align:center;margin:30px 0'>
-                          <span style='font-size:24px;color:#3CB4AC;border:2px dashed #3CB4AC;padding:10px 20px;border-radius:8px;font-weight:bold'>{otp}</span>
-                        </p>
-                        <p>Nếu bạn không yêu cầu OTP, vui lòng bỏ qua email này.</p>
-                        <br>
-                        <p>🌴 Trân trọng,<br><strong>Đội ngũ Audivia</strong></p>
-                      </div>
-                    </div>";
-        }
+        //public static string EmailOTPContent(string username, int otp)
+        //{
+        //    return $@"
+        //            <div style='background-color:#eaf7f6;font-family:sans-serif;padding:20px'>
+        //              <div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px;color:#003f5c'>
+        //                <h2 style='color:#1A469E;'>🎧 Audivia - Xác minh tài khoản</h2>
+        //                <p>Xin chào <strong>{username}</strong>,</p>
+        //                <p>Bạn vừa yêu cầu mã OTP để xác minh tài khoản của mình tại <strong>Audivia</strong> – nền tảng trải nghiệm du lịch bằng âm thanh.</p>
+        //                <p style='text-align:center;margin:30px 0'>
+        //                  <span style='font-size:24px;color:#3CB4AC;border:2px dashed #3CB4AC;padding:10px 20px;border-radius:8px;font-weight:bold'>{otp}</span>
+        //                </p>
+        //                <p>Nếu bạn không yêu cầu OTP, vui lòng bỏ qua email này.</p>
+        //                <br>
+        //                <p>🌴 Trân trọng,<br><strong>Đội ngũ Audivia</strong></p>
+        //              </div>
+        //            </div>";
+        //}
         public static string ConfirmEmail(string username, IConfiguration configuration, string tokenConfirm)
         {
             var frontendUrl = configuration["Frontend:BaseUrl"];
@@ -63,6 +63,25 @@ namespace Audivia.Application.Utils.Helper
                       </div>
                     </div>";
         }
+
+        public static string EmailOTPContent(string username, int otp)
+        {
+            return $@"
+        <div style='background-color:#eaf7f6;font-family:sans-serif;padding:20px'>
+          <div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px;color:#003f5c'>
+            <h2 style='color:#1A469E;'>🔐 Audivia - Khôi phục mật khẩu</h2>
+            <p>Xin chào <strong>{username}</strong>,</p>
+            <p>Bạn đã yêu cầu khôi phục mật khẩu cho tài khoản tại <strong>Audivia</strong>.</p>
+            <p style='text-align:center;margin:30px 0'>
+              <span style='font-size:24px;color:#3CB4AC;border:2px dashed #3CB4AC;padding:10px 20px;border-radius:8px;font-weight:bold'>{otp}</span>
+            </p>
+            <p>Mã có hiệu lực trong 5 phút.</p>
+            <br>
+            <p>Trân trọng,<br><strong>Đội ngũ Audivia</strong></p>
+          </div>
+        </div>";
+        }
+
 
     }
 }

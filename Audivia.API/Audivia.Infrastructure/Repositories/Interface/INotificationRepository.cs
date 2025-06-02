@@ -8,5 +8,7 @@ namespace Audivia.Infrastructure.Repositories.Interface
         Task<List<Notification>> GetNotificationsByUserIdAsync(string userId);
 
         Task<int> CountUnreadNotificationAsync(string userId);
+        Task<List<Notification>> FindByUserAndTourAsync(string userId, string tourId, string type);
+
     }
 }

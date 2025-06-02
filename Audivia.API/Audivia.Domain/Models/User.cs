@@ -62,4 +62,11 @@ public class User
 
     [BsonElement("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    [BsonElement("email_otp")]
+    public int? EmailOtp { get; set; }
+    [BsonElement("email_otp_created_at")]
+    public DateTime? EmailOtpCreatedAt { get; set; }
+
+    [BsonElement("confirmed_otp")]
+    public bool? ConfirmedOtp { get; set; }
 }
