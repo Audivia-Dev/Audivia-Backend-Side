@@ -21,7 +21,7 @@ namespace Audivia.Application.Services.Implemetation
         }
         public async Task ProcessTourRemindersAsync()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var notifyTime = now.Add(_notifyBefore);
             
             var upcomingTours = await _savedTourRepository.GetUpcomingToursAsync(now, notifyTime);

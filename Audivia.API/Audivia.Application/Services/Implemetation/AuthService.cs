@@ -11,6 +11,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.WebSockets;
 using System.Security.Claims;
 
 
@@ -228,5 +229,86 @@ namespace Audivia.Application.Services.Implemetation
                 RefreshToken = refeshToken
             };
         }
+
+
+        public async Task SendResetPasswordOtpAsync(ForgotPasswordRequest request)
+        {
+            var email = request.Email;
+            var user = await _userRepository.GetByEmail(email);
+            if (user == null)
+                throw new KeyNotFoundException("Email không tồn tại.");
+            var otp = new Random().Next(100000, 999999);
+            user.EmailOtp = otp;
+            user.EmailOtpCreatedAt = DateTime.UtcNow;
+            await _userRepository.Update(user);
+            await _mailService.SendEmailAsync(new MailRequest
+            {
+                ToEmail = email,
+                Subject = "[Audivia] Mã OTP khôi phục mặt khẩu",
+                Body = EmailContent.EmailOTPContent(user.Username ?? "bạn", otp)
+            });
+        }
+
+        public async Task<OTPConfirmResponse> VerifyResetPasswordOtpAsync(ConfirmEmailOTP request)
+        {
+            var user = await _userRepository.GetByEmail(request.Email);
+            if (user == null)
+            {
+                return new OTPConfirmResponse
+                {
+                    IsSuccess = false,
+                    Message = "User not found!"
+                };
+            }
+            if (user.EmailOtp != request.Otp || (user.EmailOtpCreatedAt == null ||
+                  (DateTime.UtcNow - user.EmailOtpCreatedAt.Value).TotalMinutes > 5))
+            {
+               return new OTPConfirmResponse
+                {
+                    IsSuccess = false,
+                    Message = "OTP not correct or expired!"
+                };
+            }
+
+            user.EmailOtp = null;
+            user.EmailOtpCreatedAt = null;
+            user.ConfirmedOtp = true;
+            await _userRepository.Update(user);
+            return new OTPConfirmResponse
+            {
+                IsSuccess = true,
+                Message = "Confirm OTP successfully!"
+            };
+        }
+        public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            var user = await _userRepository.GetByEmail(request.Email);
+            if (user == null)
+                return new ResetPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = "User not found!"
+                };
+            if (user.ConfirmedOtp != true)
+            {
+                return new ResetPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = "OTP not confirm!"
+                };
+            }
+
+            user.Password = PasswordHasher.HashPassword(request.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+            user.ConfirmedOtp = null; //reset
+            await _userRepository.Update(user);
+
+            return new ResetPasswordResponse
+            {
+                IsSuccess = true,
+                Message = "Change password successfully!"
+            };
+        }
+
     }
 }

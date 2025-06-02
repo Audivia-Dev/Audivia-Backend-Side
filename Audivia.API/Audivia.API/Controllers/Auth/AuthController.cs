@@ -31,6 +31,30 @@ namespace Audivia.API.Controllers.Auth
             return Content(result, "text/html");
         }
 
+
+        [HttpPost("verify-reset-code")]
+        public async Task<IActionResult> VerifyResetCode([FromBody] ConfirmEmailOTP request)
+        {
+            var result = await _authService.VerifyResetPasswordOtpAsync(request);
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var result = await _authService.ResetPasswordAsync(request);
+            return Ok(result);
+        }
+
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> SendRestPasswordOtp([FromBody] ForgotPasswordRequest request)
+        {
+            await _authService.SendResetPasswordOtpAsync(request);
+            return NoContent();
+        }
+
+
         // login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
