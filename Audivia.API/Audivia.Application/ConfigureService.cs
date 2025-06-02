@@ -62,6 +62,10 @@ namespace Audivia.Application
             service.AddScoped<IPaymentService, PaymentService>(); // contain logic 
 
             service.AddScoped<IChatBotService, ChatBotService>();
+
+
+            service.AddScoped<IReminderService, ReminderService>();
+            service.AddHostedService<TourReminderBackgroundService>();
             return service;
         }
     }

@@ -22,5 +22,9 @@ namespace Audivia.Application.Services.Interface
         Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims);
 
         Task<UserDTO?> GetCurrentUserAsync();
+        //confirm otp
+        Task SendResetPasswordOtpAsync(ForgotPasswordRequest request);
+        Task<OTPConfirmResponse> VerifyResetPasswordOtpAsync(ConfirmEmailOTP request);
+        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
     }
 }

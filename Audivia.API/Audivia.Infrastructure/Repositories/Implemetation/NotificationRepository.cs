@@ -47,5 +47,15 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 
             return (int)await _collection.CountDocumentsAsync(filter);
         }
+
+        public async Task<List<Notification>> FindByUserAndTourAsync(string userId, string tourId, string type)
+        {
+            var filter = Builders<Notification>.Filter.Eq(n => n.UserId, userId)
+                       & Builders<Notification>.Filter.Eq(n => n.TourId, tourId)
+                       & Builders<Notification>.Filter.Eq(n => n.Type, type)
+                       & Builders<Notification>.Filter.Eq(n => n.IsDeleted, false);
+
+            return await _collection.Find(filter).ToListAsync();
+        }
     }
 }
