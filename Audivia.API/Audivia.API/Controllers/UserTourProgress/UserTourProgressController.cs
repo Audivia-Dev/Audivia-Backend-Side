@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.UserTourProgress
             return Ok(result);
         }
 
+        [HttpGet("users/{userId}/tours/{tourId}")]
+        public async Task<IActionResult> GetByUserIdAndTourId(string userId, string tourId)
+        {
+            var result = await _userTourProgressService.GetUserTourProgressByUserIdAndTourId(userId, tourId);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateUserTourProgressRequest request)
         {

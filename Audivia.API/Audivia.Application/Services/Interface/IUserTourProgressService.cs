@@ -12,6 +12,8 @@ namespace Audivia.Application.Services.Interface
 
         Task<UserTourProgressResponse> GetUserTourProgressById(string id);
 
+        Task<UserTourProgressResponse> GetUserTourProgressByUserIdAndTourId(string userId, string tourId);
+
         Task UpdateUserTourProgress(string id, UpdateUserTourProgressRequest request);
 
         Task DeleteUserTourProgress(string id);
