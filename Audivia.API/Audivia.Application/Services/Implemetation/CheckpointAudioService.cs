@@ -34,6 +34,7 @@ namespace Audivia.Application.Services.Implemetation
                 TourCheckpointId = request.CheckpointId,
                 AudioCharacterId = request.AudioCharacterId,
                 FileUrl = request.FileUrl,
+                VideoUrl = request.VideoUrl,
                 IsDefault = request.IsDefault,
                 Transcript = request.Transcript,
 
@@ -83,13 +84,14 @@ namespace Audivia.Application.Services.Implemetation
             if (audio == null) return;
 
             if ((!string.IsNullOrEmpty(request.AudioCharacterId) && !ObjectId.TryParse(request.AudioCharacterId, out _))
-                || !ObjectId.TryParse(request.CheckpointId, out _))
+                || (!string.IsNullOrEmpty(request.CheckpointId) && !ObjectId.TryParse(request.CheckpointId, out _)))
             {
                 throw new FormatException("Invalid character Id or checkpoint Id format");
             }
             audio.TourCheckpointId = request.CheckpointId ?? audio.TourCheckpointId;
             audio.AudioCharacterId = request.AudioCharacterId ?? audio.AudioCharacterId;
             audio.FileUrl = request.FileUrl ?? audio.FileUrl;
+            audio.VideoUrl = request.VideoUrl ?? audio.VideoUrl;
             audio.IsDefault = request.IsDefault ?? audio.IsDefault;
             audio.Transcript = request.Transcript ?? audio.Transcript;
             audio.UpdatedAt = DateTime.UtcNow;
