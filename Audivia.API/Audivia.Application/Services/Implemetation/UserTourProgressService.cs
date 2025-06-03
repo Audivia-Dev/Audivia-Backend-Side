@@ -12,10 +12,12 @@ namespace Audivia.Application.Services.Implemetation
     public class UserTourProgressService : IUserTourProgressService
     {
         private readonly IUserTourProgressRepository _userTourProgressRepository;
+        private readonly IUserCheckpointProgressRepository _userCheckpointProgressRepository;
 
-        public UserTourProgressService(IUserTourProgressRepository userTourProgressRepository)
+        public UserTourProgressService(IUserTourProgressRepository userTourProgressRepository, IUserCheckpointProgressRepository userCheckpointProgressRepository)
         {
             _userTourProgressRepository = userTourProgressRepository;
+            _userCheckpointProgressRepository = userCheckpointProgressRepository;
         }
 
         public async Task<UserTourProgressResponse> CreateUserTourProgress(CreateUserTourProgressRequest request)
@@ -25,12 +27,7 @@ namespace Audivia.Application.Services.Implemetation
                 || !ObjectId.TryParse(request.CurrentCheckpointId, out _)
                 )
             {
-                return new UserTourProgressResponse
-                {
-                    Success = false,
-                    Message = "Invalid format of UserId or TourId or TourCheckpointId ",
-                    Response = null
-                };
+                throw new FormatException("Invalid format of UserId or TourId or TourCheckpointId");
             }
             var userTourProgress = new UserTourProgress
             {
@@ -38,14 +35,11 @@ namespace Audivia.Application.Services.Implemetation
                 UserId = request.UserId,
                 StartedAt = request.StartedAt,
                 FinishedAt = request.FinishedAt,
-                Status = request.Status,
+                IsCompleted = request.IsCompleted,
                 CurrentCheckpointId = request.CurrentCheckpointId,
                 GroupId = request.GroupId,
                 Score = request.Score,
-                GroupMode = request.GroupMode,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                IsDeleted = false
+                GroupMode = request.GroupMode
             };
 
             await _userTourProgressRepository.Create(userTourProgress);
@@ -62,57 +56,66 @@ namespace Audivia.Application.Services.Implemetation
         {
             var progresss = await _userTourProgressRepository.GetAll();
             return progresss
-                .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapUserTourProgressToDTO)
                 .ToList();
         }
 
         public async Task<UserTourProgressResponse> GetUserTourProgressById(string id)
         {
-            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id);
             if (progress == null)
             {
-                return new UserTourProgressResponse
-                {
-                    Success = false,
-                    Message = "Tour progress not found",
-                    Response = null
-                };
+                throw new KeyNotFoundException("Progress not found!");
             }
+
+            var checkpointProgress = await _userCheckpointProgressRepository.GetByTourProgressId(progress.Id);
 
             return new UserTourProgressResponse
             {
                 Success = true,
                 Message = "Tour progress retrieved successfully",
-                Response = ModelMapper.MapUserTourProgressToDTO(progress)
+                Response = ModelMapper.MapUserTourProgressToDTO(progress, checkpointProgress)
+            };
+        }
+
+        public async Task<UserTourProgressResponse> GetUserTourProgressByUserIdAndTourId(string userId, string tourId)
+        {
+            var progress = await _userTourProgressRepository.GetByUserIdAndTourId(userId, tourId);
+            if (progress == null)
+            {
+                throw new KeyNotFoundException("Progress Not Found!");
+            }
+            var checkpointProgress = await _userCheckpointProgressRepository.GetByTourProgressId(progress.Id);
+
+            return new UserTourProgressResponse
+            {
+                Success = true,
+                Message = "Tour progress retrieved successfully",
+                Response = ModelMapper.MapUserTourProgressToDTO(progress, checkpointProgress)
             };
         }
 
         public async Task UpdateUserTourProgress(string id, UpdateUserTourProgressRequest request)
         {
-            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (progress == null) return;
+            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id);
+            if (progress == null) throw new KeyNotFoundException("Progress Not Found!");
             progress.StartedAt = request.StartedAt ?? progress.StartedAt;
             progress.FinishedAt = request.FinishedAt ?? progress.FinishedAt;
-            progress.Status = request.Status ?? progress.Status;
+            progress.IsCompleted = request.IsCompleted ?? progress.IsCompleted;
             progress.CurrentCheckpointId = request.CurrentCheckpointId ?? progress.CurrentCheckpointId;
             progress.Score = request.Score ?? progress.Score;
             progress.GroupMode = request.GroupMode ?? progress.GroupMode;
             progress.GroupId = request.GroupId ?? progress.GroupId;
-            progress.UpdatedAt = DateTime.UtcNow;
 
             await _userTourProgressRepository.Update(progress);
         }
 
         public async Task DeleteUserTourProgress(string id)
         {
-            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
-            if (progress == null) return;
+            var progress = await _userTourProgressRepository.FindFirst(t => t.Id == id);
+            if (progress == null) throw new KeyNotFoundException("Progress not found!");
 
-            progress.IsDeleted = true;
-            progress.UpdatedAt = DateTime.UtcNow;
-
-            await _userTourProgressRepository.Update(progress);
+            await _userTourProgressRepository.Delete(progress);
         }
 
     }

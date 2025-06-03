@@ -58,6 +58,8 @@ namespace Audivia.Infrastructure
 
             service.AddScoped<IChatBotMessageRepository, ChatBotMessageRepository>();
             service.AddScoped<IChatBotSessionRepository, ChatBotSessionRepository>();
+
+            service.AddScoped<IUserCheckpointProgressRepository, UserCheckpointProgressRepository>();
            
             return service;
         }

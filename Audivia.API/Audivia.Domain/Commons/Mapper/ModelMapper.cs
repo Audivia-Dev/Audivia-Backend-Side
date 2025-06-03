@@ -1,8 +1,6 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.Models;
-using MongoDB.Bson.Serialization.Serializers;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Audivia.Domain.Commons.Mapper
 {
@@ -294,14 +292,43 @@ namespace Audivia.Domain.Commons.Mapper
                 TourId = userTourProgress.TourId,
                 StartedAt = userTourProgress.StartedAt,
                 FinishedAt = userTourProgress.FinishedAt,
-                Status = userTourProgress.Status,
+                IsCompleted = userTourProgress.IsCompleted,
+                CurrentCheckpointId = userTourProgress.CurrentCheckpointId,
+                Score = userTourProgress.Score,
+                GroupMode = userTourProgress.GroupMode,
+                GroupId = userTourProgress.GroupId
+            };
+        }
+
+        public static UserTourProgressDTO MapUserTourProgressToDTO(UserTourProgress userTourProgress, IEnumerable<UserCheckpointProgress>? checkpointProgress = null)
+        {
+            return new UserTourProgressDTO
+            {
+                Id = userTourProgress.Id,
+                UserId = userTourProgress.UserId,
+                TourId = userTourProgress.TourId,
+                StartedAt = userTourProgress.StartedAt,
+                FinishedAt = userTourProgress.FinishedAt,
+                IsCompleted = userTourProgress.IsCompleted,
                 CurrentCheckpointId = userTourProgress.CurrentCheckpointId,
                 Score = userTourProgress.Score,
                 GroupMode = userTourProgress.GroupMode,
                 GroupId = userTourProgress.GroupId,
-                CreatedAt = userTourProgress.CreatedAt,
-                UpdatedAt = userTourProgress.UpdatedAt,
-                IsDeleted = userTourProgress.IsDeleted,
+                CheckpointProgress = checkpointProgress?.Select(MapUserCheckpointProgressToDTO)
+            };
+        }
+
+        public static UserCheckpointProgressDTO MapUserCheckpointProgressToDTO(UserCheckpointProgress userCheckpointProgress)
+        {
+            return new UserCheckpointProgressDTO
+            {
+                Id = userCheckpointProgress.Id,
+                UserTourProgressId = userCheckpointProgress.UserTourProgressId,
+                CheckpointAudioId = userCheckpointProgress.CheckpointAudioId,
+                TourCheckpointId = userCheckpointProgress.TourCheckpointId,
+                IsCompleted = userCheckpointProgress.IsCompleted,
+                LastListenedTime = userCheckpointProgress.LastListenedTime,
+                ProgressSeconds = userCheckpointProgress.ProgressSeconds,
             };
         }
 
