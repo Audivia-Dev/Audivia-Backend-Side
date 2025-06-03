@@ -20,6 +20,8 @@ namespace Audivia.Domain.Models
 
         [BsonElement("file_url")]
         public string? FileUrl { get; set; }
+        [BsonElement("video_url")]
+        public string? VideoUrl { get; set; }
 
         [BsonElement("is_default")]
         public bool IsDefault { get; set; } = true;

@@ -340,6 +340,7 @@ namespace Audivia.Domain.Commons.Mapper
                 TourCheckpointId = checkpointAudio.TourCheckpointId,
                 AudioCharacterId = checkpointAudio.AudioCharacterId,
                 FileUrl = checkpointAudio.FileUrl,
+                VideoUrl = checkpointAudio.VideoUrl,
                 IsDefault = checkpointAudio.IsDefault,
                 Transcript = checkpointAudio.Transcript,
                 CreatedAt = checkpointAudio.CreatedAt,
