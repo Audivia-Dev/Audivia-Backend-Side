@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.UserCheckpointProgress
             return Ok(result);
         }
 
+        [HttpGet("tour-progress/{tourProgressId}/checkpoints/{checkpointId}")]
+        public async Task<IActionResult> GetByTourProgressAndCheckpoint(string tourProgressId, string checkpointId)
+        {
+            var result = await _userCheckpointProgressService.GetByTourProgressAndCheckpoint(tourProgressId, checkpointId);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateUserCheckpointProgressRequest request)
         {

@@ -63,6 +63,22 @@ namespace Audivia.Application.Services.Implemetation
                 .ToList();
         }
 
+        public async Task<UserCheckpointProgressResponse> GetByTourProgressAndCheckpoint(string tourProgressId, string checkpointId)
+        {
+            var progress = await _userCheckpointProgressRepository.FindFirst(t => t.UserTourProgressId == tourProgressId && t.TourCheckpointId == checkpointId);
+            if (progress == null)
+            {
+                throw new KeyNotFoundException("Progress not found!");
+            }
+
+            return new UserCheckpointProgressResponse
+            {
+                Success = true,
+                Message = "Checkpoint progress retrieved successfully",
+                Response = ModelMapper.MapUserCheckpointProgressToDTO(progress)
+            };
+        }
+
         public async Task<UserCheckpointProgressResponse> GetUserCheckpointProgressById(string id)
         {
             var progress = await _userCheckpointProgressRepository.FindFirst(t => t.Id == id);
