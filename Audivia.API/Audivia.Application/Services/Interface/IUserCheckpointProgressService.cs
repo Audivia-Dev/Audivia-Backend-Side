@@ -11,6 +11,7 @@ namespace Audivia.Application.Services.Interface
         Task<List<UserCheckpointProgressDTO>> GetAllUserCheckpointProgresss();
 
         Task<UserCheckpointProgressResponse> GetUserCheckpointProgressById(string id);
+        Task<UserCheckpointProgressResponse> GetByTourProgressAndCheckpoint(string tourProgressId, string checkpointId);
 
         Task UpdateUserCheckpointProgress(string id, UpdateUserCheckpointProgressRequest request);
 
