@@ -68,7 +68,12 @@ namespace Audivia.Application.Services.Implemetation
             var progress = await _userCheckpointProgressRepository.FindFirst(t => t.UserTourProgressId == tourProgressId && t.TourCheckpointId == checkpointId);
             if (progress == null)
             {
-                throw new KeyNotFoundException("Progress not found!");
+                return new UserCheckpointProgressResponse
+                {
+                    Success = true,
+                    Message = "Checkpoint progress not existed!",
+                    Response = null
+                };
             }
 
             return new UserCheckpointProgressResponse
@@ -84,7 +89,12 @@ namespace Audivia.Application.Services.Implemetation
             var progress = await _userCheckpointProgressRepository.FindFirst(t => t.Id == id);
             if (progress == null)
             {
-                throw new KeyNotFoundException("Progress not found!");
+                return new UserCheckpointProgressResponse
+                {
+                    Success = true,
+                    Message = "Checkpoint progress not existed!",
+                    Response = null
+                };
             }
 
             return new UserCheckpointProgressResponse
