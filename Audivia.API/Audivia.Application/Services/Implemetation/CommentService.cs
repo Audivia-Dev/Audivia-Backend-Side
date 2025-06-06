@@ -108,19 +108,19 @@ namespace Audivia.Application.Services.Implemetation
             await _commentRepository.Update(comment);
         }
 
-        public async Task DeleteComment(string id)
+        public async Task DeleteComment(string id, string userId)
         {
             if (!ObjectId.TryParse(id, out _))
             {
                 throw new FormatException("Invalid comment id!");
             }
-            var comment = await _commentRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var comment = await _commentRepository.FindFirst(t => t.Id == id);
             if (comment == null) return;
-
-            comment.IsDeleted = true;
-            comment.UpdatedAt = DateTime.UtcNow;
-
-            await _commentRepository.Update(comment);
+            if (comment.CreatedBy != userId)
+            {
+                throw new HttpRequestException("You are not allowed to delete this comment!");
+            }
+            await _commentRepository.Delete(comment);
         }
 
         public async Task<CommentListResponse> GetByPost(string postId)
