@@ -58,7 +58,7 @@ namespace Audivia.Application.Services.Implemetation
             // update avg rating of the reviewed tour            
             if (request.Rating.HasValue)
             {
-                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
                 await _tourRepository.Update(tour);
             }
 
@@ -132,7 +132,7 @@ namespace Audivia.Application.Services.Implemetation
             // update average rating of the reviewed tour
             if (request.Rating.HasValue)
             {
-                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
                 await _tourRepository.Update(tour);
             }
         }
@@ -143,28 +143,29 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid tour review id!");
             }
-            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id);
             if (tourReview == null) throw new KeyNotFoundException("TourReview not found!");
 
-            tourReview.IsDeleted = true;
-            tourReview.UpdatedAt = DateTime.UtcNow;
+            await _tourReviewRepository.Delete(tourReview);
 
-            await _tourReviewRepository.Update(tourReview);
+            Tour tour = await _tourRepository.FindFirst(t => t.Id == tourReview.TourId && !t.IsDeleted) ?? throw new KeyNotFoundException("Tour not found!");
+            (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
+            await _tourRepository.Update(tour);
         }
 
-        private async Task<double> CalculateAverageRatingAsync(string tourId)
+        private async Task<(double, int)> CalculateAverageRatingAsync(string tourId)
         {
             FilterDefinition<TourReview>? filter = Builders<TourReview>.Filter.Eq(r => r.TourId, tourId);
             var tourReviews = await _tourReviewRepository.Search(filter);
             var validRatings = tourReviews
-                                .Where(r => r.Rating.HasValue)
-                                .Select(r => r.Rating!.Value)
+                                .Where(r => r.Rating.HasValue && r.IsDeleted == false)
+                                .Select(r => r.Rating!.Value )
                                 .ToList();
 
             if (!validRatings.Any())
-                return 0;
+                return (0,0);
 
-            return validRatings.Average();
+            return (validRatings.Average(), validRatings.Count);
         }
 
         public async Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId)

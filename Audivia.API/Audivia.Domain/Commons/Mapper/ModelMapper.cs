@@ -59,6 +59,7 @@ namespace Audivia.Domain.Commons.Mapper
                 TourTypeName = tour.TourType != null ? tour.TourType.TourTypeName : null,
                 ThumbnailUrl = tour.ThumbnailUrl,
                 AvgRating = Math.Round((double)tour.AvgRating, 1),
+                RatingCount = tour.RatingCount,
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
                 UpdatedAt = tour.UpdatedAt
@@ -81,6 +82,7 @@ namespace Audivia.Domain.Commons.Mapper
                 TourTypeName = tour.TourType != null ? tour.TourType.TourTypeName : null,
                 ThumbnailUrl = tour.ThumbnailUrl,
                 AvgRating = Math.Round((double)tour.AvgRating, 1),
+                RatingCount = tour.RatingCount,
                 Checkpoints = checkpoints.Select(MapTourCheckpointToDTO),
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,

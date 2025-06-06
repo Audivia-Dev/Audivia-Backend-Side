@@ -51,9 +51,9 @@ namespace Audivia.API.Controllers.Comment
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id, string userId)
         {
-            await _commentService.DeleteComment(id);
+            await _commentService.DeleteComment(id, userId);
             return NoContent();
         }
     }
