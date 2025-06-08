@@ -77,12 +77,12 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
-        public async Task<string> VerifyEmail(ConfirmEmailRequest request)
+        public async Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request)
         {
             var user = await _userRepository.GetByTokenConfirm(request.Token);
             if (user == null)
             {
-                throw new KeyNotFoundException("User not found!");
+                throw new KeyNotFoundException("Token is invalid! User not found!");
             }
             user.ConfirmedEmail = true;
             user.TokenConfirmEmail = "";
@@ -93,7 +93,7 @@ namespace Audivia.Application.Services.Implemetation
                 Subject = "[Audivia] Welcome to Audivia",
                 Body = EmailContent.WelcomeEmail(user.Username ?? "New Customer")
             });
-            return ConfirmEmailResponse.VerifyEmailResponse("");
+            return new ConfirmEmailResponse { StatusCode = 200, IsSuccess = true, Message = "Xác thực thành công!" };
         }
 
         public async Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request)

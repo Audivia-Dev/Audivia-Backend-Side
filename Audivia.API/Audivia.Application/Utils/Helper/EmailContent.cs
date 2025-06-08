@@ -26,7 +26,7 @@ namespace Audivia.Application.Utils.Helper
         {
             var frontendUrl = configuration["Frontend:BaseUrl"];
 
-            var confirmLink = $"{frontendUrl}/auth/verify-email?token={tokenConfirm}";
+            var confirmLink = $"{frontendUrl}/confirm-email?token={tokenConfirm}";
             return $@"
                     <div style='background-color:#eaf7f6;font-family:sans-serif;padding:20px'>
                       <div style='max-width:600px;margin:auto;background:white;border-radius:8px;padding:30px;color:#003f5c'>
