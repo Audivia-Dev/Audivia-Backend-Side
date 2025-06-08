@@ -16,7 +16,7 @@ namespace Audivia.Application.Services.Interface
         Task<RegisterResponse> Register(RegisterRequest request);
 
         //confirm email
-        Task<string> VerifyEmail(ConfirmEmailRequest request);
+        Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request);
 
         // get profile
         Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims);
