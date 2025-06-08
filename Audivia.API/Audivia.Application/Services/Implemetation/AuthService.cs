@@ -211,7 +211,8 @@ namespace Audivia.Application.Services.Implemetation
                     RoleId = (await _roleRepository.GetByRoleName("customer")).Id,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    AvatarUrl = googlePayload.Picture
                 };
 
                 await _userRepository.Create(newUser); 
