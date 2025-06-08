@@ -24,11 +24,11 @@ namespace Audivia.API.Controllers.Auth
             return Ok(result);
         }
 
-        [HttpGet("verify-email")]
-        public async Task<IActionResult> VerifyEmail([FromQuery] ConfirmEmailRequest request)
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyEmail( ConfirmEmailRequest request)
         {
             var result = await _authService.VerifyEmail(request);
-            return Content(result, "text/html");
+            return Ok(result);
         }
 
 
