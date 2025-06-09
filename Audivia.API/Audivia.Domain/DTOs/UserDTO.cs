@@ -20,6 +20,7 @@ namespace Audivia.Domain.DTOs
         public int? AutoPlayDistance { get; set; }
         public int? TravelDistance { get; set; }
         public string RoleId { get; set; }
+        public string RoleName { get; set; }
         public bool ConfirmedEmail { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
