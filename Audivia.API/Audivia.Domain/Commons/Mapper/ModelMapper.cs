@@ -6,7 +6,11 @@ namespace Audivia.Domain.Commons.Mapper
 {
     public static class ModelMapper
     {
-        public static UserDTO MapUserToDTO(User user, int? followers = null, int? following = null, int? friends = null)
+        public static UserDTO MapUserToDTO(User user,
+            string roleName = "",
+            int? followers = null,
+            int? following = null,
+            int? friends = null)
         {
             return new UserDTO
             {
@@ -26,6 +30,7 @@ namespace Audivia.Domain.Commons.Mapper
                 AutoPlayDistance = user.AutoPlayDistance,
                 TravelDistance = user.TravelDistance,
                 RoleId = user.RoleId,
+                RoleName = roleName,
                 ConfirmedEmail = user.ConfirmedEmail,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
