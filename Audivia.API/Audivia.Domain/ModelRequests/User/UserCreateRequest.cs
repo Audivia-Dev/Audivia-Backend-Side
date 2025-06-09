@@ -10,5 +10,7 @@ namespace Audivia.Domain.ModelRequests.User
 
         public required string Password { get; set; }
 
+        public string RoleName { get; set; } = "admin";
+
     }
 }

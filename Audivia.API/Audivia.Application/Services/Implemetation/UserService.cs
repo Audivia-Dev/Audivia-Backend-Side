@@ -23,17 +23,23 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<UserResponse> CreateUser(UserCreateRequest request)
         {
-            var customerRole = await _roleRepository.GetByRoleName("customer");
+            var role = await _roleRepository.GetByRoleName(request.RoleName) 
+                            ?? throw new KeyNotFoundException("Role not found!");
+            
             var user = new User
             {
                 Email = request.Email,
                 Username = request.UserName,
                 Password = PasswordHasher.HashPassword(request.Password),
-                RoleId = customerRole.Id,
+                RoleId = role.Id,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
+            if (role.RoleName.ToLower().Equals("admin") || role.RoleName.ToLower().Equals("staff"))
+            {
+                user.ConfirmedEmail = true;
+            }
 
             await _userRepository.Create(user);
 
@@ -72,15 +78,6 @@ namespace Audivia.Application.Services.Implemetation
                 Message = "User retrieved successfully",
                 Response = await FinalMapUserToDTO(user)
             };
-        }
-
-        private async Task<UserDTO> FinalMapUserToDTO(User user)
-        {
-            int followers = await _userFollowService.CountByFollowingId(user.Id);
-            int following = await _userFollowService.CountByFollowerId(user.Id);
-            int friends = await _userFollowService.CountFriends(user.Id);
-
-            return ModelMapper.MapUserToDTO(user, followers, following, friends);
         }
 
         public async Task UpdateUser(string id, UserUpdateRequest request)
@@ -132,19 +129,33 @@ namespace Audivia.Application.Services.Implemetation
             await _userRepository.Update(user);
         }
 
-        public async Task IncreaseBalanceAsync(string userId, int ammount)
+        private async Task<UserDTO> FinalMapUserToDTO(User user)
+        {
+            var role = await _roleRepository.FindFirst(role => role.Id == user.RoleId)
+                            ?? throw new KeyNotFoundException("Role not found!");
+
+            if (role.RoleName.ToLower().Equals("customer"))
+            {
+                int followers = await _userFollowService.CountByFollowingId(user.Id);
+                int following = await _userFollowService.CountByFollowerId(user.Id);
+                int friends = await _userFollowService.CountFriends(user.Id);
+                return ModelMapper.MapUserToDTO(user, role.RoleName, followers, following, friends);
+            }
+            return ModelMapper.MapUserToDTO(user, role.RoleName);
+        }
+        public async Task IncreaseBalanceAsync(string userId, int amount)
         {
             var user = await _userRepository.FindFirst(t => t.Id == userId && !t.IsDeleted);
             if (user == null) return;
-            user.BalanceWallet += ammount;
+            user.BalanceWallet += amount;
             await _userRepository.Update(user);
         }
 
-        public async Task<bool> DeductBalanceAsync(string userId, double ammount)
+        public async Task<bool> DeductBalanceAsync(string userId, double amount)
         {
             var user = await _userRepository.FindFirst(t => t.Id == userId && !t.IsDeleted);
             if (user == null) return false;
-            user.BalanceWallet -= ammount;
+            user.BalanceWallet -= amount;
             await _userRepository.Update(user);
             return true;
         }
