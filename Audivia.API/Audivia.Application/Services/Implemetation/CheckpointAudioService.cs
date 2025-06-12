@@ -133,21 +133,23 @@ namespace Audivia.Application.Services.Implemetation
             var currentCheckpoint = await _tourCheckpointRepository.FindFirst(tc => tc.Id == checkpointId && !tc.IsDeleted);
             if (currentCheckpoint == null)
                 throw new KeyNotFoundException("Checkpoint not found!");
-
-            // Get all checkpoints in the tour, ordered by Order
-            var checkpoints = await _tourCheckpointRepository.GetTourCheckpointsByTourId(currentCheckpoint.TourId);
-            var orderedCheckpoints = checkpoints.Where(tc => !tc.IsDeleted).OrderBy(tc => tc.Order).ToList();
-
-            // If current is the first, return null (no previous)
-            if (orderedCheckpoints.FirstOrDefault()?.Id == currentCheckpoint.Id)
-                return null;
+            int currentOrder = currentCheckpoint.Order;
 
             // Find previous checkpoint
-            var currentIndex = orderedCheckpoints.FindIndex(tc => tc.Id == currentCheckpoint.Id);
-            if (currentIndex <= 0)
-                return null;
+            TourCheckpoint? prevCheckpoint = null;
+            int i = 1;
+            while (prevCheckpoint == null && i <= currentOrder)
+            {
+                prevCheckpoint = await _tourCheckpointRepository.FindFirst(tc => tc.TourId == currentCheckpoint.TourId && !tc.IsDeleted && tc.Order == currentOrder - i);
+                i++;
+                if (prevCheckpoint != null)
+                {
+                    break;
+                }
+            }
 
-            var prevCheckpoint = orderedCheckpoints[currentIndex - 1];
+            if (prevCheckpoint == null)
+                throw new KeyNotFoundException("Prev checkpoint not found!");
 
             var audio = await _checkpointAudioRepository.FindFirst(a => a.TourCheckpointId == prevCheckpoint.Id && !a.IsDeleted);
             if (audio == null)
@@ -166,21 +168,23 @@ namespace Audivia.Application.Services.Implemetation
             var currentCheckpoint = await _tourCheckpointRepository.FindFirst(tc => tc.Id == checkpointId && !tc.IsDeleted);
             if (currentCheckpoint == null)
                 throw new KeyNotFoundException("Checkpoint not found!");
-
-            // Get all checkpoints in the tour, ordered by Order
-            var checkpoints = await _tourCheckpointRepository.GetTourCheckpointsByTourId(currentCheckpoint.TourId);
-            var orderedCheckpoints = checkpoints.Where(tc => !tc.IsDeleted).OrderBy(tc => tc.Order).ToList();
-
-            // If current is the last, return null (no next)
-            if (orderedCheckpoints.LastOrDefault()?.Id == currentCheckpoint.Id)
-                return null;
+            int currentOrder = currentCheckpoint.Order;
 
             // Find next checkpoint
-            var currentIndex = orderedCheckpoints.FindIndex(tc => tc.Id == currentCheckpoint.Id);
-            if (currentIndex < 0 || currentIndex >= orderedCheckpoints.Count - 1)
-                return null;
+            TourCheckpoint? nextCheckpoint = null;
+            int i = 1;
+            while (nextCheckpoint == null && i <= 5)
+            {
+                nextCheckpoint = await _tourCheckpointRepository.FindFirst(tc => tc.TourId == currentCheckpoint.TourId && !tc.IsDeleted && tc.Order == currentCheckpoint.Order + i);
+                i++;
+                if (nextCheckpoint != null)
+                {
+                    break;
+                }
+            }
 
-            var nextCheckpoint = orderedCheckpoints[currentIndex + 1];
+            if (nextCheckpoint == null)
+                throw new KeyNotFoundException("Next checkpoint not found!");
 
             var audio = await _checkpointAudioRepository.FindFirst(a => a.TourCheckpointId == nextCheckpoint.Id && !a.IsDeleted);
             if (audio == null)
