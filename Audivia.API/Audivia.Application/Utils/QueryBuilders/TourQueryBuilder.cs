@@ -12,6 +12,14 @@ namespace Audivia.Application.Utils.QueryBuilders
             var filterBuilder = Builders<Tour>.Filter;
             var filter = filterBuilder.Empty;
 
+            if (!string.IsNullOrEmpty(request.Title))
+            {
+                var regex = new BsonRegularExpression(request.Title, "i");
+                var notNullFilter = filterBuilder.Ne(t => t.Title, null);
+                var nameFilter = filterBuilder.Regex("title", regex);
+                filter &= filterBuilder.And(notNullFilter, nameFilter);
+            }
+
             if (!string.IsNullOrEmpty(request.TourTypeId))
             {
                 filter &= filterBuilder.Eq(t => t.TypeId, request.TourTypeId);
