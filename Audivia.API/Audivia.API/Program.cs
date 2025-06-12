@@ -130,9 +130,6 @@ namespace Audivia.API
             });
             var app = builder.Build();
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
@@ -145,7 +142,6 @@ namespace Audivia.API
     //        app.UseHttpsRedirection();
 
             app.UseCors("app-cors");
-           // app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseAuthentication();
 
             app.UseAuthorization();
