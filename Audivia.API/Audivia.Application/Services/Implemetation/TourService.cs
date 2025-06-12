@@ -19,12 +19,14 @@ namespace Audivia.Application.Services.Implemetation
         private readonly ITourRepository _tourRepository;
         private readonly ITourTypeRepository _tourTypeRepository;
         private readonly ITourCheckpointService _tourCheckpointService;
+        private readonly ITransactionHistoryRepository _transactionHistoryRepository;
 
-        public TourService(ITourRepository tourRepository, ITourTypeRepository tourTypeRepository, ITourCheckpointService tourCheckpointService)
+        public TourService(ITourRepository tourRepository, ITourTypeRepository tourTypeRepository, ITourCheckpointService tourCheckpointService, ITransactionHistoryRepository transactionHistoryRepository)
         {
             _tourRepository = tourRepository;
             _tourTypeRepository = tourTypeRepository;
             _tourCheckpointService = tourCheckpointService;
+            _transactionHistoryRepository = transactionHistoryRepository;
         }
 
         public async Task<AudioTourResponse> CreateAudioTour(CreateTourRequest request)
@@ -163,18 +165,31 @@ namespace Audivia.Application.Services.Implemetation
                 throw new HttpRequestException("Invalid coordination!");
             }
 
-            var tours = await _tourRepository.GetAll(); // must be optimized when scope expand
+            var topTourTypes = await _transactionHistoryRepository.GetTopTourTypesByUserIdAsync(request.UserId, 5);
+            var bookedTourIds = await _transactionHistoryRepository.GetBookedTourIdsByUserIdAsync(request.UserId);
 
-            // Apply Haversine filter on the smaller dataset
-            var nearbyTours = tours
-                .Where(t => DistanceUtils.CalculateDistance(request.Latitude, request.Longitude, t.StartLatitude ?? 0, t.StartLongitude ?? 0) <= request.Radius)
-                .Take(3) // Limit to 3 nearest tours
+            var candidateTours = await _tourRepository.GetToursByTypesExcludingIdsAsync(topTourTypes.Keys.ToList(), bookedTourIds);
+
+            var filteredSortedTours = candidateTours
+                .Select(t =>
+                {
+                    double distance = DistanceUtils.CalculateDistance(request.Latitude, request.Longitude, t.StartLatitude ?? 0, t.StartLongitude ?? 0);
+                    int popularity = topTourTypes.TryGetValue(t.TourType.TourTypeName ?? "", out int count) ? count : 0;
+
+                    return new { Tour = t, Distance = distance, Popularity = popularity };
+                })
+                //.Where(t => t.Distance <= request.Radius)
+                .OrderBy(t => t.Distance)
+                .ThenByDescending(t => t.Popularity)
+                .Take(request.Top)
+                .Select(t => t.Tour)
                 .ToList();
 
-            var totalCount = nearbyTours.Count;
+
+            var totalCount = filteredSortedTours.Count;
 
             // Map to DTOs
-            var dtos = nearbyTours.Select(ModelMapper.MapAudioTourToDTO).ToList();
+            var dtos = filteredSortedTours.Select(ModelMapper.MapAudioTourToDTO).ToList();
 
             // Pagination response
             var pagedResponse = new PaginationResponse<TourDTO>(1, 3, totalCount, dtos);
