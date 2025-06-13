@@ -28,6 +28,8 @@ namespace Audivia.Domain.DTOs
         public double AvgRating { get; set; }
         public int RatingCount { get; set; }
         public IEnumerable<TourCheckpointDTO>? Checkpoints { get; set; }
+        public bool UseCustomMap { get; set; } = false;
+        public List<string>? CustomMapImages { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

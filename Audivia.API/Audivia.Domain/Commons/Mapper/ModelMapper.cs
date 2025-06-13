@@ -86,6 +86,8 @@ namespace Audivia.Domain.Commons.Mapper
                 TypeId = tour.TypeId,
                 TourTypeName = tour.TourType != null ? tour.TourType.TourTypeName : null,
                 ThumbnailUrl = tour.ThumbnailUrl,
+                UseCustomMap = tour.UseCustomMap,
+                CustomMapImages = tour.CustomMapImages,
                 AvgRating = Math.Round((double)tour.AvgRating, 1),
                 RatingCount = tour.RatingCount,
                 Checkpoints = checkpoints.Select(MapTourCheckpointToDTO),

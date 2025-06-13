@@ -46,6 +46,8 @@ namespace Audivia.Application.Services.Implemetation
                 Duration = request.Duration,
                 TypeId = request.TypeId,
                 ThumbnailUrl = request.ThumbnailUrl,
+                UseCustomMap = request.UseCustomMap,
+                CustomMapImages = request.CustomMapImages,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -135,6 +137,8 @@ namespace Audivia.Application.Services.Implemetation
             tour.Price = request.Price ?? tour.Price;
             tour.Duration = request.Duration ?? tour.Duration;
             tour.ThumbnailUrl = request.ThumbnailUrl ?? tour.ThumbnailUrl;
+            tour.UseCustomMap = request.UseCustomMap ?? tour.UseCustomMap;
+            tour.CustomMapImages = request.CustomMapImages ?? tour.CustomMapImages;
             tour.UpdatedAt = DateTime.UtcNow;
 
 

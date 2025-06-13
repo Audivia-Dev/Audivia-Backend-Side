@@ -46,6 +46,12 @@ namespace Audivia.Domain.Models
         [BsonElement("start_longitude")] // longitude of checkpoint 1 of this tour
         public double? StartLongitude { get; set; }
 
+        [BsonElement("use_custom_map")]
+        public bool UseCustomMap { get; set; } 
+
+        [BsonElement("custom_map_images")]
+        public List<string>? CustomMapImages { get; set; }
+
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
 
