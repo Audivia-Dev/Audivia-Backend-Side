@@ -50,7 +50,7 @@ namespace Audivia.Domain.Models
         public bool UseCustomMap { get; set; } 
 
         [BsonElement("custom_map_images")]
-        public List<string>? CustomMapImages { get; set; }
+        public List<CustomMap>? CustomMapImages { get; set; }
 
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;
