@@ -56,5 +56,12 @@ namespace Audivia.API.Controllers.TourReview
             var rs = await _tourReviewService.GetReviewsByTourId(tourId);
             return Ok(rs);
         }
+
+        [HttpGet("tours/{tourId}/users/{userId}")]
+        public async Task<IActionResult> GetReviewsByTourId(string tourId, string userId)
+        {
+            var rs = await _tourReviewService.GetReviewsByTourIdAndUserId(tourId, userId);
+            return Ok(rs);
+        }
     }
 }
