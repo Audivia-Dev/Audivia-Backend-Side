@@ -94,7 +94,6 @@ namespace Audivia.Application.Services.Implemetation
                 Text = request.Text,
                 Timestamp = DateTime.UtcNow
             };
-            await _messageRepository.Create(userMessage);
 
             var sessionName = SessionName.FromProjectLocationAgentSession(_projectId, _locationId, _agentId, currentSession.Id);
 
@@ -136,6 +135,7 @@ namespace Audivia.Application.Services.Implemetation
                     Text = replyText,
                     Timestamp = replyTime
                 };
+                await _messageRepository.Create(userMessage);
                 await _messageRepository.Create(botMessage);
 
                 return new MessageResponse { Reply = replyText, Sender = SenderType.Bot, Timestamp = replyTime.ToString() };
