@@ -17,5 +17,6 @@ namespace Audivia.Application.Services.Interface
 
         Task DeleteTourReview(string id);
         Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId);
+        Task<TourReviewResponse> GetReviewsByTourIdAndUserId(string tourId, string userId);
     }
 }
