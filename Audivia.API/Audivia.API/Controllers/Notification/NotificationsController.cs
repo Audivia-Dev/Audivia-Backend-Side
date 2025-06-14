@@ -24,8 +24,9 @@ namespace Audivia.API.Controllers.Notification
             var result = await _notificationService.CreateNotification(request);
             var countUnread = await _notificationService.CountUnreadNotificationAsync(request.UserId);
 
-            //Send Client
-            await _hubContext.Clients.Group(request.UserId).SendAsync("ReceiveUnreadCount", countUnread);
+            _ = _hubContext.Clients.Group(request.UserId)
+                .SendAsync("ReceiveUnreadCount", countUnread); // không await → không chặn thread
+
             return Ok(result);
         }
 
@@ -47,10 +48,19 @@ namespace Audivia.API.Controllers.Notification
         public async Task<IActionResult> Update(string id, [FromBody] UpdateNotificationRequest request)
         {
             await _notificationService.UpdateNotification(id, request);
-            var countUnread = await _notificationService.CountUnreadNotificationAsync(request.UserId);
 
-            //Send Client
-            await _hubContext.Clients.Group(request.UserId).SendAsync("ReceiveUnreadCount", countUnread);
+            // Fire-and-forget gửi số chưa đọc sau khi cập nhật
+            _ = _notificationService.CountUnreadNotificationAsync(request.UserId)
+                .ContinueWith(async t =>
+                {
+                    if (!t.IsFaulted)
+                    {
+                        var count = t.Result;
+                        await _hubContext.Clients.Group(request.UserId)
+                            .SendAsync("ReceiveUnreadCount", count);
+                    }
+                });
+
             return NoContent();
         }
 
@@ -62,10 +72,24 @@ namespace Audivia.API.Controllers.Notification
                 return NotFound();
 
             await _notificationService.DeleteNotification(id);
-            await _hubContext.Clients.Group(notification.Response.UserId)
+            var userId = notification.Response.UserId;
+
+            // Fire-and-forget gửi sự kiện xoá
+            _ = _hubContext.Clients.Group(userId)
                 .SendAsync("NotificationDeleted", id);
-            var countUnread = await _notificationService.CountUnreadNotificationAsync(notification.Response.UserId);
-            await _hubContext.Clients.Group(notification.Response.UserId).SendAsync("ReceiveUnreadCount", countUnread);
+
+            // Fire-and-forget gửi số lượng chưa đọc
+            _ = _notificationService.CountUnreadNotificationAsync(userId)
+                .ContinueWith(async t =>
+                {
+                    if (!t.IsFaulted)
+                    {
+                        var count = t.Result;
+                        await _hubContext.Clients.Group(userId)
+                            .SendAsync("ReceiveUnreadCount", count);
+                    }
+                });
+
             return NoContent();
         }
 

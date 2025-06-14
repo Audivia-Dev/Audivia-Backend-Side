@@ -22,9 +22,9 @@ namespace Audivia.API.Controllers.Message
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateMessageRequest request)
         {
-            var result = await _messageService.CreateMessage(request);
-            await _hubContext.Clients.Group(request.ChatRoomId)
-               .SendAsync("ReceiveMessage", result);
+            var result = await _messageService.CreateMessage(request); 
+            _ = _hubContext.Clients.Group(request.ChatRoomId)
+                .SendAsync("ReceiveMessage", result); // Gửi SignalR mà không chờ (fire-and-forget)
             return Ok(result);
         }
 

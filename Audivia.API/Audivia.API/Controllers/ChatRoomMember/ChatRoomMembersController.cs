@@ -22,8 +22,10 @@ namespace Audivia.API.Controllers.ChatRoomMember
         public async Task<IActionResult> Create([FromBody] CreateChatRoomMemberRequest request)
         {
             var result = await _chatRoomMemberService.CreateChatRoomMember(request);
-            await _hubContext.Clients.Group(request.ChatRoomId)
-            .SendAsync("UserJoined", request);
+
+            _ = _hubContext.Clients.Group(request.ChatRoomId)
+                .SendAsync("UserJoined", request); // Fire-and-forget gửi thông báo
+
             return Ok(result);
         }
 
