@@ -200,5 +200,25 @@ namespace Audivia.Application.Services.Implemetation
             }
             return result;
         }
+
+        public async Task<TourReviewResponse> GetReviewsByTourIdAndUserId(string tourId, string userId)
+        {
+            if (!ObjectId.TryParse(tourId, out _))
+            {
+                throw new FormatException("Invalid tour id!");
+            }
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.TourId == tourId && t.CreatedBy == userId && !t.IsDeleted);
+            if (tourReview == null)
+            {
+                throw new KeyNotFoundException("Tour review not found!");
+            }
+
+            return new TourReviewResponse
+            {
+                Success = true,
+                Message = "TourReview retrieved successfully",
+                Response = ModelMapper.MapTourReviewToDTO(tourReview)
+            };
+        }
     }
 }
