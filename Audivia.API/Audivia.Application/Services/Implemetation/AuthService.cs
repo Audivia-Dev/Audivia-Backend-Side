@@ -123,19 +123,18 @@ namespace Audivia.Application.Services.Implemetation
 
         public async Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims)
         {
-            var username = userClaims.FindFirst(ClaimTypes.Name)?.Value;
+            var email = userClaims.FindFirst(ClaimTypes.Email)?.Value;
 
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(email))
                 return null;
 
-            var user = await _userRepository.FindFirst(u => u.Username == username);
+            var user = await _userRepository.FindFirst(u => u.Email == email);
             if (user == null)
                 return null;
 
-            var role = await _roleRepository.FindFirst(role => role.Id == user.RoleId)
-                            ?? throw new KeyNotFoundException("Role not found!");
+            var roleName = userClaims.FindFirst(ClaimTypes.Role)?.Value;
 
-            return ModelMapper.MapUserToDTO(user, role.RoleName);
+            return ModelMapper.MapUserToDTO(user, roleName);
         }
 
         private async Task<string> GenerateAccessToken(User user)
@@ -147,7 +146,7 @@ namespace Audivia.Application.Services.Implemetation
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("userId", user.Id.ToString()),
-                new Claim("email", user.Email != null ? user.Email.ToString() : ""),
+                new Claim(ClaimTypes.Email, user.Email != null ? user.Email.ToString() : ""),
                 new Claim(ClaimTypes.Role, role.RoleName)
             };
 
