@@ -132,7 +132,10 @@ namespace Audivia.Application.Services.Implemetation
             if (user == null)
                 return null;
 
-            return ModelMapper.MapUserToDTO(user);
+            var role = await _roleRepository.FindFirst(role => role.Id == user.RoleId)
+                            ?? throw new KeyNotFoundException("Role not found!");
+
+            return ModelMapper.MapUserToDTO(user, role.RoleName);
         }
 
         private async Task<string> GenerateAccessToken(User user)
