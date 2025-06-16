@@ -147,7 +147,15 @@ namespace Audivia.Application.Services.Implemetation
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("userId", user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email != null ? user.Email.ToString() : ""),
-                new Claim(ClaimTypes.Role, role.RoleName)
+                new Claim(ClaimTypes.Role, role.RoleName),
+                new Claim("fullName", user.FullName),
+                new Claim("phone", user.Phone),
+                new Claim("avatarUrl",user.AvatarUrl),
+                new Claim("coverPhoto", user.CoverPhoto),
+                new Claim("bio", user.Bio),
+                new Claim("balanceWallet", user.BalanceWallet.ToString()),
+                new Claim("audioCharacterId", user.AudioCharacterId),
+                new Claim("autoPlayDistance", user.AutoPlayDistance.ToString())
             };
 
 
