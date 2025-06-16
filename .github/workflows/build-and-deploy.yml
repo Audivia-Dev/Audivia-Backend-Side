@@ -86,11 +86,11 @@ jobs:
           port: 22
           script: |
             cd /root/services/Audivia-Backend-Side/Audivia.API
-            echo "${{ secrets.APPSETTINGS_PRODUCTION }}" > ./Audivia.API/appsettings.json
 
             git fetch origin
             git checkout main
             git pull
             
-            docker compose down
+            docker compose stop
+            docker compose down --rmi all
             docker compose up -d --build
