@@ -4,10 +4,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080" 
+      - "8084:8080" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
     volumes:
-      - ./Audivia.API/appsettings.json:/app/appsettings.json
+      - ./Audivia.API/appsettings.json:/app/appsettings.json:ro
     restart: always
