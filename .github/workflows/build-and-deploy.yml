@@ -51,7 +51,7 @@ jobs:
           name: webapp
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-  deploy:
+  deploy-to-azure:
     name: Deploy to Azure
     runs-on: ubuntu-latest
     needs: [build-and-test]
@@ -69,3 +69,28 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+  deploy-to-vps:
+    name: Deploy to VPS via Docker
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+
+    steps:
+
+      - name: Restart Docker on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            cd /root/services/Audivia-Backend-Side/Audivia.API
+            echo "${{ secrets.APPSETTINGS_PRODUCTION }}" > ./Audivia.API/appsettings.json
+
+            git fetch origin
+            git checkout main
+            git pull
+            
+            docker compose down
+            docker compose up -d --build
