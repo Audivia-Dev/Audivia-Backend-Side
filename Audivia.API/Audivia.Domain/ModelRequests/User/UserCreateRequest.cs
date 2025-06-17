@@ -1,16 +1,22 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace Audivia.Domain.ModelRequests.User
 
 {
     public class UserCreateRequest
     {
-        public required string UserName { get; set; }
+        [Required]
+        public string UserName { get; set; } = string.Empty;
 
-        public required string Email { get; set; }
+        [Required]
+        public string Email { get; set; } = string.Empty;
 
-        public required string Password { get; set; }
+        [Required]
+        public string Password { get; set; } = string.Empty;
 
-        public string RoleName { get; set; } = "admin";
+        [Required]
+        public string RoleName { get; set; } = string.Empty;
 
+        public DateOnly? BirthDay { get; set; }
     }
 }

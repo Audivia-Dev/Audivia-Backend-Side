@@ -16,6 +16,9 @@ public class User
     [BsonElement("full_name")]
     public string? FullName { get; set; }
 
+    [BsonElement("birth_day")]
+    public DateOnly? BirthDay { get; set; }
+
     [BsonElement("password")]
     public string Password { get; set; } = null!;
 
