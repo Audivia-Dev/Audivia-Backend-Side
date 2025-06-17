@@ -29,12 +29,12 @@ namespace Audivia.Domain.Commons.Mapper
                 AudioCharacterId = user.AudioCharacterId,
                 AutoPlayDistance = user.AutoPlayDistance,
                 TravelDistance = user.TravelDistance,
-                RoleId = user.RoleId,
                 RoleName = roleName,
                 ConfirmedEmail = user.ConfirmedEmail,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
                 IsDeleted = user.IsDeleted,
+                BirthDay = user.BirthDay
             };
         }
 
