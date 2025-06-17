@@ -133,13 +133,15 @@ namespace Audivia.API
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-           
-    //        app.UseHttpsRedirection();
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            //        app.UseHttpsRedirection();
 
             app.UseCors("app-cors");
             app.UseAuthentication();
