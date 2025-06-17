@@ -68,6 +68,7 @@ namespace Audivia.Application
             service.AddHostedService<TourReminderBackgroundService>();
 
             service.AddScoped<IUserCheckpointProgressService, UserCheckpointProgressService>();
+            service.AddScoped<IStatisticsService, StatisticsService>();
             return service;
         }
     }

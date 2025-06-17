@@ -11,5 +11,6 @@
         public string? AudioCharacterId { get; set; }
         public int? AutoPlayDistance { get; set; }
         public int? TravelDistance { get; set; }
+        public DateOnly? BirthDay { get; set; }
     }
 }
