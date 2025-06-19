@@ -33,6 +33,8 @@ namespace Audivia.Application.Utils.QueryBuilders
                 filter &= filterBuilder.And(notNullFilter, nameFilter);
             }
 
+            filter &= filterBuilder.Eq(t => t.IsDeleted, false);
+
             return filter;
         }
 
