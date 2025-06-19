@@ -1,4 +1,6 @@
-﻿using Audivia.Domain.ModelResponses.TransactionHistory;
+﻿using Audivia.Domain.ModelRequests.Statistics;
+using Audivia.Domain.ModelResponses.Statistics;
+using Audivia.Domain.ModelResponses.TransactionHistory;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Interface;
 using MongoDB.Bson;
@@ -12,5 +14,6 @@ namespace Audivia.Infrastructure.Repositories.Interface
 
         Task<Dictionary<string, int>> GetTopTourTypesByUserIdAsync(string userId, int topN);
         Task<List<string?>> GetBookedTourIdsByUserIdAsync(string userId);
+        Task<List<RevenueStatItem>> GetRevenueStatisticsAsync(GetRevenueStatRequest request);
     }
 }
