@@ -73,7 +73,6 @@ namespace Audivia.Application.Services.Implemetation
             // get tours
             var tours = await _tourRepository.Search(filter, sort, request.Top, request.PageIndex, request.PageSize);
             var dtos = tours
-                .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapAudioTourToDTO)
                 .ToList();
 
