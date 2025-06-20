@@ -8,7 +8,6 @@ namespace Audivia.API.Controllers.User
 {
     [Route("api/v1/users")]
     [ApiController]
-    [Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,6 +17,7 @@ namespace Audivia.API.Controllers.User
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
         {
             var result = await _userService.CreateUser(request);
@@ -25,6 +25,7 @@ namespace Audivia.API.Controllers.User
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAll()
         {
             var result = await _userService.GetAllUsers();
@@ -39,6 +40,7 @@ namespace Audivia.API.Controllers.User
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(string id, [FromBody] UserUpdateRequest request)
         {
             await _userService.UpdateUser(id, request);
@@ -46,6 +48,7 @@ namespace Audivia.API.Controllers.User
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             await _userService.DeleteUser(id);
