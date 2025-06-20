@@ -116,9 +116,6 @@ namespace Audivia.API
             });
             var app = builder.Build();
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             // Configure the HTTP request pipeline.
