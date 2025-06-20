@@ -1,6 +1,7 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.AudioTour;
 using Audivia.Domain.ModelRequests.Tour;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.AudioTour
@@ -17,6 +18,7 @@ namespace Audivia.API.Controllers.AudioTour
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromBody] CreateTourRequest request)
         {
             var result = await _tourService.CreateAudioTour(request);
@@ -46,6 +48,7 @@ namespace Audivia.API.Controllers.AudioTour
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateTourRequest request)
         {
             await _tourService.UpdateAudioTour(id, request);
@@ -53,6 +56,7 @@ namespace Audivia.API.Controllers.AudioTour
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             await _tourService.DeleteAudioTour(id);

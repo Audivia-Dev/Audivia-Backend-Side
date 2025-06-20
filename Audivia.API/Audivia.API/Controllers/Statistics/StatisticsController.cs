@@ -1,12 +1,14 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.Statistics;
 using Audivia.Domain.ModelResponses.Statistics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.Statistics
 {
     [Route("api/v1/statistics")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class StatisticsController : ControllerBase
     {
         private readonly IStatisticsService _statisticsService;
