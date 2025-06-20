@@ -4,6 +4,7 @@ using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TransactionHistory;
 using Audivia.Domain.ModelResponses.TransactionHistory;
 using Audivia.Domain.Models;
+using Audivia.Infrastructure.Repositories.Implemetation;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
 
@@ -13,8 +14,7 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly ITransactionHistoryRepository _transactionHistoryRepository;
         private readonly IUserService _userService;
-
-        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository, IUserService userService)
+        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository,IUserService userService)
         {
             _transactionHistoryRepository = transactionHistoryRepository;
             _userService = userService;
@@ -64,6 +64,38 @@ namespace Audivia.Application.Services.Implemetation
                 .Select(ModelMapper.MapTransactionHistoryToDTO)
                 .ToList();
         }
+
+        public async Task<List<TransactionWithUserTourDTO>> GetAllTransactionsWithUserAndTour()
+        {
+            var transactions = await _transactionHistoryRepository.GetAll();
+            var filteredTransactions = transactions.Where(t => !t.IsDeleted).ToList();
+
+            var result = new List<TransactionWithUserTourDTO>();
+
+            foreach (var transaction in filteredTransactions)
+            {
+                var user = await _userService.GetById(transaction.UserId);
+
+                result.Add(new TransactionWithUserTourDTO
+                {
+                    Id = transaction.Id,
+                    UserId = transaction.UserId,
+                    TourId = transaction.TourId,
+                    Amount = transaction.Amount,
+                    Description = transaction.Description,
+                    Type = transaction.Type,
+                    Status = transaction.Status,
+                    CreatedAt = transaction.CreatedAt,
+
+                    Email = user?.Email,
+                    UserName = user?.Username,
+                    AvatarUrl = user?.AvatarUrl,
+                });
+            }
+
+            return result;
+        }
+
 
         public async Task<TransactionHistoryResponse> GetTransactionHistoryById(string id)
         {
