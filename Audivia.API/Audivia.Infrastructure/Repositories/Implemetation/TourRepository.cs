@@ -45,7 +45,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
 
             return await _collection.Aggregate<TourStatItem>(pipeline).ToListAsync();
         }
-
+        // for statistics
         private static IEnumerable<BsonDocument> BuildTourTypeGroupPipeline()
         {
             return new BsonDocument[]

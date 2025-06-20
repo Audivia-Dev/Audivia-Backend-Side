@@ -81,7 +81,7 @@ namespace Audivia.Application.Services.Implemetation
 
             int count = request.Top.HasValue ? request.Top.Value : countAll;
 
-            var pagedResponse = new PaginationResponse<TourDTO>(request.PageIndex ?? 1, request.PageSize ?? 5, count, dtos);
+            var pagedResponse = new PaginationResponse<TourDTO>(request.PageIndex ?? 1, request.PageSize ?? count, count, dtos);
 
             return new AudioTourListResponse
             {
