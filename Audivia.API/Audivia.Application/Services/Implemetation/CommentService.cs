@@ -1,20 +1,24 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.Commons.Mapper;
+using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Comment;
 using Audivia.Domain.ModelResponses.Comment;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IUserRepository userRepository)
         {
             _commentRepository = commentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<CommentResponse> CreateComment(CreateCommentRequest request)
@@ -46,10 +50,14 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<CommentListResponse> GetAllComments()
         {
             var comments = await _commentRepository.GetAll();
-            var commentDtos = comments
-                .Where(t => !t.IsDeleted)
-                .Select(ModelMapper.MapCommentToDTO)
-                .ToList();
+            comments = comments.Where(t => !t.IsDeleted);
+
+            List<CommentDTO> commentDtos = new List<CommentDTO>();
+            foreach (var comment in comments)
+            {
+                var commentDto = ModelMapper.MapCommentToDTO(comment);
+                commentDtos.Add(commentDto);
+            }
             return new CommentListResponse
             {
                 Success = true,
@@ -100,19 +108,41 @@ namespace Audivia.Application.Services.Implemetation
             await _commentRepository.Update(comment);
         }
 
-        public async Task DeleteComment(string id)
+        public async Task DeleteComment(string id, string userId)
         {
             if (!ObjectId.TryParse(id, out _))
             {
                 throw new FormatException("Invalid comment id!");
             }
-            var comment = await _commentRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var comment = await _commentRepository.FindFirst(t => t.Id == id);
             if (comment == null) return;
+            if (comment.CreatedBy != userId)
+            {
+                throw new HttpRequestException("You are not allowed to delete this comment!");
+            }
+            await _commentRepository.Delete(comment);
+        }
 
-            comment.IsDeleted = true;
-            comment.UpdatedAt = DateTime.UtcNow;
+        public async Task<CommentListResponse> GetByPost(string postId)
+        {
+            FilterDefinition<Comment> filter = Builders<Comment>.Filter.Eq(c => c.PostId, postId);
+            var comments = await _commentRepository.Search(filter);
+            
+            comments = comments.Where(t => !t.IsDeleted);
 
-            await _commentRepository.Update(comment);
+            List<CommentDTO> commentDtos = new List<CommentDTO>();
+            foreach (var comment in comments)
+            {
+                var user = await _userRepository.FindFirst(u => u.Id == comment.CreatedBy);
+                var commentDto = ModelMapper.MapCommentToDTO(comment, user.Username);
+                commentDtos.Add(commentDto);
+            }
+            return new CommentListResponse
+            {
+                Success = true,
+                Message = "Comments retrieved successfully",
+                Response = commentDtos
+            };
         }
     }
 }

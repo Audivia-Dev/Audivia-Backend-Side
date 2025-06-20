@@ -4,7 +4,7 @@
     {
         public DateTime? StartedAt { get; set; }
         public DateTime? FinishedAt { get; set; }
-        public string? Status { get; set; }
+        public bool? IsCompleted { get; set; }
         public string? CurrentCheckpointId { get; set; }
         public int? Score { get; set; }
         public bool? GroupMode { get; set; }

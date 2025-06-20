@@ -15,14 +15,16 @@ namespace Audivia.Domain.DTOs
         public int? Following { get; set; }
         public int? Friends { get; set; }
         public string? Bio {  get; set; }
-        public int BalanceWallet { get; set; }
+        public double BalanceWallet { get; set; }
         public string? AudioCharacterId { get; set; }
         public int? AutoPlayDistance { get; set; }
         public int? TravelDistance { get; set; }
         public string RoleId { get; set; }
+        public string RoleName { get; set; }
         public bool ConfirmedEmail { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public DateOnly? BirthDay { get; set; }
     }
 }

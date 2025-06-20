@@ -46,6 +46,16 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
                 });
         }
 
+        public async Task<List<SavedTour>> GetUpcomingToursAsync(DateTime fromTime, DateTime toTime)
+        {
+            var filter = Builders<SavedTour>.Filter.And(
+                Builders<SavedTour>.Filter.Gte(x => x.PlannedTime, fromTime),
+                Builders<SavedTour>.Filter.Lte(x => x.PlannedTime, toTime)
+                );
+            return await _collection.Find(filter).ToListAsync();
+        }
+
+
 
     }
 }

@@ -24,12 +24,36 @@ namespace Audivia.API.Controllers.Auth
             return Ok(result);
         }
 
-        [HttpGet("verify-email")]
-        public async Task<IActionResult> VerifyEmail([FromQuery] ConfirmEmailRequest request)
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyEmail( ConfirmEmailRequest request)
         {
             var result = await _authService.VerifyEmail(request);
-            return Content(result, "text/html");
+            return Ok(result);
         }
+
+
+        [HttpPost("verify-reset-code")]
+        public async Task<IActionResult> VerifyResetCode([FromBody] ConfirmEmailOTP request)
+        {
+            var result = await _authService.VerifyResetPasswordOtpAsync(request);
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var result = await _authService.ResetPasswordAsync(request);
+            return Ok(result);
+        }
+
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> SendRestPasswordOtp([FromBody] ForgotPasswordRequest request)
+        {
+            await _authService.SendResetPasswordOtpAsync(request);
+            return NoContent();
+        }
+
 
         // login
         [HttpPost("login")]
@@ -38,6 +62,36 @@ namespace Audivia.API.Controllers.Auth
             var result = await _authService.LoginWithEmailAndPassword(request);
             return Ok(result);
         }
+
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Token))
+            {
+                return BadRequest("Google token is required.");
+            }
+
+            try
+            {
+                // Gọi service để xử lý Google login
+                var result = await _authService.LoginWithGoogle(request.Token);
+                return Ok(result);
+            }
+            catch (HttpRequestException ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException ex) 
+            {
+                return Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred during Google login.");
+            }
+        }
+
 
         // get current user profile
         [HttpGet("profile")]

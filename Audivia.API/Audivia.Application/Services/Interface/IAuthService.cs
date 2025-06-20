@@ -10,15 +10,21 @@ namespace Audivia.Application.Services.Interface
         // login
         Task<LoginResponse> LoginWithEmailAndPassword(LoginRequest request);
 
+        Task<LoginResponse> LoginWithGoogle(string token);
+
         // register
         Task<RegisterResponse> Register(RegisterRequest request);
 
         //confirm email
-        Task<string> VerifyEmail(ConfirmEmailRequest request);
+        Task<ConfirmEmailResponse> VerifyEmail(ConfirmEmailRequest request);
 
         // get profile
         Task<UserDTO?> GetCurrentUserAsync(ClaimsPrincipal userClaims);
 
         Task<UserDTO?> GetCurrentUserAsync();
+        //confirm otp
+        Task SendResetPasswordOtpAsync(ForgotPasswordRequest request);
+        Task<OTPConfirmResponse> VerifyResetPasswordOtpAsync(ConfirmEmailOTP request);
+        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
     }
 }

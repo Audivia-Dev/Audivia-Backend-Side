@@ -1,5 +1,7 @@
 ﻿
 
+using Audivia.Domain.Models;
+
 namespace Audivia.Domain.ModelRequests.AudioTour
 {
     public class UpdateTourRequest
@@ -21,5 +23,9 @@ namespace Audivia.Domain.ModelRequests.AudioTour
         public string? TypeId { get; set; }
 
         public string? ThumbnailUrl { get; set; }
+
+        public bool? UseCustomMap { get; set; }
+
+        public List<CustomMap>? CustomMapImages { get; set; }
     }
 }

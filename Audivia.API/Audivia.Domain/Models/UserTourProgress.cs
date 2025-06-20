@@ -23,8 +23,8 @@ namespace Audivia.Domain.Models
         [BsonElement("finished_at")]
         public DateTime? FinishedAt { get; set; }
 
-        [BsonElement("status")]
-        public string? Status { get; set; }
+        [BsonElement("is_completed")]
+        public bool IsCompleted { get; set; } = false;
 
         [BsonElement("current_checkpoint_id")]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -40,13 +40,5 @@ namespace Audivia.Domain.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? GroupId { get; set; }
 
-        [BsonElement("is_deleted")]
-        public bool IsDeleted { get; set; } = false;
-
-        [BsonElement("created_at")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [BsonElement("updated_at")]
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

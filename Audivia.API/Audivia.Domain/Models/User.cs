@@ -16,6 +16,9 @@ public class User
     [BsonElement("full_name")]
     public string? FullName { get; set; }
 
+    [BsonElement("birth_day")]
+    public DateOnly? BirthDay { get; set; }
+
     [BsonElement("password")]
     public string Password { get; set; } = null!;
 
@@ -32,7 +35,7 @@ public class User
     public string? Bio { get; set; }
 
     [BsonElement("balance_wallet")]
-    public int BalanceWallet { get; set; } = 0;
+    public double BalanceWallet { get; set; } = 0;
 
     [BsonElement("audio_character_id")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -62,4 +65,11 @@ public class User
 
     [BsonElement("updated_at")]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    [BsonElement("email_otp")]
+    public int? EmailOtp { get; set; }
+    [BsonElement("email_otp_created_at")]
+    public DateTime? EmailOtpCreatedAt { get; set; }
+
+    [BsonElement("confirmed_otp")]
+    public bool? ConfirmedOtp { get; set; }
 }

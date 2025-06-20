@@ -16,11 +16,13 @@ namespace Audivia.Application.Services.Implemetation
     {
         private readonly ITourReviewRepository _tourReviewRepository;
         private readonly ITourRepository _tourRepository;
+        private readonly IUserRepository _userRepository;
 
-        public TourReviewService(ITourReviewRepository tourReviewRepository, ITourRepository tourRepository)
+        public TourReviewService(ITourReviewRepository tourReviewRepository, ITourRepository tourRepository, IUserRepository userRepository)
         {
             _tourReviewRepository = tourReviewRepository;
             _tourRepository = tourRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<TourReviewResponse> CreateTourReview(CreateTourReviewRequest request)
@@ -56,7 +58,7 @@ namespace Audivia.Application.Services.Implemetation
             // update avg rating of the reviewed tour            
             if (request.Rating.HasValue)
             {
-                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
                 await _tourRepository.Update(tour);
             }
 
@@ -130,7 +132,7 @@ namespace Audivia.Application.Services.Implemetation
             // update average rating of the reviewed tour
             if (request.Rating.HasValue)
             {
-                tour.AvgRating = await CalculateAverageRatingAsync(tour.Id);
+                (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
                 await _tourRepository.Update(tour);
             }
         }
@@ -141,34 +143,82 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new FormatException("Invalid tour review id!");
             }
-            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.Id == id);
             if (tourReview == null) throw new KeyNotFoundException("TourReview not found!");
 
-            tourReview.IsDeleted = true;
-            tourReview.UpdatedAt = DateTime.UtcNow;
+            await _tourReviewRepository.Delete(tourReview);
 
-            await _tourReviewRepository.Update(tourReview);
+            Tour tour = await _tourRepository.FindFirst(t => t.Id == tourReview.TourId && !t.IsDeleted) ?? throw new KeyNotFoundException("Tour not found!");
+            (tour.AvgRating, tour.RatingCount) = await CalculateAverageRatingAsync(tour.Id);
+            await _tourRepository.Update(tour);
         }
 
-        private async Task<double> CalculateAverageRatingAsync(string tourId)
+        private async Task<(double, int)> CalculateAverageRatingAsync(string tourId)
         {
             FilterDefinition<TourReview>? filter = Builders<TourReview>.Filter.Eq(r => r.TourId, tourId);
             var tourReviews = await _tourReviewRepository.Search(filter);
             var validRatings = tourReviews
-                                .Where(r => r.Rating.HasValue)
-                                .Select(r => r.Rating!.Value)
+                                .Where(r => r.Rating.HasValue && r.IsDeleted == false)
+                                .Select(r => r.Rating!.Value )
                                 .ToList();
 
             if (!validRatings.Any())
-                return 0;
+                return (0,0);
 
-            return validRatings.Average();
+            return (validRatings.Average(), validRatings.Count);
         }
 
         public async Task<List<TourReviewDTO>> GetReviewsByTourId(string tourId)
         {
             var rs = await _tourReviewRepository.GetReviewsByTourId(tourId);
-            return rs.Select(ModelMapper.MapTourReviewToDTO).ToList();
+            var reviews = rs.Where(r => !r.IsDeleted).ToList();
+
+            // Lấy tất cả CreatedBy khác nhau
+            var userIds = reviews
+                .Where(r => !string.IsNullOrEmpty(r.CreatedBy))
+                .Select(r => r.CreatedBy)
+                .Distinct()
+                .ToList();
+
+            // Lấy toàn bộ user 1 lần
+            var filter = Builders<User>.Filter.In(u => u.Id, userIds);
+            var users = await _userRepository.Search(filter);
+            var userDict = users.ToDictionary(u => u.Id, u => u);
+
+            var result = new List<TourReviewDTO>();
+            foreach (var review in reviews)
+            {
+                var dto = ModelMapper.MapTourReviewToDTO(review);
+
+                if (!string.IsNullOrEmpty(review.CreatedBy) && userDict.TryGetValue(review.CreatedBy, out var user))
+                {
+                    dto.UserName = user?.Username;
+                    dto.AvatarUrl = user?.AvatarUrl;
+                }
+
+                result.Add(dto);
+            }
+            return result;
+        }
+
+        public async Task<TourReviewResponse> GetReviewsByTourIdAndUserId(string tourId, string userId)
+        {
+            if (!ObjectId.TryParse(tourId, out _))
+            {
+                throw new FormatException("Invalid tour id!");
+            }
+            var tourReview = await _tourReviewRepository.FindFirst(t => t.TourId == tourId && t.CreatedBy == userId && !t.IsDeleted);
+            if (tourReview == null)
+            {
+                throw new KeyNotFoundException("Tour review not found!");
+            }
+
+            return new TourReviewResponse
+            {
+                Success = true,
+                Message = "TourReview retrieved successfully",
+                Response = ModelMapper.MapTourReviewToDTO(tourReview)
+            };
         }
     }
 }

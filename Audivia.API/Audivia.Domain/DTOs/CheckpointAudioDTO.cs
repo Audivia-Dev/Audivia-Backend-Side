@@ -6,6 +6,7 @@
         public string TourCheckpointId { get; set; }
         public string AudioCharacterId { get; set; }
         public string? FileUrl { get; set; }
+        public string? VideoUrl { get; set; }
         public bool IsDefault { get; set; } = true;
         public string? Transcript { get; set; }
         public DateTime? CreatedAt { get; set; }

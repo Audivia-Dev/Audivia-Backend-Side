@@ -1,6 +1,7 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.Notification;
 using Audivia.Domain.ModelResponses.Notification;
+using Audivia.Domain.Models;
 
 namespace Audivia.Application.Services.Interface
 {
@@ -15,5 +16,9 @@ namespace Audivia.Application.Services.Interface
         Task UpdateNotification(string id, UpdateNotificationRequest request);
 
         Task DeleteNotification(string id);
+
+        Task<NotificationListResponse> GetNotificationsByUserIdAsync(string userId);
+
+        Task<int> CountUnreadNotificationAsync(string userId);
     }
 }

@@ -1,14 +1,16 @@
 ﻿using Audivia.Domain.DTOs;
 using Audivia.Domain.Models;
-using MongoDB.Bson.Serialization.Serializers;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Audivia.Domain.Commons.Mapper
 {
     public static class ModelMapper
     {
-        public static UserDTO MapUserToDTO(User user, int? followers = null, int? following = null, int? friends = null)
+        public static UserDTO MapUserToDTO(User user,
+            string roleName = "",
+            int? followers = null,
+            int? following = null,
+            int? friends = null)
         {
             return new UserDTO
             {
@@ -27,11 +29,12 @@ namespace Audivia.Domain.Commons.Mapper
                 AudioCharacterId = user.AudioCharacterId,
                 AutoPlayDistance = user.AutoPlayDistance,
                 TravelDistance = user.TravelDistance,
-                RoleId = user.RoleId,
+                RoleName = roleName,
                 ConfirmedEmail = user.ConfirmedEmail,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
                 IsDeleted = user.IsDeleted,
+                BirthDay = user.BirthDay
             };
         }
 
@@ -61,6 +64,7 @@ namespace Audivia.Domain.Commons.Mapper
                 TourTypeName = tour.TourType != null ? tour.TourType.TourTypeName : null,
                 ThumbnailUrl = tour.ThumbnailUrl,
                 AvgRating = Math.Round((double)tour.AvgRating, 1),
+                RatingCount = tour.RatingCount,
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
                 UpdatedAt = tour.UpdatedAt
@@ -82,7 +86,10 @@ namespace Audivia.Domain.Commons.Mapper
                 TypeId = tour.TypeId,
                 TourTypeName = tour.TourType != null ? tour.TourType.TourTypeName : null,
                 ThumbnailUrl = tour.ThumbnailUrl,
+                UseCustomMap = tour.UseCustomMap,
+                CustomMapImages = tour.CustomMapImages,
                 AvgRating = Math.Round((double)tour.AvgRating, 1),
+                RatingCount = tour.RatingCount,
                 Checkpoints = checkpoints.Select(MapTourCheckpointToDTO),
                 IsDeleted = tour.IsDeleted,
                 CreatedAt = tour.CreatedAt,
@@ -149,7 +156,7 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static CommentDTO MapCommentToDTO(Comment comment)
+        public static CommentDTO MapCommentToDTO(Comment comment, string? username = null)
         {
             return new CommentDTO
             {
@@ -158,6 +165,7 @@ namespace Audivia.Domain.Commons.Mapper
                 CreatedAt = comment.CreatedAt,
                 UpdatedAt = comment.UpdatedAt,
                 CreatedBy = comment.CreatedBy,
+                UserName = username,
                 IsDeleted = comment.IsDeleted,
                 PostId = comment.PostId,
             };
@@ -272,6 +280,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = transaction.Id,
                 UserId = transaction.UserId,
                 TourId = transaction.TourId,
+                AudioCharacterId = transaction.AudioCharacterId,
                 Amount = transaction.Amount,
                 Description = transaction.Description,
                 Type = transaction.Type,
@@ -279,6 +288,7 @@ namespace Audivia.Domain.Commons.Mapper
                 IsDeleted = transaction.IsDeleted,
                 CreatedAt = transaction.CreatedAt,
                 UpdatedAt = transaction.UpdatedAt,
+                Tour = transaction.Tour,
             };
         }
 
@@ -291,14 +301,43 @@ namespace Audivia.Domain.Commons.Mapper
                 TourId = userTourProgress.TourId,
                 StartedAt = userTourProgress.StartedAt,
                 FinishedAt = userTourProgress.FinishedAt,
-                Status = userTourProgress.Status,
+                IsCompleted = userTourProgress.IsCompleted,
+                CurrentCheckpointId = userTourProgress.CurrentCheckpointId,
+                Score = userTourProgress.Score,
+                GroupMode = userTourProgress.GroupMode,
+                GroupId = userTourProgress.GroupId
+            };
+        }
+
+        public static UserTourProgressDTO MapUserTourProgressToDTO(UserTourProgress userTourProgress, IEnumerable<UserCheckpointProgress>? checkpointProgress = null)
+        {
+            return new UserTourProgressDTO
+            {
+                Id = userTourProgress.Id,
+                UserId = userTourProgress.UserId,
+                TourId = userTourProgress.TourId,
+                StartedAt = userTourProgress.StartedAt,
+                FinishedAt = userTourProgress.FinishedAt,
+                IsCompleted = userTourProgress.IsCompleted,
                 CurrentCheckpointId = userTourProgress.CurrentCheckpointId,
                 Score = userTourProgress.Score,
                 GroupMode = userTourProgress.GroupMode,
                 GroupId = userTourProgress.GroupId,
-                CreatedAt = userTourProgress.CreatedAt,
-                UpdatedAt = userTourProgress.UpdatedAt,
-                IsDeleted = userTourProgress.IsDeleted,
+                CheckpointProgress = checkpointProgress?.Select(MapUserCheckpointProgressToDTO)
+            };
+        }
+
+        public static UserCheckpointProgressDTO MapUserCheckpointProgressToDTO(UserCheckpointProgress userCheckpointProgress)
+        {
+            return new UserCheckpointProgressDTO
+            {
+                Id = userCheckpointProgress.Id,
+                UserTourProgressId = userCheckpointProgress.UserTourProgressId,
+                CheckpointAudioId = userCheckpointProgress.CheckpointAudioId,
+                TourCheckpointId = userCheckpointProgress.TourCheckpointId,
+                IsCompleted = userCheckpointProgress.IsCompleted,
+                LastListenedTime = userCheckpointProgress.LastListenedTime,
+                ProgressSeconds = userCheckpointProgress.ProgressSeconds,
             };
         }
 
@@ -337,6 +376,7 @@ namespace Audivia.Domain.Commons.Mapper
                 TourCheckpointId = checkpointAudio.TourCheckpointId,
                 AudioCharacterId = checkpointAudio.AudioCharacterId,
                 FileUrl = checkpointAudio.FileUrl,
+                VideoUrl = checkpointAudio.VideoUrl,
                 IsDefault = checkpointAudio.IsDefault,
                 Transcript = checkpointAudio.Transcript,
                 CreatedAt = checkpointAudio.CreatedAt,
@@ -368,6 +408,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Description = audioCharacter.Description,
                 AvatarUrl = audioCharacter.AvatarUrl,
                 VoiceType = audioCharacter.VoiceType,
+                AudioUrl = audioCharacter.AudioUrl,
                 CreatedAt = audioCharacter.CreatedAt,
                 UpdatedAt = audioCharacter.UpdatedAt,
                 IsDeleted = audioCharacter.IsDeleted,
@@ -396,6 +437,7 @@ namespace Audivia.Domain.Commons.Mapper
                 Type = notification.Type,
                 IsRead = notification.IsRead,
                 CreatedAt = notification.CreatedAt,
+                TourId = notification.TourId,
             };
         }
         public static PlaySessionDTO MapPlaySessionToDTO(PlaySession playSession)

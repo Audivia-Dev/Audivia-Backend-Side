@@ -13,6 +13,8 @@ namespace Audivia.Application.Services.Interface
 
         Task UpdateComment(string id, UpdateCommentRequest request);
 
-        Task DeleteComment(string id);
+        Task DeleteComment(string id, string userId);
+
+        Task<CommentListResponse> GetByPost(string postId);
     }
 }

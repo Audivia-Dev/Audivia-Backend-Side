@@ -37,11 +37,20 @@ namespace Audivia.Domain.Models
         [BsonElement("avg_rating")]
         public double AvgRating { get; set; } = 0;
 
+        [BsonElement("rating_count")]
+        public int RatingCount { get; set; } = 0;
+
         [BsonElement("start_latitude")] // latitude of checkpoint 1 of this tour
         public double? StartLatitude { get; set; }
 
         [BsonElement("start_longitude")] // longitude of checkpoint 1 of this tour
         public double? StartLongitude { get; set; }
+
+        [BsonElement("use_custom_map")]
+        public bool UseCustomMap { get; set; } 
+
+        [BsonElement("custom_map_images")]
+        public List<CustomMap>? CustomMapImages { get; set; }
 
         [BsonElement("is_deleted")]
         public bool IsDeleted { get; set; } = false;

@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using Audivia.Domain.Models;
+using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -25,5 +26,9 @@
             public string? TypeId { get; set; }
 
             public string? ThumbnailUrl { get; set; }
+
+            public bool UseCustomMap { get; set; } = false;
+            
+            public List<CustomMap> CustomMapImages { get; set; }
         }
     }

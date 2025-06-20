@@ -12,14 +12,17 @@ namespace Audivia.Application.Services.Implemetation
     public class TransactionHistoryService : ITransactionHistoryService
     {
         private readonly ITransactionHistoryRepository _transactionHistoryRepository;
+        private readonly IUserService _userService;
 
-        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository)
+        public TransactionHistoryService(ITransactionHistoryRepository transactionHistoryRepository, IUserService userService)
         {
             _transactionHistoryRepository = transactionHistoryRepository;
+            _userService = userService;
         }
 
         public async Task<TransactionHistoryResponse> CreateTransactionHistory(CreateTransactionHistoryRequest request)
         {
+
             if (!ObjectId.TryParse(request.UserId, out _) || !ObjectId.TryParse(request.TourId, out _))
             {
                 return new TransactionHistoryResponse
@@ -43,6 +46,7 @@ namespace Audivia.Application.Services.Implemetation
             };
 
             await _transactionHistoryRepository.Create(transactionHistory);
+            await _userService.DeductBalanceAsync(request.UserId, request.Amount);
 
             return new TransactionHistoryResponse
             {
@@ -111,6 +115,24 @@ namespace Audivia.Application.Services.Implemetation
                 .Where(t => !t.IsDeleted)
                 .Select(ModelMapper.MapTransactionHistoryToDTO)
                 .ToList();
+        }
+
+        public async Task<TransactionHistoryDTO> GetTransactionHistoryByUserIdAndTourId(string userId, string tourId)
+        {
+            var trans = await _transactionHistoryRepository.GetTransactionHistoryByUserIdAndTourId(userId, tourId);
+            if (trans is null)
+                return null;
+            return ModelMapper.MapTransactionHistoryToDTO(trans);
+        }
+
+        public async Task UpdateCharacterSelection(string id, UpdateCharacterIdRequest request)
+        {
+            var transaction = await  _transactionHistoryRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
+
+            if (transaction == null)  throw new Exception("Transaction not found");
+
+            transaction.AudioCharacterId = request.AudioCharacterId;
+            await _transactionHistoryRepository.Update(transaction);
         }
     }
 }

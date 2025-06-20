@@ -11,5 +11,7 @@ namespace Audivia.Domain.DTOs
         public string? Type { get; set; } // enum
         public bool IsRead { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public string? TourId { get; set; }
+        public string? TimeAgo { get; set; }
     }
 }

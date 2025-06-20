@@ -4,6 +4,6 @@
     {
         public int? Top { get; set; }
         public int? PageIndex { get; set; } = 1;
-        public int? PageSize { get; set; } = 5;
+        public int? PageSize { get; set; }
     }
 }

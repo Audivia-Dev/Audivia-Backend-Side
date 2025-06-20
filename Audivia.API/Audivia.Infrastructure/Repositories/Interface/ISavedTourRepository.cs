@@ -8,5 +8,6 @@ namespace Audivia.Infrastructure.Repositories.Interface
         Task<List<SavedTour>> GetSavedTourByUserId(string id);
         Task<SavedTour?> FindByUserIdAndTourIdAsync(string userId, string tourId);
         Task<SavedTour?> GetByIdWithTour(string id);
+        Task<List<SavedTour>> GetUpcomingToursAsync(DateTime fromTime, DateTime toTime);
     }
 }

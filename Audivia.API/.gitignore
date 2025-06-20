@@ -10,8 +10,8 @@ Audivia.Infrastructure/Migrations
 # Ignore appsetttings.json
 Audivia.API/appsettings.json
 Audivia.API/appsettings.Development.json
-# Ignore Docker-compose
-/docker-compose.yml
+# Ignore docker-compose.yml
+docker-compose.yml
 # JetBrains Rider
 *.sln.iml
 /Audivia.API/appsettings.Development.json

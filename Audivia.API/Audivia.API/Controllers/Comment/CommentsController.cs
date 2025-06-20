@@ -36,6 +36,13 @@ namespace Audivia.API.Controllers.Comment
             return Ok(result);
         }
 
+        [HttpGet("posts/{postId}")]
+        public async Task<IActionResult> GetByPostId(string postId)
+        {
+            var result = await _commentService.GetByPost(postId);
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateCommentRequest request)
         {
@@ -44,9 +51,9 @@ namespace Audivia.API.Controllers.Comment
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(string id, string userId)
         {
-            await _commentService.DeleteComment(id);
+            await _commentService.DeleteComment(id, userId);
             return NoContent();
         }
     }
