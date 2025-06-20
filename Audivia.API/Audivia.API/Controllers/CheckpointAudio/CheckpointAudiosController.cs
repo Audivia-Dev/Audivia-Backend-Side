@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.CheckpointAudio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.CheckpointAudio
@@ -16,6 +17,7 @@ namespace Audivia.API.Controllers.CheckpointAudio
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromBody] CreateCheckpointAudioRequest request)
         {
             var result = await _checkpointAudioService.CreateCheckpointAudio(request);
@@ -55,6 +57,7 @@ namespace Audivia.API.Controllers.CheckpointAudio
             return Ok(result);
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update(string id, [FromBody] UpdateCheckpointAudioRequest request)
         {
             await _checkpointAudioService.UpdateCheckpointAudio(id, request);
@@ -62,6 +65,7 @@ namespace Audivia.API.Controllers.CheckpointAudio
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(string id)
         {
             await _checkpointAudioService.DeleteCheckpointAudio(id);

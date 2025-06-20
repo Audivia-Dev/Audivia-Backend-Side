@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.CheckpointImage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace Audivia.API.Controllers.CheckpointImage
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateCheckpointImage([FromBody] CreateCheckpointImageRequest request)
         {
             var rs = await _service.CreateCheckpointImageAsync(request);
@@ -31,6 +33,7 @@ namespace Audivia.API.Controllers.CheckpointImage
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateCheckpointImage(string id, [FromBody] UpdateCheckpointImageRequest request)
         {
             var rs = await _service.UpdateCheckpointImageAsync(id, request);
@@ -38,6 +41,7 @@ namespace Audivia.API.Controllers.CheckpointImage
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteCheckpointImage(string id)
         {
             var rs = await _service.DeleteCheckpointImageAsync(id);

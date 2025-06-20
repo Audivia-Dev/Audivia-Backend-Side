@@ -1,5 +1,6 @@
 ﻿using Audivia.Application.Services.Interface;
 using Audivia.Domain.ModelRequests.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Audivia.API.Controllers.User
 {
     [Route("api/v1/users")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
