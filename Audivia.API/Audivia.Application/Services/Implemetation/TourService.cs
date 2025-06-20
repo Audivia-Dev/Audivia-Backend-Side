@@ -174,6 +174,7 @@ namespace Audivia.Application.Services.Implemetation
             var candidateTours = await _tourRepository.GetToursByTypesExcludingIdsAsync(topTourTypes.Keys.ToList(), bookedTourIds);
 
             var filteredSortedTours = candidateTours
+                .Where(t => t.IsDeleted == false)
                 .Select(t =>
                 {
                     double distance = DistanceUtils.CalculateDistance(request.Latitude, request.Longitude, t.StartLatitude ?? 0, t.StartLongitude ?? 0);
