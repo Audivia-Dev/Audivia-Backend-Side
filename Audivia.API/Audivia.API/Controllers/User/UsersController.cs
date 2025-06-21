@@ -31,6 +31,20 @@ namespace Audivia.API.Controllers.User
             var result = await _userService.GetAllUsers();
             return Ok(result);
         }
+        [HttpGet("admin")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetAllMembersByAdmin(int pageIndex = 1, int pageSize = 5)
+        {
+            var users = await _userService.GetAllMemberAdmin(
+                filter: null,
+                sortCondition: null,
+                top: null,
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
+            return Ok(users);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)

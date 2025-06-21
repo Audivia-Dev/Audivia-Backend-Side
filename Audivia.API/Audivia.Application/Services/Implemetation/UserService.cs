@@ -6,6 +6,7 @@ using Audivia.Domain.ModelRequests.User;
 using Audivia.Domain.ModelResponses.User;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Audivia.Application.Services.Implemetation
 {
@@ -64,7 +65,32 @@ namespace Audivia.Application.Services.Implemetation
             }
             return userDtos;
         }
+        public async Task<List<UserDTO>> GetAllMemberAdmin(
+           FilterDefinition<User>? filter = null,
+           SortDefinition<User>? sortCondition = null,
+           int? top = null,
+           int? pageIndex = null,
+           int? pageSize = null)
+        {
+            var finalFilter = filter ?? Builders<User>.Filter.Eq(u => u.IsDeleted, false);
 
+            var users = await _userRepository.Search(
+                filter: finalFilter,
+                sortCondition: sortCondition,
+                top: top,
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
+            var userDtos = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                var dto = await FinalMapUserToDTO(user);
+                userDtos.Add(dto);
+            }
+
+            return userDtos;
+        }
         public async Task<UserResponse> GetUserById(string id)
         {
             var user = await _userRepository.FindFirst(t => t.Id == id && !t.IsDeleted);
