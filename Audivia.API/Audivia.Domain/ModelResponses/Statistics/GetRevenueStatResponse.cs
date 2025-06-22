@@ -2,6 +2,8 @@
 {
     public class GetRevenueStatResponse
     {
+        public int TotalBookings { get; set; }
+        public double TotalRevenue { get; set; }
         public List<RevenueStatItem> Items { get; set; }
     }
 
