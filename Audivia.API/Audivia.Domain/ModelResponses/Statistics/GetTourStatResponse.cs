@@ -2,6 +2,7 @@
 {
     public class GetTourStatResponse
     {
+        public int TotalTours { get; set; }
         public List<TourStatItem> Items { get; set; }
     }
 
