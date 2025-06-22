@@ -2,6 +2,7 @@
 {
     public class GetUserStatResponse
     {
+        public int TotalUsers { get; set; }
         public List<UserStatItem> Items { get; set; }
     }
 
