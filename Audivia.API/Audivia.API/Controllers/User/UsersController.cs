@@ -25,7 +25,7 @@ namespace Audivia.API.Controllers.User
         }
 
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var result = await _userService.GetAllUsers();

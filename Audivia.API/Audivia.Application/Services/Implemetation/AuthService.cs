@@ -22,16 +22,18 @@ namespace Audivia.Application.Services.Implemetation
         
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IRoleRepository _roleRepository;
         private readonly IConfiguration _configuration;
         private readonly IMailService _mailService;
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IRoleRepository roleRepository, IMailService mailService, IHttpContextAccessor httpContextAccessor, IUserService userService)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _configuration = configuration;
             _mailService = mailService;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
         }
 
         public async Task<RegisterResponse> Register(RegisterRequest request)
@@ -131,10 +133,7 @@ namespace Audivia.Application.Services.Implemetation
             var user = await _userRepository.FindFirst(u => u.Email == email);
             if (user == null)
                 return null;
-
-            var roleName = userClaims.FindFirst(ClaimTypes.Role)?.Value;
-
-            return ModelMapper.MapUserToDTO(user, roleName);
+            return await _userService.FinalMapUserToDTO(user);
         }
 
         private async Task<string> GenerateAccessToken(User user)
