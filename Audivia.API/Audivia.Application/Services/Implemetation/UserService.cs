@@ -131,7 +131,7 @@ namespace Audivia.Application.Services.Implemetation
             await _userRepository.Update(user);
         }
 
-        private async Task<UserDTO> FinalMapUserToDTO(User user)
+        public async Task<UserDTO> FinalMapUserToDTO(User user)
         {
             var role = await _roleRepository.FindFirst(role => role.Id == user.RoleId)
                             ?? throw new KeyNotFoundException("Role not found!");
