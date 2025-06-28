@@ -157,6 +157,7 @@ namespace Audivia.Application.Services.Implemetation
         {
             var user = await _userRepository.FindFirst(t => t.Id == userId && !t.IsDeleted);
             if (user == null) return false;
+            if (user.BalanceWallet < amount) return false;
             user.BalanceWallet -= amount;
             await _userRepository.Update(user);
             return true;

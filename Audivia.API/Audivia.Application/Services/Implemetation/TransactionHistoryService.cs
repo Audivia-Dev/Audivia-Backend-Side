@@ -44,9 +44,18 @@ namespace Audivia.Application.Services.Implemetation
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
-
+            var deductResult = await _userService.DeductBalanceAsync(request.UserId, request.Amount);
+            if (!deductResult)
+            {
+                return new TransactionHistoryResponse
+                {
+                    Success = false,
+                    Message = "Not enough balance!",
+                    Response = null
+                };
+            }
             await _transactionHistoryRepository.Create(transactionHistory);
-            await _userService.DeductBalanceAsync(request.UserId, request.Amount);
+            
 
             return new TransactionHistoryResponse
             {
