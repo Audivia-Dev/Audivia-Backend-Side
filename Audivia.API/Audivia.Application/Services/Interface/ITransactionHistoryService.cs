@@ -10,6 +10,7 @@ namespace Audivia.Application.Services.Interface
         Task<TransactionHistoryResponse> CreateTransactionHistory(CreateTransactionHistoryRequest request);
 
         Task<List<TransactionHistoryDTO>> GetAllTransactionHistorys();
+        Task<List<TransactionWithUserTourDTO>> GetAllTransactionsWithUserAndTour();
 
         Task<TransactionHistoryResponse> GetTransactionHistoryById(string id);
 

@@ -28,6 +28,12 @@ namespace Audivia.API.Controllers.Transaction
             var result = await _transactionHistoryService.GetAllTransactionHistorys();
             return Ok(result);
         }
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAllTransactionByAdmin()
+        {
+            var result = await _transactionHistoryService.GetAllTransactionsWithUserAndTour();
+            return Ok(result);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
