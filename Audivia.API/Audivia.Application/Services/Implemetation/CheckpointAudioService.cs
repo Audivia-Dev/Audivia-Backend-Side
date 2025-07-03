@@ -197,5 +197,21 @@ namespace Audivia.Application.Services.Implemetation
                 Response = ModelMapper.MapCheckpointAudioToDTO(audio)
             };
         }
+
+        public async Task<bool> HasCheckpointAudioForTour(string tourId)
+        {
+            // Lấy tất cả checkpoint của tour
+            var checkpoints = await _tourCheckpointRepository.GetTourCheckpointsByTourId(tourId);
+            if (checkpoints == null || !checkpoints.Any())
+                return false;
+
+            var checkpointIds = checkpoints.Select(c => c.Id).ToList();
+
+            // Lấy tất cả audio gắn với các checkpoint này
+            var allAudios = await _checkpointAudioRepository.GetAll();
+            var hasAudio = allAudios.Any(a => checkpointIds.Contains(a.TourCheckpointId) && !a.IsDeleted);
+
+            return hasAudio;
+        }
     }
 }
