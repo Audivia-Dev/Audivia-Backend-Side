@@ -9,7 +9,7 @@ namespace Audivia.Application.Services.Interface
         Task<CheckpointAudioResponse> CreateCheckpointAudio(CreateCheckpointAudioRequest request);
 
         Task<List<CheckpointAudioDTO>> GetAllCheckpointAudios();
-
+        Task<bool> HasCheckpointAudioForTour(string tourId);
         Task<CheckpointAudioResponse> GetCheckpointAudioById(string id);
 
         Task<CheckpointAudioResponse> GetCheckpointAudioByTourCheckpointId(string checkpointId, string characterId);
