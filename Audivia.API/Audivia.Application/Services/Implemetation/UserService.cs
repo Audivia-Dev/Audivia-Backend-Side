@@ -30,9 +30,9 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Email = request.Email,
                 Username = request.UserName,
+                FullName = request.FullName,
                 Password = PasswordHasher.HashPassword(request.Password),
                 RoleId = role.Id,
-                BirthDay = request.BirthDay,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsDeleted = false
@@ -105,6 +105,9 @@ namespace Audivia.Application.Services.Implemetation
             user.AutoPlayDistance = request.AutoPlayDistance ?? user.AutoPlayDistance;
             user.TravelDistance = request.TravelDistance ?? user.TravelDistance;
             user.BirthDay = request.BirthDay ?? user.BirthDay;
+            user.Gender = request.Gender ?? user.Gender;
+            user.Country = request.Country ?? user.Country;
+            user.Job = request.Job ?? user.Job;
             user.UpdatedAt = DateTime.UtcNow;
 
             await _userRepository.Update(user);

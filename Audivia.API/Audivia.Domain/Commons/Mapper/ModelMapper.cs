@@ -35,7 +35,10 @@ namespace Audivia.Domain.Commons.Mapper
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
                 IsDeleted = user.IsDeleted,
-                BirthDay = user.BirthDay
+                BirthDay = user.BirthDay,
+                Gender = user.Gender,
+                Country = user.Country,
+                Job = user.Job
             };
         }
 

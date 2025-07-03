@@ -19,6 +19,15 @@ public class User
     [BsonElement("birth_day")]
     public DateOnly? BirthDay { get; set; }
 
+    [BsonElement("gender")]
+    public bool Gender { get; set; } // true - female, false - male
+
+    [BsonElement("job")]
+    public string? Job { get; set; }
+
+    [BsonElement("country")]
+    public string? Country { get; set; }
+
     [BsonElement("password")]
     public string Password { get; set; } = null!;
 

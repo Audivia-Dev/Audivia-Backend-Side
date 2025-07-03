@@ -14,8 +14,8 @@ namespace Audivia.Application.Services.Interface
         Task DeleteUser(string id);
         Task<User> GetById(string id);
         Task UpdateUser(User user);
-        Task IncreaseBalanceAsync(string userId, int ammount);
-        Task<bool> DeductBalanceAsync(string userId, double ammount);
+        Task IncreaseBalanceAsync(string userId, int amount);
+        Task<bool> DeductBalanceAsync(string userId, double amount);
         Task<UserDTO> FinalMapUserToDTO(User user);
     }
 }

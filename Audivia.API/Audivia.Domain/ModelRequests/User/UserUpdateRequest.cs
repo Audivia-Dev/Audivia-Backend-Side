@@ -11,6 +11,10 @@
         public string? AudioCharacterId { get; set; }
         public int? AutoPlayDistance { get; set; }
         public int? TravelDistance { get; set; }
+        // ask at page "Let us know you better"
         public DateOnly? BirthDay { get; set; }
+        public bool? Gender { get; set; }
+        public string? Country { get; set; }
+        public string? Job { get; set; }
     }
 }

@@ -11,7 +11,6 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.WebSockets;
 using System.Security.Claims;
 
 
@@ -193,8 +192,9 @@ namespace Audivia.Application.Services.Implemetation
                     Audience = new[] { clientId }
                 });
             }
-            catch (InvalidJwtException)
+            catch (InvalidJwtException ex1)
             {
+                Console.Error.WriteLine($"InvalidJwtException details: {ex1.Message}");
                 throw new HttpRequestException("Invalid Google token.");
             }
             catch (Exception ex)
@@ -216,6 +216,7 @@ namespace Audivia.Application.Services.Implemetation
                 {
                     Email = email,
                     Username = googlePayload.Name ?? email,
+                    FullName = googlePayload.Name,
                     ConfirmedEmail = true,
                     RoleId = (await _roleRepository.GetByRoleName("customer")).Id,
                     CreatedAt = DateTime.UtcNow,
