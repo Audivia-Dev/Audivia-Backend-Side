@@ -26,5 +26,8 @@ namespace Audivia.Domain.DTOs
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateOnly? BirthDay { get; set; }
+        public bool? Gender { get; set; }
+        public string? Country { get; set; }
+        public string? Job { get; set; }
     }
 }

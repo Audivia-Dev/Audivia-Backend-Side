@@ -17,6 +17,7 @@ namespace Audivia.Domain.ModelRequests.User
         [Required]
         public string RoleName { get; set; } = string.Empty;
 
-        public DateOnly? BirthDay { get; set; }
+        [Required]
+        public string FullName { get; set; } = string.Empty;
     }
 }
