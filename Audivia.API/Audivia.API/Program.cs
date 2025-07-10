@@ -148,8 +148,8 @@ namespace Audivia.API
 
             // Map SignalR Hub
 
-            app.MapHub<ChatHub>("/chatHub");
-            app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<ChatHub>("/chatHub").RequireCors("app-cors"); ;
+            app.MapHub<NotificationHub>("/notificationHub").RequireCors("app-cors"); ;
             app.MapControllers();
 
             app.Run();
