@@ -69,7 +69,11 @@ namespace Audivia.API
                 options.AddPolicy("app-cors", builder =>
                 {
                     builder
-                        .SetIsOriginAllowed(_ => true) // Dung thay vi AllowAnyOrigin()
+                        .WithOrigins(
+                            "http://localhost:5173",
+                            "https://audivia.vn",
+                            "https://web.audivia.vn"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // Bat buoc cho SignalR
