@@ -25,6 +25,7 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
             // Bước 2: Truy vấn danh sách ChatRoom tương ứng
             var rooms = await _collection
                 .Find(x => roomIds.Contains(x.Id))
+                .SortByDescending(x => x.CreatedAt)
                 .ToListAsync();
             foreach (var room in rooms)
             {
