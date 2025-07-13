@@ -9,5 +9,6 @@ namespace Audivia.Application.Services.Interface
         Task<GetTourStatResponse> GetTourStatistics(GetTourStatRequest request);
         Task<GetPostStatResponse> GetPostStatistics(GetPostStatRequest request);
         Task<GetUserStatResponse> GetUserStatistics(GetUserStatRequest request);
+        Task<List<TourWithPurchaseCount>> GetTopPurchasedToursWithDetailAsync(int topN);
     }
 }

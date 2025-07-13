@@ -1,4 +1,6 @@
-﻿namespace Audivia.Domain.ModelResponses.Statistics
+﻿using Audivia.Domain.Models;
+
+namespace Audivia.Domain.ModelResponses.Statistics
 {
     public class GetRevenueStatResponse
     {
@@ -13,4 +15,10 @@
         public double Revenue { get; set; }
     }
 
+
+    public class TourWithPurchaseCount
+    {
+        public Tour Tour { get; set; } = null!;
+        public int PurchaseCount { get; set; }
+    }
 }

@@ -2,6 +2,7 @@
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TransactionHistory;
+using Audivia.Domain.ModelResponses.Statistics;
 using Audivia.Domain.ModelResponses.TransactionHistory;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Implemetation;
@@ -175,5 +176,6 @@ namespace Audivia.Application.Services.Implemetation
             transaction.AudioCharacterId = request.AudioCharacterId;
             await _transactionHistoryRepository.Update(transaction);
         }
+
     }
 }
