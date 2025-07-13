@@ -45,5 +45,12 @@ namespace Audivia.API.Controllers.Statistics
             var result = await _statisticsService.GetPostStatistics(request);
             return Ok(result);
         }
+
+        [HttpGet("top-purchased-tours")]
+        public async Task<IActionResult> GetTopPurchasedTours([FromQuery] int top = 10)
+        {
+            var result = await _statisticsService.GetTopPurchasedToursWithDetailAsync(top);
+            return Ok(result);
+        }
     }
 }

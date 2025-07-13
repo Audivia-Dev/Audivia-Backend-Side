@@ -15,5 +15,6 @@ namespace Audivia.Infrastructure.Repositories.Interface
         Task<Dictionary<string, int>> GetTopTourTypesByUserIdAsync(string userId, int topN);
         Task<List<string?>> GetBookedTourIdsByUserIdAsync(string userId);
         Task<List<RevenueStatItem>> GetRevenueStatisticsAsync(GetRevenueStatRequest request);
+        Task<List<TourWithPurchaseCount>> GetTopPurchasedToursWithDetailAsync(int topN);
     }
 }
