@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Audivia.API.Controllers.UserResponse
 {
-    [Route("api/user-quiz-responses")]
+    [Route("api/v1/user-quiz-responses")]
     [ApiController]
     public class UserQuizResponsesController : ControllerBase
     {
