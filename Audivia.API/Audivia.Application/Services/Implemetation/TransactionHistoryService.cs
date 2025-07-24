@@ -33,6 +33,16 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
+            var existingTransaction = await _transactionHistoryRepository.GetTransactionHistoryByUserIdAndTourId(request.UserId, request.TourId);
+            if (existingTransaction != null)
+            {
+                return new TransactionHistoryResponse
+                {
+                    Success = false,
+                    Message = "This tour is purchased already!",
+                    Response = null
+                };
+            }
             var transactionHistory = new TransactionHistory
             {
                 UserId = request.UserId,
