@@ -25,10 +25,13 @@ namespace Audivia.Domain.Models
         [BsonElement("text")]
         public string? Text { get; set; }
 
+        [BsonElement("imageUrl")]
+        public string? ImageUrl { get; set; }
 
         [BsonElement("points")]
         public double? Points { get; set; }
-       // [BsonIgnore]
+       
+        // [BsonIgnore]
         public List<Answer>? Answers { get; set; } = new List<Answer>();
 
         [BsonElement("created_at")]

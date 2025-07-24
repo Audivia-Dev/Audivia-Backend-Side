@@ -1,24 +1,14 @@
 ﻿using Audivia.Domain.Enums;
-using Audivia.Domain.Models;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Domain.DTOs
 {
     public class QuestionDTO
     {
         public string Id { get; set; }
-
         public string? QuizId { get; set; }
-
         public QuestionType Type { get; set; } // e.g., "MultipleChoice", "TrueFalse", etc.
-
         public string? Text { get; set; }
-
+        public string? ImageUrl { get; set; }
         public double? Points { get; set; }
         public List<AnswerDTO>? Answers { get; set; }
         public DateTime? CreatedAt { get; set; }

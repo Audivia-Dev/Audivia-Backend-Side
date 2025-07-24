@@ -194,10 +194,11 @@ namespace Audivia.Domain.Commons.Mapper
                 Id = q.Id,
                 Title = q.Title,
                 QuizFieldId = q.QuizFieldId,
-                TourCheckpointId = q.TourCheckpointId,
+                TourId = q.TourId,
                 CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
                 IsDeleted = q.IsDeleted,
+
                 Image = q.Image,
             };
         }
@@ -207,6 +208,7 @@ namespace Audivia.Domain.Commons.Mapper
             {
                 Id = question.Id,
                 Text = question.Text,
+                ImageUrl = question.ImageUrl,
                 QuizId = question.QuizId,
                 Points = question.Points,
                 Type = question.Type,
@@ -228,17 +230,32 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static UserResponseDTO MapUserResponseToDTO(UserResponse userResponse)
+        public static UserQuestionResponseDTO MapUserQuestionResponseToDTO(UserQuestionResponse userResponse)
         {
-            return new UserResponseDTO
+            return new UserQuestionResponseDTO
             {
-                Id = userResponse.Id,
-                AnswerId = userResponse.AnswerId,
+                QuizId = userResponse.QuizId,
                 QuestionId = userResponse.QuestionId,
-                RespondedAt = userResponse.RespondedAt,
+                AnswerId = userResponse.AnswerId,
+                IsCorrect = userResponse.IsCorrect,
                 UserId = userResponse.UserId,
             };
         }
+
+        public static UserQuizResponseDTO MapUserQuizResponseToDTO(UserQuizResponse userQuizResponse)
+        {
+            return new UserQuizResponseDTO
+            {
+                Id = userQuizResponse.Id,
+                QuizId = userQuizResponse.QuizId,
+                CorrectAnswersCount = userQuizResponse.CorrectAnswersCount,
+                QuestionAnswers = (userQuizResponse.QuestionAnswers?.Select(MapUserQuestionResponseToDTO)).ToList(),
+                IsDone = userQuizResponse.IsDone,
+                RespondedAt = userQuizResponse.RespondedAt,
+                UserId = userQuizResponse.UserId
+            };
+        }
+
         public static UserLocationVisitDTO MapUserLocationVisitToDTO(UserLocationVisit userLocationVisit)
         {
             return new UserLocationVisitDTO
