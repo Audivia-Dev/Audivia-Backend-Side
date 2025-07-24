@@ -253,6 +253,49 @@ namespace Audivia.Infrastructure.Repositories.Implemetation
             };
         }
 
+        public async Task<List<TourWithPurchaseCount>> GetTopPurchasedToursWithDetailAsync(int topN)
+        {
+            var pipeline = new BsonDocument[]
+                {
+                    new BsonDocument("$match", new BsonDocument("is_deleted", false)),
+
+                    // Nhóm theo tour_id, đếm số lượng mua
+                    new BsonDocument("$group", new BsonDocument
+                    {
+                        { "_id", "$tour_id" },
+                        { "PurchaseCount", new BsonDocument("$sum", 1) }
+                    }),
+
+                    // Sort giảm dần
+                    new BsonDocument("$sort", new BsonDocument("PurchaseCount", -1)),
+
+                    // Limit top N
+                    new BsonDocument("$limit", topN),
+
+                    // Join với collection Tour
+                    new BsonDocument("$lookup", new BsonDocument
+                    {
+                        { "from", "Tour" },
+                        { "localField", "_id" },
+                        { "foreignField", "_id" },
+                        { "as", "Tour" }
+                    }),
+
+                    // Unwind để lấy 1 tour
+                    new BsonDocument("$unwind", "$Tour"),
+
+                    // Project thông tin Tour + purchaseCount
+                    new BsonDocument("$project", new BsonDocument
+                    {
+                        { "_id", 0 },
+                        { "PurchaseCount", 1 },
+                        { "Tour", "$Tour" }
+                    })
+                };
+
+                return await _collection.Aggregate<TourWithPurchaseCount>(pipeline).ToListAsync();
+        }
+
     }
 }
 

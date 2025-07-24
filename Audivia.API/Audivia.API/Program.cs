@@ -69,7 +69,11 @@ namespace Audivia.API
                 options.AddPolicy("app-cors", builder =>
                 {
                     builder
-                        .SetIsOriginAllowed(_ => true) // Dung thay vi AllowAnyOrigin()
+                        .WithOrigins(
+                            "http://localhost:5173",
+                            "https://audivia.vn",
+                            "https://web.audivia.vn"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // Bat buoc cho SignalR
@@ -148,8 +152,8 @@ namespace Audivia.API
 
             // Map SignalR Hub
 
-            app.MapHub<ChatHub>("/chatHub");
-            app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<ChatHub>("/chatHub").RequireCors("app-cors"); ;
+            app.MapHub<NotificationHub>("/notificationHub").RequireCors("app-cors"); ;
             app.MapControllers();
 
             app.Run();

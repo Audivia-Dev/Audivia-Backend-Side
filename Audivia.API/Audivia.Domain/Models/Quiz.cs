@@ -1,10 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Domain.Models
 {
@@ -18,14 +13,19 @@ namespace Audivia.Domain.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? QuizFieldId { get; set; }
 
-        [BsonElement("tourcheckpoint_id")]
+        [BsonElement("tour_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string? TourCheckpointId { get; set; }
+        public string? TourId { get; set; }
 
         [BsonElement("title")]
         public string? Title { get; set; }
         [BsonElement("image")]
         public string? Image { get; set; }
+
+        [BsonElement("questions_count")]
+        public int QuestionsCount { get; set; } = 0;
+        
+        // default fields
         [BsonElement("created_at")]
         public DateTime? CreatedAt { get; set; }
 
@@ -34,9 +34,11 @@ namespace Audivia.Domain.Models
 
         [BsonElement("is_deleted")]
         public bool? IsDeleted { get; set; }
+
+        // navigation props
         [BsonIgnore]
         public QuizField? QuizFieldData { get; set; }
         [BsonIgnore]
-        public TourCheckpoint? TourCheckpointData { get; set; }
+        public Tour? TourData { get; set; }
     }
 }

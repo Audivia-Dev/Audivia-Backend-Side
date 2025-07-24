@@ -59,5 +59,10 @@ namespace Audivia.Application.Services.Implemetation
             var userStatItems = await _userRepository.GetUserStatisticsAsync(request);
             return new GetUserStatResponse { TotalUsers = totalUsers, Items = userStatItems };
         }
+
+        public async Task<List<TourWithPurchaseCount>> GetTopPurchasedToursWithDetailAsync(int topN)
+        {
+            return await _transactionHistoryRepository.GetTopPurchasedToursWithDetailAsync(topN);
+        }
     }
 }

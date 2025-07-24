@@ -32,6 +32,12 @@ namespace Audivia.API.Controllers.Question
             var rs = await _questionService.GetQuestionByIdAsync(id);
             return Ok(rs);
         }
+        [HttpGet("quizs/{quizId}")]
+        public async Task<IActionResult> GetQuestionByQuizId(string quizId)
+        {
+            var rs = await _questionService.GetQuestionsByQuizIdAsync(quizId);
+            return Ok(rs);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuestion(string id, UpdateQuestionRequest req)
         {

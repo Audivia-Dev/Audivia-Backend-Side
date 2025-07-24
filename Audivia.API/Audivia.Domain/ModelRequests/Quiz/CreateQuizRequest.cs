@@ -11,7 +11,7 @@ namespace Audivia.Domain.ModelRequests.Quiz
     {
 
         public string? QuizFieldId { get; set; }
-        public string? TourCheckpointId { get; set; }
+        public string? TourId { get; set; }
         public string? Title { get; set; }
         public string? Image { get; set; }
         public bool? IsDeleted { get; set; } = false;

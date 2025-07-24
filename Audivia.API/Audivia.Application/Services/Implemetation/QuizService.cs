@@ -29,7 +29,7 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Title = req.Title,
                 QuizFieldId = req.QuizFieldId,
-                TourCheckpointId = req.TourCheckpointId,
+                TourId = req.TourId,
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
                 Image = req.Image,
@@ -122,7 +122,7 @@ namespace Audivia.Application.Services.Implemetation
             {
                 quiz.Title = req.Title ?? quiz.Title;
                 quiz.QuizFieldId = req.QuizFieldId ?? quiz.QuizFieldId;
-                quiz.TourCheckpointId = req.TourCheckpointId ?? quiz.TourCheckpointId;   
+                quiz.TourId = req.TourId ?? quiz.TourId;   
                 quiz.UpdatedAt = DateTime.UtcNow;
                 quiz.Image = req.Image ?? quiz.Image;
                 return new QuizReponse

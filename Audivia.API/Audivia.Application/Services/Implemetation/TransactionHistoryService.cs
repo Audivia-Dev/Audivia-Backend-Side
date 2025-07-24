@@ -2,6 +2,7 @@
 using Audivia.Domain.Commons.Mapper;
 using Audivia.Domain.DTOs;
 using Audivia.Domain.ModelRequests.TransactionHistory;
+using Audivia.Domain.ModelResponses.Statistics;
 using Audivia.Domain.ModelResponses.TransactionHistory;
 using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Implemetation;
@@ -29,6 +30,16 @@ namespace Audivia.Application.Services.Implemetation
                 {
                     Success = false,
                     Message = "Invalid UserId or TourId format",
+                    Response = null
+                };
+            }
+            var existingTransaction = await _transactionHistoryRepository.GetTransactionHistoryByUserIdAndTourId(request.UserId, request.TourId);
+            if (existingTransaction != null)
+            {
+                return new TransactionHistoryResponse
+                {
+                    Success = false,
+                    Message = "This tour is purchased already!",
                     Response = null
                 };
             }
@@ -175,5 +186,6 @@ namespace Audivia.Application.Services.Implemetation
             transaction.AudioCharacterId = request.AudioCharacterId;
             await _transactionHistoryRepository.Update(transaction);
         }
+
     }
 }
