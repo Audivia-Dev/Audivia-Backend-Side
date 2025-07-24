@@ -6,6 +6,7 @@ using Audivia.Domain.Models;
 using Audivia.Infrastructure.Repositories.Implemetation;
 using Audivia.Infrastructure.Repositories.Interface;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,6 +84,9 @@ namespace Audivia.Application.Services.Implemetation
         {
             var objectId = new ObjectId(id.ToString());
             var question = await _questionRepository.GetById(objectId);
+            FilterDefinition<Answer> filterDefinition = Builders<Answer>.Filter.Eq(i => i.QuestionId, id);
+            var answers = await _answerRepository.Search(filterDefinition);
+            question.Answers = (List<Answer>?)answers;
             if (question is null)
             {
                 return new QuestionResponse
@@ -103,6 +107,20 @@ namespace Audivia.Application.Services.Implemetation
         public async Task<Question> GetQuestionModel(string id)
         {
             return await _questionRepository.GetById(new ObjectId(id.ToString()));
+        }
+
+        public async Task<QuestionListResponse> GetQuestionsByQuizIdAsync(string id)
+        {
+            var objectId = new ObjectId(id.ToString());
+            FilterDefinition<Question> filterDefinition = Builders<Question>.Filter.Eq(i => i.QuizId, id);
+            var questions = await _questionRepository.Search(filterDefinition);
+
+            return new QuestionListResponse
+            {
+                Success = true,
+                Message = "Fetched all questions successfully!",
+                Response = questions.Select(ModelMapper.MapQuestionToDTO).ToList()
+            };
         }
 
         public async Task UpdateQuestion(Question question)
