@@ -33,6 +33,7 @@ namespace Audivia.Application.Services.Implemetation
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false,
                 Image = req.Image,
+                QuestionsCount = req.QuestionsCount,
             };
             
             await _quizRepository.Create(newQuiz);
@@ -125,6 +126,7 @@ namespace Audivia.Application.Services.Implemetation
                 quiz.TourId = req.TourId ?? quiz.TourId;   
                 quiz.UpdatedAt = DateTime.UtcNow;
                 quiz.Image = req.Image ?? quiz.Image;
+                quiz.QuestionsCount = req.QuestionsCount ?? quiz.QuestionsCount;
                 return new QuizReponse
                 {
                     Message = "Update quiz successfully!",

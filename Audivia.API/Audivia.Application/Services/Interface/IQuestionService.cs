@@ -16,6 +16,7 @@ namespace Audivia.Application.Services.Interface
         Task UpdateQuestion(Question question);
         Task<QuestionResponse> DeleteQuestionAsync(string id);
         Task<QuestionResponse> GetQuestionByIdAsync(string id);
+        Task<QuestionResponse> GetQuestionByQuizIdAndOrderAsync(string quizId, int order);
         Task<QuestionListResponse> GetQuestionsByQuizIdAsync(string id);
         Task<QuestionListResponse> GetAllQuestionsAsync();
         Task<Question> GetQuestionModel(string id);

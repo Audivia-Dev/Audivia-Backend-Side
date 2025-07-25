@@ -198,7 +198,7 @@ namespace Audivia.Domain.Commons.Mapper
                 CreatedAt = q.CreatedAt,
                 UpdatedAt = q.UpdatedAt,
                 IsDeleted = q.IsDeleted,
-
+                QuestionsCount = q.QuestionsCount,
                 Image = q.Image,
             };
         }
@@ -211,6 +211,7 @@ namespace Audivia.Domain.Commons.Mapper
                 ImageUrl = question.ImageUrl,
                 QuizId = question.QuizId,
                 Points = question.Points,
+                Order = question.Order,
                 Type = question.Type,
                 CreatedAt = question.CreatedAt,
                 UpdatedAt = question.UpdatedAt,
@@ -224,9 +225,7 @@ namespace Audivia.Domain.Commons.Mapper
             {
                 Id = a.Id,
                 QuestionId = a.QuestionId,
-                Text = a.Text,
-                IsCorrect = a.IsCorrect,
-                IsDeleted = a.IsDeleted,
+                Text = a.Text
             };
         }
 

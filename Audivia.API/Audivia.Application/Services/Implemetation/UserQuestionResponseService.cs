@@ -29,7 +29,7 @@ namespace Audivia.Application.Services.Implemetation
             }
 
             var newQuestionResponse = new UserQuestionResponse { UserId = req.UserId, QuestionId = req.QuestionId, AnswerId = req.AnswerId, QuizId = req.QuizId, IsCorrect = false };
-
+            
             // if this is the first answer for the quiz:
             if (existedQuizResponse == null)
             {

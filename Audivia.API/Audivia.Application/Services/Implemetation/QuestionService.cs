@@ -32,6 +32,7 @@ namespace Audivia.Application.Services.Implemetation
                 Text = request.Text,
                 Points = request.Points,
                 QuizId = request.QuizId,
+                Order = request.Order,
                 CreatedAt = DateTime.UtcNow,
             };
             await _questionRepository.Create(newQuestion);
@@ -56,8 +57,7 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
-            question.IsDeleted = !question.IsDeleted;   
-            await _questionRepository.Update(question);
+            await _questionRepository.Delete(question);
             return new QuestionResponse
             {
                 Success = true,
@@ -96,6 +96,34 @@ namespace Audivia.Application.Services.Implemetation
                     Response = null
                 };
             }
+            return new QuestionResponse
+            {
+                Success = true,
+                Message = "Fetch question successfully!",
+                Response = ModelMapper.MapQuestionToDTO(question)
+            };
+        }
+
+        public async Task<QuestionResponse> GetQuestionByQuizIdAndOrderAsync(string quizId, int order)
+        {
+            var question = await _questionRepository.FindFirst(q => q.QuizId == quizId && q.Order == order);
+
+            if (question is null)
+            {
+                return new QuestionResponse
+                {
+                    Success = false,
+                    Message = "Not found question!",
+                    Response = null
+                };
+            }
+
+            // get answers
+            FilterDefinition<Answer> filterDefinition = Builders<Answer>.Filter.Eq(i => i.QuestionId, question.Id);
+            var answers = await _answerRepository.Search(filterDefinition);
+            question.Answers = (List<Answer>?)answers;
+           
+            
             return new QuestionResponse
             {
                 Success = true,
@@ -151,6 +179,7 @@ namespace Audivia.Application.Services.Implemetation
             question.Text = request.Text ?? question.Text;   
             question.Points = request.Points ?? question.Points;
             question.QuizId = request.QuizId ?? question.QuizId;
+            question.Order = request.Order ?? question.Order;
             question.UpdatedAt = DateTime.UtcNow;
             await _questionRepository.Update(question);
             return new QuestionResponse

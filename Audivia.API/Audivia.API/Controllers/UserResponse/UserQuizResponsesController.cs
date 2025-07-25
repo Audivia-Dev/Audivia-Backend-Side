@@ -33,6 +33,14 @@ namespace Audivia.API.Controllers.UserResponse
             var rs = await _userQuizResponseService.GetUserQuizResponseByIdAsync(id);
             return Ok(rs);
         }
+
+        [HttpGet("quizs/{quizId}/users/{userId}")]
+        public async Task<IActionResult> GetUserResponseById(string quizId, string userId)
+        {
+            var rs = await _userQuizResponseService.GetUserQuizResponseByQuizIdAndUserIdAsync(quizId, userId);
+            return Ok(rs);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserResponse(string id, [FromBody] UpdateUserQuizResponseRequest request)
         {

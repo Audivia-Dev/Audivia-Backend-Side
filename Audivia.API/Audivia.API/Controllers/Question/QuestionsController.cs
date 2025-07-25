@@ -33,9 +33,15 @@ namespace Audivia.API.Controllers.Question
             return Ok(rs);
         }
         [HttpGet("quizs/{quizId}")]
-        public async Task<IActionResult> GetQuestionByQuizId(string quizId)
+        public async Task<IActionResult> GetQuestionsByQuizId(string quizId)
         {
             var rs = await _questionService.GetQuestionsByQuizIdAsync(quizId);
+            return Ok(rs);
+        }
+        [HttpGet("quizs/{quizId}/order/{order}")]
+        public async Task<IActionResult> GetQuestionByQuizIdAndOrder(string quizId, int order)
+        {
+            var rs = await _questionService.GetQuestionByQuizIdAndOrderAsync(quizId, order);
             return Ok(rs);
         }
         [HttpPut("{id}")]
