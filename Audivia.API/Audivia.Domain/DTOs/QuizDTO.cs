@@ -11,7 +11,7 @@ namespace Audivia.Domain.DTOs
 
         public string? TourId { get; set; }
         public Tour? Tour { get; set; }
-
+        public int QuestionsCount { get; set; }
         public string? Title { get; set; }
         public string? Image { get; set; }
         public DateTime? CreatedAt { get; set; }

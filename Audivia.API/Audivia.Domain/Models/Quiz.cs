@@ -33,7 +33,7 @@ namespace Audivia.Domain.Models
         public DateTime? UpdatedAt { get; set; }
 
         [BsonElement("is_deleted")]
-        public bool? IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; } = false;
 
         // navigation props
         [BsonIgnore]

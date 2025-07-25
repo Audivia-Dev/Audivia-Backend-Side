@@ -14,8 +14,8 @@ namespace Audivia.Domain.ModelRequests.Question
         public QuestionType Type { get; set; } // e.g., "MultipleChoice", "TrueFalse", etc.
 
         public string? Text { get; set; }
-
-
         public double? Points { get; set; }
+        public int? Order { get; set; }
+
     }
 }

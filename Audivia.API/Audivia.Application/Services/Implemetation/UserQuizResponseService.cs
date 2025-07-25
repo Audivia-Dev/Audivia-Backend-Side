@@ -83,6 +83,26 @@ namespace Audivia.Application.Services.Implemetation
             };
         }
 
+        public async Task<UserQuizResponseResponse> GetUserQuizResponseByQuizIdAndUserIdAsync(string quizId, string userId)
+        {
+            var userQuizResponse = await _userQuizResponseRepository.FindFirst(q => q.QuizId == quizId && q.UserId == userId);
+            if (userQuizResponse == null)
+            {
+                return new UserQuizResponseResponse
+                {
+                    Success = false,
+                    Message = "Not found!",
+                    Response = null,
+                };
+            }
+            return new UserQuizResponseResponse
+            {
+                Success = true,
+                Message = "Fetch User Quiz Response successfully!",
+                Response = ModelMapper.MapUserQuizResponseToDTO(userQuizResponse),
+            };
+        }
+
         public async Task<UserQuizResponseResponse> UpdateUserQuizResponseAsync(string id, UpdateUserQuizResponseRequest req)
         {
             var userQuizResponse = await _userQuizResponseRepository.GetById(new ObjectId(id.ToString()));
