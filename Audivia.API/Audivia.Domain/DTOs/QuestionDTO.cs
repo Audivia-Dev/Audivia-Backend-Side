@@ -10,6 +10,7 @@ namespace Audivia.Domain.DTOs
         public string? Text { get; set; }
         public string? ImageUrl { get; set; }
         public double? Points { get; set; }
+        public int Order { get; set; }
         public List<AnswerDTO>? Answers { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

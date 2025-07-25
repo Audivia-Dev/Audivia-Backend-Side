@@ -30,6 +30,9 @@ namespace Audivia.Domain.Models
 
         [BsonElement("points")]
         public double? Points { get; set; }
+
+        [BsonElement("order")]
+        public int Order { get; set; }
        
         // [BsonIgnore]
         public List<Answer>? Answers { get; set; } = new List<Answer>();

@@ -9,6 +9,7 @@ namespace Audivia.Application.Services.Interface
         Task<UserQuizResponseResponse> UpdateUserQuizResponseAsync(string id, UpdateUserQuizResponseRequest req);
         Task<UserQuizResponseResponse> DeleteUserQuizResponseAsync(string id);
         Task<UserQuizResponseListResponse> GetAllUserQuizResponseAsync();
-        Task<UserQuizResponseResponse> GetUserQuizResponseByIdAsync(string id); 
+        Task<UserQuizResponseResponse> GetUserQuizResponseByIdAsync(string id);
+        Task<UserQuizResponseResponse> GetUserQuizResponseByQuizIdAndUserIdAsync(string quizId, string userId);
     }
 }
