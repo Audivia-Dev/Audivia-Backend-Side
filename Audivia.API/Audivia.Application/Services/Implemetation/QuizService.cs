@@ -108,10 +108,35 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Message = "Fetch quiz failed!",
                 Success = false,
-                Response = ModelMapper.MapQuizToDTO(quiz),
+                Response = null,
 
             };
 
+
+        }
+
+        public async Task<QuizReponse> GetQuizByTourIdAsync(string tourId)
+        {
+            var quiz = await _quizRepository.FindFirst(q => q.TourId == tourId);
+            if (quiz != null)
+            {
+
+                return new QuizReponse
+                {
+                    Message = "Fetch quiz successfully!",
+                    Success = true,
+                    Response = ModelMapper.MapQuizToDTO(quiz),
+
+                };
+
+            }
+            return new QuizReponse
+            {
+                Message = "Fetch quiz failed!",
+                Success = false,
+                Response = null,
+
+            };
 
         }
 
