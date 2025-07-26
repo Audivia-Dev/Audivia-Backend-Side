@@ -32,6 +32,12 @@ namespace Audivia.API.Controllers.Quiz
             var rs = await _quizService.GetQuizByIdAsync(id);
             return Ok(rs);
         }
+        [HttpGet("tours/{tourId}")]
+        public async Task<IActionResult> GetQuizByTourId(string tourId)
+        {
+            var rs = await _quizService.GetQuizByTourIdAsync(tourId);
+            return Ok(rs);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuiz(string id, UpdateQuizRequest req)
         {
