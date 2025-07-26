@@ -13,11 +13,13 @@ namespace Audivia.Application.Services.Implemetation
         private readonly IUserQuizResponseRepository _userQuizResponseRepository;
         private readonly IAnswerRepository _answerRepository;
         private readonly IQuizRepository _quizRepository;
-        public UserQuestionResponseService(IUserQuizResponseRepository userResponseRepository, IAnswerRepository answerRepository, IQuizRepository quizRepository)
+        private readonly IQuestionRepository _questionRepository;
+        public UserQuestionResponseService(IUserQuizResponseRepository userResponseRepository, IAnswerRepository answerRepository, IQuizRepository quizRepository, IQuestionRepository questionRepository)
         {
             _userQuizResponseRepository = userResponseRepository;
             _answerRepository = answerRepository;
             _quizRepository = quizRepository;
+            _questionRepository = questionRepository;
         }
         public async Task<UserQuestionResponseResponse> CreateUserQuestionResponseAsync(CreateUserQuestionResponseRequest req)
         {
@@ -27,8 +29,10 @@ namespace Audivia.Application.Services.Implemetation
             {
                 throw new NotSupportedException("This user completed this quiz before!");
             }
+            var question = await _questionRepository.FindFirst(q => q.Id == req.QuestionId) ?? throw new KeyNotFoundException("Question not found!");
 
-            var newQuestionResponse = new UserQuestionResponse { UserId = req.UserId, QuestionId = req.QuestionId, AnswerId = req.AnswerId, QuizId = req.QuizId, IsCorrect = false };
+            var newQuestionResponse = new UserQuestionResponse { UserId = req.UserId, QuestionId = req.QuestionId, AnswerId = req.AnswerId, QuizId = req.QuizId, IsCorrect = false,  };
+
             
             // if this is the first answer for the quiz:
             if (existedQuizResponse == null)
@@ -45,7 +49,7 @@ namespace Audivia.Application.Services.Implemetation
             {
                 Success = true,
                 Message = "Created user question response successfully!",
-                Response = ModelMapper.MapUserQuestionResponseToDTO(newQuestionResponse),
+                Response = ModelMapper.MapUserQuestionResponseToDTO(newQuestionResponse, question.TrueAnswerNote),
 
             };
         }

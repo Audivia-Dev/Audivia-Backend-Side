@@ -16,6 +16,7 @@ namespace Audivia.Domain.ModelRequests.Question
         public string? Text { get; set; }
         public double? Points { get; set; }
         public int? Order { get; set; }
+        public string? TrueAnswerNote { get; set; }
 
     }
 }
