@@ -1,10 +1,4 @@
 ﻿using Audivia.Domain.Enums;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Audivia.Domain.ModelRequests.Question
 {
@@ -17,6 +11,7 @@ namespace Audivia.Domain.ModelRequests.Question
         public string? Text { get; set; }
         public double? Points { get; set; }
         public int Order { get; set; }
+        public string? TrueAnswerNote { get; set; }
 
     }
 }
