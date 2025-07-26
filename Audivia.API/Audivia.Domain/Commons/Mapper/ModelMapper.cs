@@ -229,7 +229,7 @@ namespace Audivia.Domain.Commons.Mapper
             };
         }
 
-        public static UserQuestionResponseDTO MapUserQuestionResponseToDTO(UserQuestionResponse userResponse)
+        public static UserQuestionResponseDTO MapUserQuestionResponseToDTO(UserQuestionResponse userResponse, string? trueAnswerNote = null)
         {
             return new UserQuestionResponseDTO
             {
@@ -238,6 +238,19 @@ namespace Audivia.Domain.Commons.Mapper
                 AnswerId = userResponse.AnswerId,
                 IsCorrect = userResponse.IsCorrect,
                 UserId = userResponse.UserId,
+                TrueAnswerNote = trueAnswerNote
+            };
+        }
+
+        public static UserQuestionResponseDTO MapUserQuestionResponseToDTO(UserQuestionResponse userResponse)
+        {
+            return new UserQuestionResponseDTO
+            {
+                QuizId = userResponse.QuizId,
+                QuestionId = userResponse.QuestionId,
+                AnswerId = userResponse.AnswerId,
+                IsCorrect = userResponse.IsCorrect,
+                UserId = userResponse.UserId
             };
         }
 

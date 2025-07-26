@@ -7,5 +7,6 @@
         public string? QuestionId { get; set; }
         public string? AnswerId { get; set; }
         public bool? IsCorrect { get; set; }
+        public string? TrueAnswerNote { get; set; }
     }
 }

@@ -33,6 +33,9 @@ namespace Audivia.Domain.Models
 
         [BsonElement("order")]
         public int Order { get; set; }
+
+        [BsonElement("true_answer_note")]
+        public string? TrueAnswerNote { get; set; }
        
         // [BsonIgnore]
         public List<Answer>? Answers { get; set; } = new List<Answer>();
